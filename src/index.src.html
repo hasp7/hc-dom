@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; form-action 'none'; base-uri 'none'">
+<title>HC · Cuidados Domiciliários</title>
+<style>
+@font-face { font-family: "Lato"; font-weight: 400; font-display: swap; src: url("{{FONT_LATO_400}}") format("woff2"); }
+@font-face { font-family: "Lato"; font-weight: 700; font-display: swap; src: url("{{FONT_LATO_700}}") format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 300 700; font-display: swap; src: url("{{FONT_MONTSERRAT}}") format("woff2-variations"); }
+:root {
+  --hc-turquesa: #00C0B5; --hc-petroleo: #0e5b6b; --hc-laranja: #E9994A;
+  --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--hc-fundo-alt); color: var(--hc-texto); font: 16px/1.55 "Lato", system-ui, sans-serif; }
+main { max-width: 720px; margin: 0 auto; background: #fff; min-height: 100vh; padding: 0 16px 40px; }
+@media (min-width: 760px) { main { margin: 32px auto; min-height: 0; padding: 0 40px 40px; box-shadow: 0 2px 12px rgba(0,0,0,.08); } }
+.faixa { height: 6px; margin: 0 -16px; background: linear-gradient(90deg, var(--hc-turquesa), var(--hc-laranja)); }
+@media (min-width: 760px) { .faixa { margin: 0 -40px; } }
+header { padding: 24px 0 16px; border-bottom: 1px solid var(--hc-linha); }
+header img { height: 60px; width: auto; }
+h1 { font: 300 26px/1.2 "Montserrat", system-ui, sans-serif; color: var(--hc-petroleo); margin: 24px 0 4px; }
+.sub { font: 300 16px "Montserrat", system-ui, sans-serif; color: var(--hc-turquesa); margin: 0 0 24px; }
+ul { list-style: none; padding: 0; margin: 0; }
+li a {
+  display: block; text-decoration: none; color: inherit; padding: 16px 18px; margin-bottom: 12px;
+  border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-turquesa); border-radius: 6px;
+}
+li a:hover, li a:focus-visible { background: var(--hc-fundo-alt); outline: none; border-left-color: var(--hc-petroleo); }
+li strong { display: block; font: 500 17px "Montserrat", system-ui, sans-serif; color: var(--hc-petroleo); }
+li span { font-size: 14px; color: var(--hc-texto-sec); }
+.nota { font-size: 13px; color: var(--hc-texto-sec); margin-top: 24px; }
+footer { margin-top: 32px; padding-top: 8px; border-top: 1px solid var(--hc-linha); font-size: 12px; color: var(--hc-texto-sec); text-align: center; }
+</style>
+</head>
+<body>
+<main>
+  <div class="faixa" aria-hidden="true"></div>
+  <header><img src="{{LOGO_PNG}}" alt="HC Healthcare &amp; Innovation"></header>
+  <h1>Cuidados domiciliários</h1>
+  <p class="sub">Ferramentas de trabalho da equipa clínica</p>
+  <ul>
+    <li><a href="eval-hc-patient/">
+      <strong>Avaliação inicial do utente</strong>
+      <span>Levantamento de necessidades na visita domiciliária: escalas (Barthel, MIF, Morse, PPS), sinais vitais, medicação, diagnósticos CID-10 e focos de enfermagem. Exporta PDF.</span>
+    </a></li>
+  </ul>
+  <p class="nota">Estas páginas não recolhem nem enviam dados. O que se preenche fica apenas no browser de quem preenche.</p>
+  <footer>HC Healthcare &amp; Innovation · Intuição e Consenso, Lda · NIPC 517684608</footer>
+</main>
+</body>
+</html>

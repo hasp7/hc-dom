@@ -1,0 +1,98 @@
+# hc-dom · HC Healthcare & Innovation
+
+Ferramentas estáticas de cuidados domiciliários da HC, publicadas no GitHub Pages. Cada página é
+um ficheiro HTML único: não recolhe, não envia e não guarda dados fora do browser de quem preenche.
+
+| Página | Caminho |
+|---|---|
+| Índice | `/` → `index.html` |
+| Avaliação inicial do utente | `/eval-hc-patient/` → `eval-hc-patient/index.html` |
+
+## Estrutura
+
+| Ficheiro | O que é |
+|---|---|
+| `src/index.src.html` | Índice do site |
+| `src/eval-hc-patient/form.src.html` | Estrutura e estilo do formulário. Marcadores `{{…}}` no lugar dos scripts, logótipo e fontes |
+| `src/eval-hc-patient/dados.js` | Dados fixos: fármacos (DCI), CID-10, MIF, Morse, sinais vitais, unidades, vias, horários |
+| `src/eval-hc-patient/app.js` | Lógica: identificação do utente, escalas, alertas, linhas repetíveis, regras dos focos, rascunho, impressão |
+| `assets/` | Logótipo e fontes HC (derivados de `claude/design-md/hc/assets/` no hasp-HQ) |
+| `build.py` | Gera `index.html` e `eval-hc-patient/index.html` |
+| `index.html`, `eval-hc-patient/index.html` | **Gerados** — nunca editar à mão |
+
+```
+python3 build.py
+```
+
+Editar sempre em `src/`, correr o build e fazer commit dos ficheiros gerados juntamente com as fontes.
+
+# Avaliação inicial do utente
+
+## Conteúdo
+
+Cabeçalho de identificação do utente (nome, n.º SNS, data de nascimento com idade calculada, NIF
+com validação do dígito de controlo — repetido no topo de cada página impressa) e 16 secções:
+identificação da visita, seguimento clínico, antecedentes e diagnósticos (CID-10), sinais vitais
+(referência, habitual e na visita), respiratório e cardíaco, medicação habitual, funcionalidade e
+risco (Barthel, MIF, Morse, PPS, pele, alimentação), cognição e noites, planeamento de cuidados,
+cuidadores, mapa de necessidades, modelo de apoio, casa e logística, sinais de alerta, focos de
+atenção de enfermagem e fecho.
+
+O conteúdo comercial (preços, valor da consulta, condições de orçamento) fica fora de propósito:
+a página é pública e o PDF pode ser visto pela família.
+
+## Focos de atenção — regras fixas, sem IA
+
+`src/eval-hc-patient/app.js → calcularFocos()` percorre o que foi preenchido e aplica regras escritas à mão. Por
+exemplo: MIF banho ≤ 5 ou Barthel banho 0 dá "Autocuidado: tomar banho"; Morse ≥ 51 dá "Queda —
+risco elevado"; 5 ou mais fármacos dá "Gestão do regime terapêutico"; código J84/J44/J96/I50 dá
+"Dispneia". Cada sugestão mostra a fundamentação.
+
+**Nada vai para o PDF sem validação do enfermeiro** (checkbox por foco). A regra só lembra; quem
+decide é o enfermeiro. As articulações sugeridas (paliativos, médico assistente, medicação
+parentérica, sinais fora do intervalo, equipamento em falta) seguem a mesma lógica.
+
+Os rótulos inspiram-se na linguagem CIPE, mas não são uma implementação certificada da
+classificação.
+
+## Avisos de conteúdo clínico
+
+- **CID-10:** a lista é da versão OMS 2019, escolhida à mão, e serve de apoio ao registo. Não
+  substitui a codificação clínica oficial; a codificação hospitalar em Portugal usa a ICD-10-CM.
+  Validar os códigos antes de qualquer uso administrativo.
+- **MIF (FIM™):** instrumento com direitos da UDSMR. Para uso interno de avaliação clínica não há
+  problema prático; antes de a incluir num produto comercial, confirmar o licenciamento.
+- **Sinais vitais:** as referências são para adulto em repouso. Na doença respiratória crónica o
+  alvo de SpO₂ pode ser 88–92 %, por isso o alerta abaixo de 92 % é um lembrete para confrontar com
+  o alvo prescrito, não um diagnóstico.
+- **Morse:** versão portuguesa, com os cortes 0–24 sem risco, 25–50 baixo e ≥ 51 alto.
+
+## Privacidade (dados de saúde, RGPD art. 9.º)
+
+- Sem servidor e sem envio: o formulário não submete nada e uma CSP (`default-src 'none'`,
+  `form-action 'none'`) impede qualquer pedido de rede.
+- O rascunho fica em `sessionStorage`. Sobrevive se a página recarregar e apaga-se quando o
+  separador fecha ou quando se carrega em *Limpar*. Não usa `localStorage` de propósito.
+- Os dados só saem pelo PDF, que se entrega pelo canal da HC.
+- A página publicada não contém dados nenhuns. Mesmo assim leva `noindex`.
+
+## Impressão / PDF
+
+O botão *Imprimir / Guardar PDF* abre o diálogo do browser e sugere o nome de ficheiro
+`HC_Avaliacao-Inicial_<data>_<iniciais>`. Na impressão:
+
+- a medicação sai numa tabela, com fármaco e dose nas linhas e os horários em colunas;
+- os diagnósticos saem numa tabela com o código CID-10, primeiro os ativos e depois os antecedentes;
+- os sinais vitais fora do intervalo saem a laranja, com ↑/↓;
+- os focos só aparecem se tiverem sido validados;
+- o rodapé leva os dados legais e a numeração `n / total`. Funciona no Chrome e no Edge; noutros
+  browsers o rodapé pode não aparecer;
+- no diálogo de impressão, desligar "Cabeçalhos e rodapés" do browser e manter "Gráficos de fundo"
+  ligado.
+
+Testado em Chromium headless com dados fictícios: 7 páginas A4, sem erros de JavaScript.
+
+## Publicar no GitHub Pages
+
+Pages servido a partir da branch `gh-pages`, pasta raiz. O `.nojekyll` garante que os ficheiros
+são servidos tal como estão.
