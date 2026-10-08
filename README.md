@@ -7,24 +7,39 @@ um ficheiro HTML único: não recolhe, não envia e não guarda dados fora do br
 |---|---|
 | Índice | `/` → `index.html` |
 | Avaliação inicial do utente | `/eval-hc-patient/` → `eval-hc-patient/index.html` |
+| Índice de Barthel (isolado) | `/barthel/` → `barthel/index.html` |
+| Escala de Morse (isolada) | `/morse/` → `morse/index.html` |
 
 ## Estrutura
 
 | Ficheiro | O que é |
 |---|---|
 | `src/index.src.html` | Índice do site |
+| `src/shared/escalas.js` | **Fonte única** das escalas Barthel e Morse (itens, descrições, faixas), usada pelo formulário e pelas páginas isoladas |
+| `src/escala/escala.src.html`, `src/escala/escala.js` | Modelo e motor das ferramentas de escala isolada; cada escala é uma configuração no `build.py` |
 | `src/eval-hc-patient/form.src.html` | Estrutura e estilo do formulário. Marcadores `{{…}}` no lugar dos scripts, logótipo e fontes |
-| `src/eval-hc-patient/dados.js` | Dados fixos: fármacos (DCI), CID-10, MIF, Morse, sinais vitais, unidades, vias, horários |
+| `src/eval-hc-patient/dados.js` | Dados fixos: fármacos (DCI), CID-10, MIF, sinais vitais, unidades, vias, horários |
 | `src/eval-hc-patient/app.js` | Lógica: identificação do utente, escalas, alertas, linhas repetíveis, regras dos focos, rascunho, impressão |
 | `assets/` | Logótipo e fontes HC (derivados de `claude/design-md/hc/assets/` no hasp-HQ) |
-| `build.py` | Gera `index.html` e `eval-hc-patient/index.html` |
-| `index.html`, `eval-hc-patient/index.html` | **Gerados** — nunca editar à mão |
+| `build.py` | Gera as quatro páginas |
+| `index.html`, `*/index.html` | **Gerados** — nunca editar à mão |
 
 ```
 python3 build.py
 ```
 
 Editar sempre em `src/`, correr o build e fazer commit dos ficheiros gerados juntamente com as fontes.
+
+## Escalas isoladas (barthel/, morse/)
+
+Cada escala tem uma página própria, para reavaliações rápidas sem abrir o formulário completo:
+identificação curta (utente, SNS, data de nascimento com idade calculada, data, avaliador, contexto),
+os itens com todas as opções descritas, o total e a classificação automáticos, a tabela de faixas
+com a faixa atual destacada, observações e PDF. Em impressão, a Morse cabe numa folha A4 e a
+Barthel ocupa duas.
+
+Para acrescentar outra escala: definir os itens e as faixas em `src/shared/escalas.js` e juntar
+uma entrada a `PAGINAS` no `build.py`.
 
 # Avaliação inicial do utente
 

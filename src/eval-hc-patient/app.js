@@ -69,12 +69,18 @@
     });
   });
 
-  var morseCorpo = document.getElementById("morse-corpo");
-  MORSE_ITENS.forEach(function (it) {
-    var r = el("tr"); r.appendChild(el("td", { "class": "rot" }, it[1]));
-    var td = el("td"), s = el("select", { name: it[0] });
-    opcoes(s, it[2], true); td.appendChild(s); r.appendChild(td); morseCorpo.appendChild(r);
-  });
+  // Barthel e Morse: definições partilhadas (shared/escalas.js), opção = [valor, rótulo, descrição]
+  function tabelaEscala(corpoId, itens) {
+    var corpo = document.getElementById(corpoId);
+    itens.forEach(function (it) {
+      var r = el("tr"); r.appendChild(el("td", { "class": "rot" }, it[1]));
+      var td = el("td"), s = el("select", { name: it[0] });
+      opcoes(s, it[2].map(function (o) { return [o[0], o[0] + " · " + o[1]]; }), true);
+      td.appendChild(s); r.appendChild(td); corpo.appendChild(r);
+    });
+  }
+  tabelaEscala("barthel-corpo", BARTHEL_ITENS);
+  tabelaEscala("morse-corpo", MORSE_ITENS);
 
   var sinaisCorpo = document.getElementById("sinais-corpo");
   SINAIS.forEach(function (s) {
@@ -190,8 +196,7 @@
     for (var i = 0; i < classes.length; i++) if (total >= classes[i][0]) return classes[i][1];
     return "";
   }
-  var BARTHEL = ["b_alim", "b_banho", "b_hig", "b_vestir", "b_int", "b_bex", "b_sanita", "b_transf", "b_deamb", "b_escadas"];
-  var BARTHEL_CLASSES = [[100, "Independente"], [91, "Dependência ligeira"], [61, "Dependência moderada"], [21, "Dependência grave"], [0, "Dependência total"]];
+  var BARTHEL = BARTHEL_ITENS.map(function (it) { return it[0]; });
   var MIF_NOMES = [];
   MIF_ITENS.forEach(function (g) { g[1].forEach(function (it) { MIF_NOMES.push(it[0]); }); });
   var MORSE_NOMES = MORSE_ITENS.map(function (it) { return it[0]; });

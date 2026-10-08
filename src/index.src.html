@@ -25,6 +25,7 @@ header { padding: 24px 0 16px; border-bottom: 1px solid var(--hc-linha); }
 header img { height: 60px; width: auto; }
 h1 { font: 300 26px/1.2 "Montserrat", system-ui, sans-serif; color: var(--hc-petroleo); margin: 24px 0 4px; }
 .sub { font: 300 16px "Montserrat", system-ui, sans-serif; color: var(--hc-turquesa); margin: 0 0 24px; }
+h2 { font: 300 18px "Montserrat", system-ui, sans-serif; color: var(--hc-petroleo); margin: 28px 0 12px; padding-bottom: 4px; border-bottom: 2px solid var(--hc-turquesa); }
 ul { list-style: none; padding: 0; margin: 0; }
 li a {
   display: block; text-decoration: none; color: inherit; padding: 16px 18px; margin-bottom: 12px;
@@ -43,10 +44,22 @@ footer { margin-top: 32px; padding-top: 8px; border-top: 1px solid var(--hc-linh
   <header><img src="{{LOGO_PNG}}" alt="HC Healthcare &amp; Innovation"></header>
   <h1>Cuidados domiciliários</h1>
   <p class="sub">Ferramentas de trabalho da equipa clínica</p>
+  <h2>Avaliação</h2>
   <ul>
     <li><a href="eval-hc-patient/">
       <strong>Avaliação inicial do utente</strong>
       <span>Levantamento de necessidades na visita domiciliária: escalas (Barthel, MIF, Morse, PPS), sinais vitais, medicação, diagnósticos CID-10 e focos de enfermagem. Exporta PDF.</span>
+    </a></li>
+  </ul>
+  <h2>Escalas</h2>
+  <ul>
+    <li><a href="barthel/">
+      <strong>Índice de Barthel</strong>
+      <span>Independência nas atividades de vida diária (0–100), com classificação automática. Para reavaliações rápidas. Exporta PDF.</span>
+    </a></li>
+    <li><a href="morse/">
+      <strong>Escala de Morse</strong>
+      <span>Risco de queda (0–125), com classificação automática. Para avaliação inicial, reavaliação ou após uma queda. Exporta PDF.</span>
     </a></li>
   </ul>
   <p class="nota">Estas páginas não recolhem nem enviam dados. O que se preenche fica apenas no browser de quem preenche.</p>

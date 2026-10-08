@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<!-- Sem pedidos de rede nem envio de dados: tudo embebido, rascunho só no separador. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'none'; base-uri 'none'">
+<title>{{TITULO}} · HC</title>
+<style>
+@font-face { font-family: "Lato"; font-weight: 400; font-display: swap; src: url("{{FONT_LATO_400}}") format("woff2"); }
+@font-face { font-family: "Lato"; font-weight: 700; font-display: swap; src: url("{{FONT_LATO_700}}") format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 300 700; font-display: swap; src: url("{{FONT_MONTSERRAT}}") format("woff2-variations"); }
+
+/* Marca: claude/design-md/hc/DESIGN.md (hasp-HQ) */
+:root {
+  --hc-turquesa: #00C0B5; --hc-petroleo: #0e5b6b; --hc-laranja: #E9994A; --hc-laranja-forte: #E86031;
+  --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
+  --font-titulo: "Montserrat", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-corpo: "Lato", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; background: var(--hc-fundo-alt); color: var(--hc-texto); font: 16px/1.5 var(--font-corpo); accent-color: var(--hc-petroleo); }
+.folha { max-width: 760px; margin: 0 auto; background: #fff; padding: 0 16px 32px; }
+@media (min-width: 800px) { .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px rgba(0,0,0,.08); } }
+.faixa { height: 6px; margin: 0 -16px; background: linear-gradient(90deg, var(--hc-turquesa), var(--hc-laranja)); }
+@media (min-width: 800px) { .faixa { margin: 0 -40px; } }
+header.cab { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0 12px; border-bottom: 1px solid var(--hc-linha); }
+header.cab img { height: 52px; width: auto; }
+header.cab .doc-id { text-align: right; font-size: 12px; color: var(--hc-texto-sec); line-height: 1.4; }
+header.cab a { color: var(--hc-petroleo); }
+h1, h2, legend { font-family: var(--font-titulo); color: var(--hc-petroleo); font-weight: 300; }
+h1 { font-size: 26px; margin: 20px 0 2px; line-height: 1.2; }
+.subtitulo { font-family: var(--font-titulo); font-weight: 300; color: var(--hc-turquesa); margin: 0 0 12px; font-size: 16px; }
+h2 { font-size: 18px; margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 2px solid var(--hc-turquesa); }
+
+.barra { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 0; background: #fff; border-bottom: 1px solid var(--hc-linha); }
+.barra .resumo { margin-right: auto; font-size: 14px; color: var(--hc-texto-sec); }
+.barra .resumo strong { font: 600 20px var(--font-titulo); color: var(--hc-petroleo); }
+.barra .resumo .cls { color: var(--hc-laranja-forte); font-weight: 700; }
+button { font: 600 14px/1 var(--font-corpo); cursor: pointer; border-radius: 6px; padding: 10px 14px; min-height: 40px; border: 1px solid var(--hc-petroleo); }
+button.prim { background: var(--hc-petroleo); color: #fff; }
+button.sec { background: #fff; color: var(--hc-petroleo); }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--hc-turquesa); outline-offset: 1px; }
+
+.aviso { background: var(--hc-fundo-alt); border-left: 4px solid var(--hc-turquesa); padding: 10px 14px; margin: 14px 0; font-size: 14px; }
+.dica { font-size: 13px; color: var(--hc-texto-sec); }
+
+.id-utente { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 4px 14px 10px; margin: 16px 0 8px; }
+.id-utente h2 { border: 0; margin: 8px 0 6px; font-size: 16px; }
+.g { display: grid; gap: 10px 16px; grid-template-columns: 1fr; align-items: end; }
+@media (min-width: 600px) { .g { grid-template-columns: 1.3fr 1fr .9fr .6fr; } .g .todo { grid-column: 1 / -1; } .g .dois { grid-column: span 2; } }
+label.campo { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 700; color: var(--hc-petroleo); }
+input[type=text], input[type=date], textarea { font: 16px/1.4 var(--font-corpo); color: var(--hc-texto); border: 1px solid #c9d4d6; border-radius: 6px; padding: 8px 10px; background: #fff; width: 100%; }
+input.calc { background: var(--hc-fundo-alt); color: var(--hc-petroleo); font-weight: 700; }
+textarea { min-height: 72px; resize: vertical; overflow: hidden; }
+
+/* Itens da escala */
+fieldset.item { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-linha); border-radius: 6px; padding: 8px 12px 6px; margin: 0 0 10px; min-width: 0; }
+fieldset.item.feito { border-left-color: var(--hc-turquesa); }
+fieldset.item legend { display: flex; width: 100%; justify-content: space-between; gap: 8px; font-size: 15px; font-weight: 500; padding: 0 4px; }
+fieldset.item legend .pts { font-weight: 600; color: var(--hc-laranja-forte); white-space: nowrap; }
+.op { display: flex; gap: 10px; align-items: flex-start; padding: 6px 4px; border-radius: 4px; cursor: pointer; }
+.op:has(input:checked) { background: #e3f7f5; }
+.op input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; }
+.op .v { font-weight: 700; color: var(--hc-petroleo); min-width: 2.2em; display: inline-block; }
+.op .d { display: block; font-size: 13px; color: var(--hc-texto-sec); }
+
+.total { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; padding: 12px 14px; background: var(--hc-fundo-alt); border: 1px solid var(--hc-linha); border-radius: 6px; margin: 14px 0; }
+.total output { font: 600 26px var(--font-titulo); color: var(--hc-petroleo); }
+.total .cls { font-weight: 700; color: var(--hc-laranja-forte); font-size: 17px; }
+table.faixas { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 12px; }
+table.faixas th { background: var(--hc-petroleo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 6px 8px; }
+table.faixas td { padding: 5px 8px; border-bottom: 1px solid var(--hc-linha); }
+table.faixas tr.atual td { background: #fdf4ec; font-weight: 700; color: var(--hc-laranja-forte); }
+.assin { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.assin .linha { border-top: 1px solid var(--hc-texto); padding-top: 4px; margin-top: 40px; font-size: 13px; color: var(--hc-texto-sec); }
+.fonte { font-size: 12px; color: var(--hc-texto-sec); margin-top: 18px; }
+footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--hc-linha); font-size: 12px; color: var(--hc-texto-sec); text-align: center; }
+.espelho { display: none; }
+
+@page {
+  size: A4; margin: 1.3cm 1.5cm 1.6cm;
+  @bottom-left { content: "HC Healthcare & Innovation · Intuição e Consenso, Lda · NIPC 517684608 · Documento confidencial — contém dados de saúde"; font: 7pt "Lato", sans-serif; color: #5a6a6e; }
+  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Lato", sans-serif; color: #5a6a6e; }
+}
+@media print {
+  body { background: #fff; font-size: 9.5pt; }
+  .folha { max-width: none; margin: 0; padding: 0; box-shadow: none; }
+  .faixa { margin: 0; height: 4px; }
+  .nao-imprimir { display: none !important; }
+  header.cab { padding: 8px 0 6px; }
+  header.cab img { height: 1.2cm; }
+  h1 { font-size: 16pt; margin-top: 8px; }
+  .subtitulo { font-size: 10.5pt; margin-bottom: 4px; }
+  h2 { font-size: 11pt; margin: 10px 0 4px; }
+  .id-utente { padding: 2px 10px 6px; margin: 6px 0 4px; break-inside: avoid; }
+  .g { grid-template-columns: 1.3fr 1fr .9fr .6fr; gap: 4px 12px; }
+  .g .todo { grid-column: 1 / -1; } .g .dois { grid-column: span 2; }
+  label.campo { font-size: 8pt; gap: 1px; }
+  input[type=text], input[type=date], textarea { font-size: 9.5pt; border: 0; border-bottom: 1px solid #b8c4c6; border-radius: 0; padding: 1px 0; background: transparent; }
+  input::-webkit-calendar-picker-indicator { display: none; }
+  input.espelhado, textarea.espelhado { display: none; }
+  .espelho { display: block; white-space: pre-wrap; font: 400 9.5pt/1.4 var(--font-corpo); border-bottom: 1px solid #b8c4c6; min-height: 1.3em; padding: 1px 0; }
+  fieldset.item { padding: 3px 8px 2px; margin-bottom: 4px; break-inside: avoid; }
+  fieldset.item legend { font-size: 9.5pt; }
+  .op { padding: 0 2px; gap: 6px; line-height: 1.35; }
+  .op input { width: 11px; height: 11px; margin-top: 2px; }
+  .op .d { display: inline; font-size: 8pt; }
+  .op .d::before { content: " — "; }
+  .op .d:empty::before { content: none; }
+  .total { padding: 6px 10px; margin: 8px 0; break-inside: avoid; }
+  .total output { font-size: 16pt; }
+  table.faixas { font-size: 8.5pt; break-inside: avoid; }
+  table.faixas th, table.faixas td { padding: 2px 6px; }
+  .assin { margin-top: 14px; break-inside: avoid; }
+  .assin .linha { margin-top: 22px; }
+  .fonte { font-size: 7.5pt; margin-top: 8px; }
+  footer.legal { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="folha">
+  <div class="faixa" aria-hidden="true"></div>
+  <header class="cab">
+    <img src="{{LOGO_PNG}}" alt="HC Healthcare &amp; Innovation">
+    <div class="doc-id"><span class="nao-imprimir"><a href="../">← Ferramentas</a><br></span>Documento confidencial · contém dados de saúde</div>
+  </header>
+
+  <h1>{{TITULO}}</h1>
+  <p class="subtitulo">{{SUBTITULO}}</p>
+
+  <div class="barra nao-imprimir">
+    <span class="resumo">Total <strong id="t-barra">—</strong> <span class="cls" id="c-barra"></span></span>
+    <button type="button" class="prim" id="btn-imprimir">Imprimir / Guardar PDF</button>
+    <button type="button" class="sec" id="btn-limpar">Limpar</button>
+  </div>
+
+  <p class="aviso nao-imprimir"><strong>Privacidade.</strong> Nada é enviado. O preenchimento fica só neste separador do browser e apaga-se ao fechá-lo ou ao carregar em <em>Limpar</em>. Guarde o PDF e entregue-o pelo canal da HC.</p>
+
+<form id="f" autocomplete="off" novalidate>
+  <section class="id-utente" aria-labelledby="id-t">
+    <h2 id="id-t">Identificação</h2>
+    <div class="g">
+      <label class="campo todo">Utente <input type="text" name="u_nome"></label>
+      <label class="campo">N.º de utente SNS <input type="text" name="u_sns" inputmode="numeric" maxlength="9"></label>
+      <label class="campo">Data de nascimento <input type="date" name="u_nasc"></label>
+      <label class="campo">Idade <input type="text" name="u_idade" readonly tabindex="-1" class="calc"></label>
+      <label class="campo">Data <input type="date" name="a_data"></label>
+      <label class="campo dois">Avaliador <input type="text" name="a_avaliador"></label>
+      <label class="campo dois">Contexto <input type="text" name="a_contexto" placeholder="ex.: avaliação inicial, reavaliação, pós-queda"></label>
+    </div>
+  </section>
+
+  <h2 class="nao-imprimir">Itens</h2>
+  <div id="itens"></div>
+
+  <div class="total">
+    <span>Total</span> <output id="total">—</output><span>/ <span id="max"></span></span>
+    <span class="cls" id="cls"></span>
+  </div>
+
+  <table class="faixas" id="faixas"><thead><tr><th>Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
+
+  <label class="campo">Observações <textarea name="obs" rows="3"></textarea></label>
+
+  <div class="assin">
+    <div><div class="linha">Avaliador</div></div>
+    <div><div class="linha">Data</div></div>
+  </div>
+  <p class="fonte" id="fonte"></p>
+</form>
+
+  <footer class="legal">HC Healthcare &amp; Innovation · Intuição e Consenso, Lda · NIPC 517684608</footer>
+</main>
+<script>
+{{ESCALAS_JS}}
+</script>
+<script>
+{{CONFIG_JS}}
+</script>
+<script>
+{{ESCALA_JS}}
+</script>
+</body>
+</html>

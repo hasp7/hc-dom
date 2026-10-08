@@ -455,18 +455,7 @@ input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
     <div class="rolar">
     <table class="tab" id="barthel">
       <thead><tr><th>Atividade</th><th>Pontuação</th></tr></thead>
-      <tbody>
-        <tr><td class="rot">Alimentação</td><td><select name="b_alim"><option value="">—</option><option value="10">10 · Independente</option><option value="5">5 · Precisa de ajuda (cortar, barrar)</option><option value="0">0 · Dependente</option></select></td></tr>
-        <tr><td class="rot">Banho</td><td><select name="b_banho"><option value="">—</option><option value="5">5 · Independente</option><option value="0">0 · Dependente</option></select></td></tr>
-        <tr><td class="rot">Higiene pessoal</td><td><select name="b_hig"><option value="">—</option><option value="5">5 · Independente (face, cabelo, dentes, barba)</option><option value="0">0 · Precisa de ajuda</option></select></td></tr>
-        <tr><td class="rot">Vestir</td><td><select name="b_vestir"><option value="">—</option><option value="10">10 · Independente</option><option value="5">5 · Precisa de ajuda</option><option value="0">0 · Dependente</option></select></td></tr>
-        <tr><td class="rot">Intestino</td><td><select name="b_int"><option value="">—</option><option value="10">10 · Continente</option><option value="5">5 · Acidente ocasional</option><option value="0">0 · Incontinente</option></select></td></tr>
-        <tr><td class="rot">Bexiga</td><td><select name="b_bex"><option value="">—</option><option value="10">10 · Continente</option><option value="5">5 · Acidente ocasional</option><option value="0">0 · Incontinente / algaliado sem autonomia</option></select></td></tr>
-        <tr><td class="rot">Uso da sanita</td><td><select name="b_sanita"><option value="">—</option><option value="10">10 · Independente</option><option value="5">5 · Precisa de alguma ajuda</option><option value="0">0 · Dependente</option></select></td></tr>
-        <tr><td class="rot">Transferências</td><td><select name="b_transf"><option value="">—</option><option value="15">15 · Independente</option><option value="10">10 · Pequena ajuda</option><option value="5">5 · Grande ajuda, consegue sentar-se</option><option value="0">0 · Dependente</option></select></td></tr>
-        <tr><td class="rot">Deambulação</td><td><select name="b_deamb"><option value="">—</option><option value="15">15 · Independente (50 m)</option><option value="10">10 · Com ajuda de uma pessoa</option><option value="5">5 · Independente em cadeira de rodas</option><option value="0">0 · Imóvel</option></select></td></tr>
-        <tr><td class="rot">Escadas</td><td><select name="b_escadas"><option value="">—</option><option value="10">10 · Independente</option><option value="5">5 · Precisa de ajuda</option><option value="0">0 · Incapaz</option></select></td></tr>
-      </tbody>
+      <tbody id="barthel-corpo"></tbody>
     </table>
     </div>
     <div class="total">
@@ -764,6 +753,9 @@ input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
 <datalist id="dl-farmacos"></datalist>
 <datalist id="dl-cid"></datalist>
 
+<script>
+{{ESCALAS_JS}}
+</script>
 <script>
 {{DADOS_JS}}
 </script>

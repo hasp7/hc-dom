@@ -217,19 +217,7 @@ var MIF_COGNITIVOS = ["mif_compr", "mif_expr", "mif_social", "mif_problemas", "m
 var MIF_CLASSES = [[104, "Independência completa / modificada"], [61, "Dependência modificada (ajuda até 25%)"],
   [19, "Dependência modificada (ajuda até 50%)"], [18, "Dependência completa"]];
 
-/* Escala de Morse (versão portuguesa). */
-var MORSE_ITENS = [
-  ["mo_hist", "Historial de quedas (últimos 3 meses)", [["0", "0 · Não"], ["25", "25 · Sim"]]],
-  ["mo_diag", "Diagnóstico(s) secundário(s)", [["0", "0 · Não"], ["15", "15 · Sim"]]],
-  ["mo_apoio", "Ajuda para caminhar", [["0", "0 · Nenhuma / acamado / apoio de profissional"],
-    ["15", "15 · Canadianas / bengala / andarilho"], ["30", "30 · Apoia-se no mobiliário"]]],
-  ["mo_ev", "Terapia endovenosa / cateter EV", [["0", "0 · Não"], ["20", "20 · Sim"]]],
-  ["mo_marcha", "Postura no andar e na transferência", [["0", "0 · Normal / acamado / imóvel"],
-    ["10", "10 · Debilitada"], ["20", "20 · Dependente de ajuda"]]],
-  ["mo_mental", "Estado mental", [["0", "0 · Consciente das suas capacidades"],
-    ["15", "15 · Esquece-se das suas limitações"]]]
-];
-var MORSE_CLASSES = [[51, "Alto risco de queda"], [25, "Baixo risco de queda"], [0, "Sem risco de queda"]];
+/* Barthel e Morse vivem em src/shared/escalas.js (partilhadas com as ferramentas isoladas). */
 
 /* Sinais vitais: [chave, rótulo, referência (texto), mínimo, máximo]. null = sem limite desse lado. */
 var SINAIS = [

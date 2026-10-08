@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Constrói o site hc-dom: cada página sai como ficheiro HTML único e autossuficiente.
 
+Páginas: índice, eval-hc-patient/, barthel/, morse/. As escalas vêm de src/shared/escalas.js.
+
 Embebe scripts, logótipo e fontes (assets/) para que o site funcione igual no GitHub Pages,
 offline ou enviado por email — sem nenhum pedido de rede. Sem dependências: só biblioteca padrão.
 
@@ -22,16 +24,53 @@ EMBEBER = {
     "{{FONT_MONTSERRAT}}": (ASSETS / "fonts" / "montserrat-var.woff2", "font/woff2"),
 }
 
-# (template, scripts embebidos como texto, saída)
+ESCALAS_JS = SRC / "shared" / "escalas.js"
+
+FONTE_BARTHEL = ("Índice de Barthel: Mahoney FI, Barthel DW (1965). Faixas de interpretação: Shah S et al. (1989). "
+                 "Instrumento de apoio à avaliação; a interpretação é sempre do profissional.")
+FONTE_MORSE = ("Escala de Quedas de Morse: Morse JM (1989), versão portuguesa. "
+               "Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico.")
+
+
+def config_escala(chave, nome, itens, classes, faixas, fonte):
+    return (f'var ESCALA = {{ chave: "{chave}", nome: "{nome}", itens: {itens}, classes: {classes}, '
+            f'faixas: {faixas}, fonte: "{fonte}" }};')
+
+
+# Cada página: template, scripts embebidos (ficheiros), textos a substituir, saída
 PAGINAS = [
-    (SRC / "index.src.html", {}, RAIZ / "index.html"),
-    (
-        SRC / "eval-hc-patient" / "form.src.html",
-        {
+    dict(template=SRC / "index.src.html", scripts={}, textos={}, saida=RAIZ / "index.html"),
+    dict(
+        template=SRC / "eval-hc-patient" / "form.src.html",
+        scripts={
+            "{{ESCALAS_JS}}": ESCALAS_JS,
             "{{DADOS_JS}}": SRC / "eval-hc-patient" / "dados.js",
             "{{APP_JS}}": SRC / "eval-hc-patient" / "app.js",
         },
-        RAIZ / "eval-hc-patient" / "index.html",
+        textos={},
+        saida=RAIZ / "eval-hc-patient" / "index.html",
+    ),
+    dict(
+        template=SRC / "escala" / "escala.src.html",
+        scripts={"{{ESCALAS_JS}}": ESCALAS_JS, "{{ESCALA_JS}}": SRC / "escala" / "escala.js"},
+        textos={
+            "{{TITULO}}": "Índice de Barthel",
+            "{{SUBTITULO}}": "Avaliação da independência nas atividades de vida diária",
+            "{{CONFIG_JS}}": config_escala("barthel", "Barthel", "BARTHEL_ITENS", "BARTHEL_CLASSES",
+                                           "BARTHEL_FAIXAS", FONTE_BARTHEL),
+        },
+        saida=RAIZ / "barthel" / "index.html",
+    ),
+    dict(
+        template=SRC / "escala" / "escala.src.html",
+        scripts={"{{ESCALAS_JS}}": ESCALAS_JS, "{{ESCALA_JS}}": SRC / "escala" / "escala.js"},
+        textos={
+            "{{TITULO}}": "Escala de Morse",
+            "{{SUBTITULO}}": "Avaliação do risco de queda",
+            "{{CONFIG_JS}}": config_escala("morse", "Morse", "MORSE_ITENS", "MORSE_CLASSES",
+                                           "MORSE_FAIXAS", FONTE_MORSE),
+        },
+        saida=RAIZ / "morse" / "index.html",
     ),
 ]
 
@@ -40,8 +79,10 @@ def data_uri(caminho: pathlib.Path, mime: str) -> str:
     return f"data:{mime};base64," + base64.b64encode(caminho.read_bytes()).decode("ascii")
 
 
-def construir(template: pathlib.Path, scripts: dict, saida: pathlib.Path) -> bool:
+def construir(template: pathlib.Path, scripts: dict, textos: dict, saida: pathlib.Path) -> bool:
     html = template.read_text(encoding="utf-8")
+    for marcador, texto in textos.items():
+        html = html.replace(marcador, texto)
     for marcador, caminho in scripts.items():
         js = caminho.read_text(encoding="utf-8")
         if "</script" in js.lower():
@@ -52,7 +93,7 @@ def construir(template: pathlib.Path, scripts: dict, saida: pathlib.Path) -> boo
         if marcador in html:
             html = html.replace(marcador, data_uri(caminho, mime))
     if "{{" in html:
-        print(f"erro: ficaram marcadores por substituir em {template.name}", file=sys.stderr)
+        print(f"erro: ficaram marcadores por substituir em {saida.relative_to(RAIZ)}", file=sys.stderr)
         return False
     saida.parent.mkdir(parents=True, exist_ok=True)
     saida.write_text(html, encoding="utf-8")
@@ -61,7 +102,7 @@ def construir(template: pathlib.Path, scripts: dict, saida: pathlib.Path) -> boo
 
 
 def main() -> int:
-    ok = all([construir(*p) for p in PAGINAS])
+    ok = all([construir(**p) for p in PAGINAS])
     return 0 if ok else 1
 
 
