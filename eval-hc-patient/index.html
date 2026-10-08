@@ -44,7 +44,7 @@ body {
 
 .folha { max-width: 860px; margin: 0 auto; background: var(--hc-fundo); padding: 0 16px 32px; }
 @media (min-width: 900px) {
-  .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+  .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px var(--sombra); }
 }
 
 /* Faixa de marca: gradiente só como elemento decorativo, nunca atrás de texto. */
@@ -79,8 +79,8 @@ button {
   font: 600 14px/1 var(--font-corpo); cursor: pointer; border-radius: 6px;
   padding: 10px 14px; min-height: 40px; border: 1px solid var(--hc-petroleo);
 }
-button.prim { background: var(--hc-petroleo); color: #fff; }
-button.sec { background: #fff; color: var(--hc-petroleo); }
+button.prim { background: var(--hc-petroleo-fundo); color: #fff; }
+button.sec { background: var(--sup); color: var(--hc-petroleo); }
 button.peq { min-height: 32px; padding: 6px 10px; font-size: 13px; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 3px solid var(--hc-turquesa); outline-offset: 1px;
@@ -102,7 +102,7 @@ label.campo { display: flex; flex-direction: column; gap: 4px; font-size: 14px; 
 label.campo > span.opc { font-weight: 400; color: var(--hc-texto-sec); }
 input[type=text], input[type=tel], input[type=date], input[type=time], input[type=number], select, textarea {
   font: 16px/1.4 var(--font-corpo); color: var(--hc-texto);
-  border: 1px solid #c9d4d6; border-radius: 6px; padding: 8px 10px; background: #fff; width: 100%;
+  border: 1px solid var(--campo-borda); border-radius: 6px; padding: 8px 10px; background: var(--sup); width: 100%;
 }
 textarea { min-height: 72px; resize: vertical; overflow: hidden; }
 
@@ -113,21 +113,21 @@ fieldset > legend { font-size: 14px; font-weight: 500; padding: 0; margin-bottom
 .ops input { width: 18px; height: 18px; margin: 0; }
 
 /* Linhas repetíveis (medicação, diagnósticos) */
-.rep { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 12px 12px 8px; margin-bottom: 10px; background: #fff; }
+.rep { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 12px 12px 8px; margin-bottom: 10px; background: var(--sup); }
 .rep .acoes { display: flex; justify-content: flex-end; }
 .chips { gap: 6px; }
-.chips label { border: 1px solid #c9d4d6; border-radius: 999px; padding: 2px 10px 2px 6px; font-size: 14px; }
-.chips label:has(input:checked) { background: #e3f7f5; border-color: var(--hc-turquesa); }
+.chips label { border: 1px solid var(--campo-borda); border-radius: 999px; padding: 2px 10px 2px 6px; font-size: 14px; }
+.chips label:has(input:checked) { background: var(--turq-suave); border-color: var(--hc-turquesa); }
 .vazio { font-size: 14px; color: var(--hc-texto-sec); font-style: italic; margin: 4px 0 10px; }
 
 /* Tabelas */
 .tab { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 12px; }
-.tab th { background: var(--hc-petroleo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 7px 8px; }
+.tab th { background: var(--hc-petroleo-fundo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 7px 8px; }
 .tab td { padding: 6px 8px; border-bottom: 1px solid var(--hc-linha); vertical-align: top; }
 .tab tbody tr:nth-child(even) { background: var(--hc-fundo-alt); }
 .tab td.rot { font-weight: 700; color: var(--hc-petroleo); }
 .tab td.ref { font-size: 13px; color: var(--hc-texto-sec); }
-.tab td.grupo { background: #e3f7f5; color: var(--hc-petroleo); font-family: var(--font-titulo); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; }
+.tab td.grupo { background: var(--turq-suave); color: var(--hc-petroleo); font-family: var(--font-titulo); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; }
 .tab select, .tab textarea, .tab input { font-size: 14px; }
 .tab textarea { min-height: 44px; }
 .tab .centro { text-align: center; }
@@ -137,7 +137,7 @@ fieldset > legend { font-size: 14px; font-weight: 500; padding: 0; margin-bottom
 /* Sinais vitais fora do intervalo */
 .sinal { display: flex; align-items: center; gap: 6px; }
 .sinal .ind { font-weight: 700; color: var(--hc-laranja-forte); min-width: 1.2em; font-size: 14px; }
-input.fora { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
+input.fora { border-color: var(--hc-laranja-forte); background: var(--lar-suave); }
 
 .total {
   display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline;
@@ -161,7 +161,7 @@ input.fora { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
 
 footer.legal { margin-top: 32px; padding-top: 8px; border-top: 1px solid var(--hc-linha); font-size: 12px; color: var(--hc-texto-sec); text-align: center; }
 /* Cabeçalho de identificação do utente */
-.id-utente { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 4px 14px 6px; margin: 16px 0 8px; background: #fff; }
+.id-utente { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 4px 14px 6px; margin: 16px 0 8px; background: var(--sup); }
 .id-utente h2 { margin: 8px 0 10px; border-bottom: 0; font-size: 17px; }
 @media (min-width: 640px) {
   .g.c4u { grid-template-columns: 1.2fr 1fr .6fr 1fr; }
@@ -171,7 +171,7 @@ input.calc { background: var(--hc-fundo-alt); color: var(--hc-petroleo); font-we
 .valid { font-size: 12px; font-weight: 400; min-height: 1em; }
 .valid.ok { color: var(--hc-petroleo); }
 .valid.erro { color: var(--hc-laranja-forte); font-weight: 700; }
-input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
+input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-suave); }
 
 .so-print, .espelho { display: none; }
 
@@ -189,7 +189,7 @@ input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
   }
 }
 @media print {
-  body { background: #fff; font-size: 10pt; }
+  body { background: var(--sup); font-size: 10pt; }
   .folha { max-width: none; margin: 0; padding: 0; box-shadow: none; }
   .faixa { margin: 0; height: 4px; }
   .nao-imprimir, .so-ecra { display: none !important; }
@@ -242,7 +242,87 @@ input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
   .valid { display: none; }
   input.calc { background: transparent; }
 }
+/* Tema claro/escuro partilhado por todas as páginas do hc-dom.
+   Embebido no fim do <style> de cada página (depois dos tokens da marca).
+   A impressão é sempre clara. */
+:root {
+  --sup: #ffffff;              /* superfícies: folha, campos, botões secundários */
+  --campo-borda: #c9d4d6;
+  --turq-suave: #e3f7f5;
+  --lar-suave: #fdf4ec;
+  --hc-petroleo-fundo: #0e5b6b; /* fundos petróleo com texto branco (cabeçalhos de tabela, botões) */
+  --sombra: rgba(0, 0, 0, .08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hc-texto: #e4f1f1; --hc-texto-sec: #a2bec2; --hc-linha: #24474f; --hc-fundo-alt: #0b2228;
+    --sup: #103039; --campo-borda: #3a5f66; --turq-suave: #123e45; --lar-suave: #3a2a22;
+    --hc-petroleo: #7fd6cf; --hc-laranja-forte: #f08a5d; --sombra: rgba(0, 0, 0, .4);
+    --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --hc-texto: #e4f1f1; --hc-texto-sec: #a2bec2; --hc-linha: #24474f; --hc-fundo-alt: #0b2228;
+  --sup: #103039; --campo-borda: #3a5f66; --turq-suave: #123e45; --lar-suave: #3a2a22;
+  --hc-petroleo: #7fd6cf; --hc-laranja-forte: #f08a5d; --sombra: rgba(0, 0, 0, .4);
+  --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620;
+  color-scheme: dark;
+}
+/* O logótipo tem letras escuras: em modo escuro vai sobre uma placa clara */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) header img { background: #fff; border-radius: 6px; padding: 4px 8px; } }
+:root[data-theme="dark"] header img { background: #fff; border-radius: 6px; padding: 4px 8px; }
+
+.tema-btn {
+  font: 600 12px/1 var(--font-corpo, system-ui); cursor: pointer; border-radius: 6px; padding: 6px 10px; min-height: 32px;
+  border: 1px solid var(--hc-linha); background: var(--sup); color: var(--hc-petroleo); margin-top: 6px;
+}
+.tema-btn:hover { border-color: var(--hc-petroleo); }
+header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
+
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
+    --sup: #ffffff; --campo-borda: #c9d4d6; --turq-suave: #e3f7f5; --lar-suave: #fdf4ec;
+    --hc-petroleo: #0e5b6b; --hc-laranja-forte: #E86031; --sombra: none;
+    --c1: #0E7A6F; --c1-bg: #DDF4F1; --c2: #9A5A12; --c2-bg: #FCEBD6; --c3: #B8441A; --c3-bg: #FADFD3;
+    color-scheme: light;
+  }
+  header img { background: none !important; padding: 0 !important; }
+  .tema-btn { display: none !important; }
+}
+
 </style>
+<script>
+/* Alternância claro/escuro. Corre no <head> para aplicar a preferência antes de pintar.
+   A escolha fica em localStorage (só neste browser); sem escolha, segue o sistema. */
+(function () {
+  "use strict";
+  var K = "hc-tema", r = document.documentElement;
+  try { var t = localStorage.getItem(K); if (t === "dark" || t === "light") r.setAttribute("data-theme", t); } catch (e) {}
+  function escuro() {
+    var t = r.getAttribute("data-theme");
+    return t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    var alvo = document.querySelector("header.cab .doc-id") || document.querySelector("header");
+    if (!alvo) return;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "tema-btn nao-imprimir";
+    function rotulo() { b.textContent = escuro() ? "Modo claro" : "Modo escuro"; b.setAttribute("aria-pressed", String(escuro())); }
+    b.addEventListener("click", function () {
+      var novo = escuro() ? "light" : "dark";
+      r.setAttribute("data-theme", novo);
+      try { localStorage.setItem(K, novo); } catch (e) {}
+      rotulo();
+    });
+    rotulo();
+    alvo.appendChild(b);
+  });
+})();
+
+</script>
 </head>
 <body>
 <main class="folha">
@@ -808,31 +888,54 @@ var BARTHEL_CLASSES = [[100, "Independente"], [91, "Dependência ligeira"], [61,
 var BARTHEL_FAIXAS = [["100", "Independente"], ["91–99", "Dependência ligeira"], ["61–90", "Dependência moderada"],
   ["21–60", "Dependência grave"], ["0–20", "Dependência total"]];
 
-/* Escala de Quedas de Morse (Morse, 1989), versão portuguesa. */
+/* Escala de Quedas de Morse (Morse, Morse & Tylko, 1989). Redação da versão portuguesa validada:
+   Costa-Dias, Ferreira & Oliveira (2014), Tabela 1. */
 var MORSE_ITENS = [
-  ["mo_hist", "Historial de quedas", [
+  ["mo_hist", "Historial de quedas (neste internamento/urgência ou nos últimos três meses)", [
     ["0", "Não", ""],
-    ["25", "Sim", "Queda nos últimos 3 meses"]]],
+    ["25", "Sim", ""]]],
   ["mo_diag", "Diagnóstico(s) secundário(s)", [
     ["0", "Não", ""],
     ["15", "Sim", "Mais do que um diagnóstico médico"]]],
   ["mo_apoio", "Ajuda para caminhar", [
-    ["0", "Nenhuma / acamado / apoio de profissional", ""],
-    ["15", "Canadianas / bengala / andarilho", ""],
+    ["0", "Nenhuma / ajuda de enfermeiro / acamado / cadeira de rodas", ""],
+    ["15", "Muletas / canadianas / bengala / andarilho", ""],
     ["30", "Apoia-se no mobiliário para andar", ""]]],
-  ["mo_ev", "Terapia endovenosa / cateter EV", [
+  ["mo_ev", "Terapia intravenosa", [
     ["0", "Não", ""],
     ["20", "Sim", ""]]],
   ["mo_marcha", "Postura no andar e na transferência", [
     ["0", "Normal / acamado / imóvel", ""],
-    ["10", "Debilitada", "Passos curtos, pode arrastar os pés; mantém a cabeça erguida"],
+    ["10", "Debilitado", "Passos curtos, pode arrastar os pés; mantém a cabeça erguida"],
     ["20", "Dependente de ajuda", "Dificuldade em levantar-se; cabeça baixa; apoia-se no mobiliário ou em pessoas"]]],
   ["mo_mental", "Estado mental", [
     ["0", "Consciente das suas capacidades", ""],
-    ["15", "Esquece-se das suas limitações", "Sobrestima as próprias capacidades"]]]
+    ["15", "Esquece-se das suas limitações", ""]]]
 ];
 var MORSE_CLASSES = [[51, "Alto risco de queda"], [25, "Baixo risco de queda"], [0, "Sem risco de queda"]];
 var MORSE_FAIXAS = [["0–24", "Sem risco de queda"], ["25–50", "Baixo risco de queda"], ["≥ 51", "Alto risco de queda"]];
+
+/* Descrição / Uso — texto de apoio por escala, a partir das fontes indicadas (verificadas em 2026-10-08). */
+var BARTHEL_INFO = {
+  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Nesta versão (a original) a pontuação vai de 0 a 100, em intervalos de 5: 0 corresponde à dependência máxima e 100 à independência nas atividades avaliadas.",
+  leitura: "O total distribui-se habitualmente em cinco faixas (Shah, Vanclay & Cooper, 1989, propostas para o índice modificado e usadas com frequência na versão original): 100 independente, 91–99 dependência ligeira, 61–90 moderada, 21–60 grave e 0–20 total. O valor 60 é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes, consoante as atividades em que estão dependentes.",
+  uso: "Avaliação inicial e reavaliação periódica da dependência funcional, planeamento de cuidados e monitorização da evolução (a diferença entre duas avaliações indica melhoria ou agravamento). Regista o que a pessoa faz, não o que poderia fazer. É rápido de aplicar e pode ser respondido pela própria pessoa ou pelo cuidador principal; em Portugal foi validado em idosos a viver no domicílio, na versão de 0 a 20 (Araújo et al., 2007).",
+  fontes: [
+    "Mahoney FI, Barthel DW. Functional evaluation: the Barthel Index. Maryland State Medical Journal. 1965;14:61–65.",
+    "Shah S, Vanclay F, Cooper B. Improving the sensitivity of the Barthel Index for stroke rehabilitation. J Clin Epidemiol. 1989;42(8):703–709. doi:10.1016/0895-4356(89)90065-6",
+    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740"
+  ]
+};
+
+var MORSE_INFO = {
+  descricao: "A Escala de Quedas de Morse (Morse, Morse & Tylko, 1989) avalia o risco de queda a partir de seis itens: historial de quedas, diagnóstico secundário, ajuda para caminhar, terapia intravenosa, postura no andar e na transferência e estado mental. A pontuação vai de 0 a 125. Foi desenhada para ser aplicada por enfermeiros e tem versão portuguesa validada (Costa-Dias, Ferreira & Oliveira, 2014).",
+  leitura: "Na versão portuguesa: sem risco 0–24, baixo risco 25–50, alto risco a partir de 51. No estudo original, a escala classificou corretamente 80,5% dos doentes (sensibilidade 78%, especificidade 83%). Os pontos de corte podem precisar de ajuste ao contexto em que a escala é usada.",
+  uso: "Triagem rápida do risco de queda, para orientar medidas de prevenção. Aplica-se na avaliação inicial e repete-se quando o estado clínico muda, depois de uma queda e periodicamente. Foi desenvolvida e validada em internamento hospitalar: no domicílio, o item da terapia intravenosa raramente se aplica e os cortes não foram validados para este contexto, pelo que o resultado apoia, mas não substitui, o juízo clínico.",
+  fontes: [
+    "Morse JM, Morse RM, Tylko SJ. Development of a scale to identify the fall-prone patient. Canadian Journal on Aging. 1989;8(4):366–377. doi:10.1017/S0714980800008576",
+    "Costa-Dias MJM, Ferreira PL, Oliveira AS. Adaptação cultural e linguística e validação da Escala de Quedas de Morse. Revista de Enfermagem Referência. 2014;IV(2):7–17. doi:10.12707/RIII1382"
+  ]
+};
 
 </script>
 <script>

@@ -26,15 +26,21 @@ EMBEBER = {
 
 ESCALAS_JS = SRC / "shared" / "escalas.js"
 
-FONTE_BARTHEL = ("Índice de Barthel: Mahoney FI, Barthel DW (1965). Faixas de interpretação: Shah S et al. (1989). "
+# Embebidos em todas as páginas que tenham o marcador (tema claro/escuro)
+GLOBAIS = {
+    "{{TEMA_CSS}}": SRC / "shared" / "tema.css",
+    "{{TEMA_JS}}": SRC / "shared" / "tema.js",
+}
+
+FONTE_BARTHEL = ("Índice de Barthel: Mahoney FI, Barthel DW (1965). Faixas de interpretação: Shah S, Vanclay F, Cooper B (1989). "
                  "Instrumento de apoio à avaliação; a interpretação é sempre do profissional.")
-FONTE_MORSE = ("Escala de Quedas de Morse: Morse JM (1989), versão portuguesa. "
+FONTE_MORSE = ("Escala de Quedas de Morse: Morse JM, Morse RM, Tylko SJ (1989); versão portuguesa: Costa-Dias, Ferreira, Oliveira (2014). "
                "Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico.")
 
 
-def config_escala(chave, nome, itens, classes, faixas, fonte):
+def config_escala(chave, nome, itens, classes, faixas, fonte, info):
     return (f'var ESCALA = {{ chave: "{chave}", nome: "{nome}", itens: {itens}, classes: {classes}, '
-            f'faixas: {faixas}, fonte: "{fonte}" }};')
+            f'faixas: {faixas}, fonte: "{fonte}", info: {info} }};')
 
 
 # Cada página: template, scripts embebidos (ficheiros), textos a substituir, saída
@@ -57,7 +63,7 @@ PAGINAS = [
             "{{TITULO}}": "Índice de Barthel",
             "{{SUBTITULO}}": "Avaliação da independência nas atividades de vida diária",
             "{{CONFIG_JS}}": config_escala("barthel", "Barthel", "BARTHEL_ITENS", "BARTHEL_CLASSES",
-                                           "BARTHEL_FAIXAS", FONTE_BARTHEL),
+                                           "BARTHEL_FAIXAS", FONTE_BARTHEL, "BARTHEL_INFO"),
         },
         saida=RAIZ / "barthel" / "index.html",
     ),
@@ -68,7 +74,7 @@ PAGINAS = [
             "{{TITULO}}": "Escala de Morse",
             "{{SUBTITULO}}": "Avaliação do risco de queda",
             "{{CONFIG_JS}}": config_escala("morse", "Morse", "MORSE_ITENS", "MORSE_CLASSES",
-                                           "MORSE_FAIXAS", FONTE_MORSE),
+                                           "MORSE_FAIXAS", FONTE_MORSE, "MORSE_INFO"),
         },
         saida=RAIZ / "morse" / "index.html",
     ),
@@ -83,7 +89,7 @@ def construir(template: pathlib.Path, scripts: dict, textos: dict, saida: pathli
     html = template.read_text(encoding="utf-8")
     for marcador, texto in textos.items():
         html = html.replace(marcador, texto)
-    for marcador, caminho in scripts.items():
+    for marcador, caminho in {**GLOBAIS, **scripts}.items():
         js = caminho.read_text(encoding="utf-8")
         if "</script" in js.lower():
             print(f"erro: {caminho.name} contém '</script' e partiria o HTML", file=sys.stderr)

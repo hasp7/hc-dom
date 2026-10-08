@@ -44,7 +44,7 @@ body {
 
 .folha { max-width: 860px; margin: 0 auto; background: var(--hc-fundo); padding: 0 16px 32px; }
 @media (min-width: 900px) {
-  .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+  .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px var(--sombra); }
 }
 
 /* Faixa de marca: gradiente só como elemento decorativo, nunca atrás de texto. */
@@ -79,8 +79,8 @@ button {
   font: 600 14px/1 var(--font-corpo); cursor: pointer; border-radius: 6px;
   padding: 10px 14px; min-height: 40px; border: 1px solid var(--hc-petroleo);
 }
-button.prim { background: var(--hc-petroleo); color: #fff; }
-button.sec { background: #fff; color: var(--hc-petroleo); }
+button.prim { background: var(--hc-petroleo-fundo); color: #fff; }
+button.sec { background: var(--sup); color: var(--hc-petroleo); }
 button.peq { min-height: 32px; padding: 6px 10px; font-size: 13px; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 3px solid var(--hc-turquesa); outline-offset: 1px;
@@ -102,7 +102,7 @@ label.campo { display: flex; flex-direction: column; gap: 4px; font-size: 14px; 
 label.campo > span.opc { font-weight: 400; color: var(--hc-texto-sec); }
 input[type=text], input[type=tel], input[type=date], input[type=time], input[type=number], select, textarea {
   font: 16px/1.4 var(--font-corpo); color: var(--hc-texto);
-  border: 1px solid #c9d4d6; border-radius: 6px; padding: 8px 10px; background: #fff; width: 100%;
+  border: 1px solid var(--campo-borda); border-radius: 6px; padding: 8px 10px; background: var(--sup); width: 100%;
 }
 textarea { min-height: 72px; resize: vertical; overflow: hidden; }
 
@@ -113,21 +113,21 @@ fieldset > legend { font-size: 14px; font-weight: 500; padding: 0; margin-bottom
 .ops input { width: 18px; height: 18px; margin: 0; }
 
 /* Linhas repetíveis (medicação, diagnósticos) */
-.rep { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 12px 12px 8px; margin-bottom: 10px; background: #fff; }
+.rep { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 12px 12px 8px; margin-bottom: 10px; background: var(--sup); }
 .rep .acoes { display: flex; justify-content: flex-end; }
 .chips { gap: 6px; }
-.chips label { border: 1px solid #c9d4d6; border-radius: 999px; padding: 2px 10px 2px 6px; font-size: 14px; }
-.chips label:has(input:checked) { background: #e3f7f5; border-color: var(--hc-turquesa); }
+.chips label { border: 1px solid var(--campo-borda); border-radius: 999px; padding: 2px 10px 2px 6px; font-size: 14px; }
+.chips label:has(input:checked) { background: var(--turq-suave); border-color: var(--hc-turquesa); }
 .vazio { font-size: 14px; color: var(--hc-texto-sec); font-style: italic; margin: 4px 0 10px; }
 
 /* Tabelas */
 .tab { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 12px; }
-.tab th { background: var(--hc-petroleo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 7px 8px; }
+.tab th { background: var(--hc-petroleo-fundo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 7px 8px; }
 .tab td { padding: 6px 8px; border-bottom: 1px solid var(--hc-linha); vertical-align: top; }
 .tab tbody tr:nth-child(even) { background: var(--hc-fundo-alt); }
 .tab td.rot { font-weight: 700; color: var(--hc-petroleo); }
 .tab td.ref { font-size: 13px; color: var(--hc-texto-sec); }
-.tab td.grupo { background: #e3f7f5; color: var(--hc-petroleo); font-family: var(--font-titulo); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; }
+.tab td.grupo { background: var(--turq-suave); color: var(--hc-petroleo); font-family: var(--font-titulo); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; }
 .tab select, .tab textarea, .tab input { font-size: 14px; }
 .tab textarea { min-height: 44px; }
 .tab .centro { text-align: center; }
@@ -137,7 +137,7 @@ fieldset > legend { font-size: 14px; font-weight: 500; padding: 0; margin-bottom
 /* Sinais vitais fora do intervalo */
 .sinal { display: flex; align-items: center; gap: 6px; }
 .sinal .ind { font-weight: 700; color: var(--hc-laranja-forte); min-width: 1.2em; font-size: 14px; }
-input.fora { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
+input.fora { border-color: var(--hc-laranja-forte); background: var(--lar-suave); }
 
 .total {
   display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline;
@@ -161,7 +161,7 @@ input.fora { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
 
 footer.legal { margin-top: 32px; padding-top: 8px; border-top: 1px solid var(--hc-linha); font-size: 12px; color: var(--hc-texto-sec); text-align: center; }
 /* Cabeçalho de identificação do utente */
-.id-utente { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 4px 14px 6px; margin: 16px 0 8px; background: #fff; }
+.id-utente { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 4px 14px 6px; margin: 16px 0 8px; background: var(--sup); }
 .id-utente h2 { margin: 8px 0 10px; border-bottom: 0; font-size: 17px; }
 @media (min-width: 640px) {
   .g.c4u { grid-template-columns: 1.2fr 1fr .6fr 1fr; }
@@ -171,7 +171,7 @@ input.calc { background: var(--hc-fundo-alt); color: var(--hc-petroleo); font-we
 .valid { font-size: 12px; font-weight: 400; min-height: 1em; }
 .valid.ok { color: var(--hc-petroleo); }
 .valid.erro { color: var(--hc-laranja-forte); font-weight: 700; }
-input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
+input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-suave); }
 
 .so-print, .espelho { display: none; }
 
@@ -189,7 +189,7 @@ input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
   }
 }
 @media print {
-  body { background: #fff; font-size: 10pt; }
+  body { background: var(--sup); font-size: 10pt; }
   .folha { max-width: none; margin: 0; padding: 0; box-shadow: none; }
   .faixa { margin: 0; height: 4px; }
   .nao-imprimir, .so-ecra { display: none !important; }
@@ -242,7 +242,11 @@ input.invalido { border-color: var(--hc-laranja-forte); background: #fdf4ec; }
   .valid { display: none; }
   input.calc { background: transparent; }
 }
+{{TEMA_CSS}}
 </style>
+<script>
+{{TEMA_JS}}
+</script>
 </head>
 <body>
 <main class="folha">
