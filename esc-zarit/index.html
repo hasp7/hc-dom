@@ -27,10 +27,10 @@ html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 html { scroll-padding-top: 120px; }
 body { margin: 0; background: var(--hc-fundo-alt); color: var(--hc-texto); font: 16px/1.5 var(--font-corpo); accent-color: var(--hc-petroleo); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.saltar { position: absolute; left: 12px; top: -60px; background: var(--hc-petroleo); color: #fff; padding: 10px 14px; border-radius: 6px; z-index: 20; }
+.saltar { position: absolute; left: 12px; top: -60px; background: var(--hc-petroleo-fundo); color: #fff; padding: 10px 14px; border-radius: 6px; z-index: 20; }
 .saltar:focus { top: 12px; }
-.folha { max-width: 860px; margin: 0 auto; background: #fff; padding: 0 16px 32px; }
-@media (min-width: 900px) { .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px rgba(0,0,0,.08); } }
+.folha { max-width: 860px; margin: 0 auto; background: var(--sup); padding: 0 16px 32px; }
+@media (min-width: 900px) { .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px var(--sombra); } }
 .faixa { height: 6px; margin: 0 -16px; background: linear-gradient(90deg, var(--hc-turquesa), var(--hc-laranja)); }
 @media (min-width: 900px) { .faixa { margin: 0 -40px; } }
 header.cab { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0 12px; border-bottom: 1px solid var(--hc-linha); }
@@ -44,7 +44,7 @@ h2 { font-size: 18px; margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 2
 :focus-visible { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
 
 /* Barra fixa: progresso e resultado */
-.barra { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 0; background: #fff; border-bottom: 1px solid var(--hc-linha); }
+.barra { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 0; background: var(--sup); border-bottom: 1px solid var(--hc-linha); }
 .prog { flex: 1 1 160px; display: flex; align-items: center; gap: 10px; }
 .prog .trilho { flex: 1; height: 8px; background: var(--hc-linha); border-radius: 4px; overflow: hidden; }
 .prog .enchimento { height: 100%; width: 0; background: var(--hc-turquesa); transition: width .25s; }
@@ -52,9 +52,9 @@ h2 { font-size: 18px; margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 2
 .barra .res { font-size: 14px; color: var(--hc-texto-sec); }
 .barra .res strong { font: 600 18px var(--font-titulo); color: var(--hc-petroleo); }
 button { font: 600 14px/1 var(--font-corpo); cursor: pointer; border-radius: 6px; padding: 10px 14px; min-height: 44px; border: 1px solid var(--hc-petroleo); }
-button.prim { background: var(--hc-petroleo); color: #fff; }
-button.sec { background: #fff; color: var(--hc-petroleo); }
-button.aviso-btn { background: #fff; color: var(--c3); border-color: var(--c3); }
+button.prim { background: var(--hc-petroleo-fundo); color: #fff; }
+button.sec { background: var(--sup); color: var(--hc-petroleo); }
+button.aviso-btn { background: var(--sup); color: var(--c3); border-color: var(--c3); }
 @media (prefers-reduced-motion: reduce) { .prog .enchimento, .banda { transition: none; } }
 
 .aviso { background: var(--hc-fundo-alt); border-left: 4px solid var(--hc-turquesa); padding: 10px 14px; margin: 14px 0; font-size: 14px; }
@@ -71,29 +71,29 @@ kbd { font-family: var(--font-corpo); font-size: .85em; border: 1px solid var(--
 .g { display: grid; gap: 10px 16px; grid-template-columns: 1fr; align-items: end; }
 @media (min-width: 640px) { .g { grid-template-columns: 1.4fr 1fr 1fr; } .g .dois { grid-column: span 2; } }
 label.campo { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 700; color: var(--hc-petroleo); }
-input[type=text], input[type=date], textarea { font: 16px/1.4 var(--font-corpo); color: var(--hc-texto); border: 1px solid #c9d4d6; border-radius: 6px; padding: 8px 10px; background: #fff; width: 100%; min-height: 44px; }
+input[type=text], input[type=date], textarea { font: 16px/1.4 var(--font-corpo); color: var(--hc-texto); border: 1px solid var(--campo-borda); border-radius: 6px; padding: 8px 10px; background: var(--sup); width: 100%; min-height: 44px; }
 textarea { min-height: 90px; resize: vertical; overflow: hidden; }
 
 /* Itens */
 fieldset.item { border: 0; border-top: 1px solid var(--hc-linha); margin: 0; padding: 16px 0 18px; min-width: 0; }
 fieldset.item legend { display: flex; gap: 12px; padding: 0; margin-bottom: 10px; width: 100%; font-family: var(--font-corpo); font-weight: 400; color: var(--hc-texto); font-size: 16px; }
 .num { flex: 0 0 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--hc-linha); font-weight: 700; color: var(--hc-texto-sec); }
-.item.resp .num { border-color: var(--hc-petroleo); background: var(--hc-petroleo); color: #fff; }
-.item.marcado .num { border-color: var(--c3); background: var(--c3); color: #fff; }
-.item.global { background: #e3f7f5; border: 0; border-radius: 6px; padding: 16px 10px 18px; margin: 8px -10px 0; }
+.item.resp .num { border-color: var(--hc-petroleo); background: var(--hc-petroleo-fundo); color: #fff; }
+.item.marcado .num { border-color: var(--c3); background: var(--c3); color: var(--sobre-c3); }
+.item.global { background: var(--turq-suave); border: 0; border-radius: 6px; padding: 16px 10px 18px; margin: 8px -10px 0; }
 .etiqueta { display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 700; color: var(--hc-petroleo); border: 1px solid currentColor; border-radius: 4px; padding: 0 6px; }
 .item.falta { box-shadow: inset 4px 0 0 var(--c3); }
 .ops { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-left: calc(2.2rem + 12px); }
 .op { position: relative; }
 .op input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-.op span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 58px; padding: 6px 4px; border: 1px solid var(--hc-linha); border-radius: 6px; background: #fff; text-align: center; cursor: pointer; }
+.op span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 58px; padding: 6px 4px; border: 1px solid var(--hc-linha); border-radius: 6px; background: var(--sup); text-align: center; cursor: pointer; }
 .op:hover span { border-color: var(--hc-petroleo); }
 .op b { font-size: 17px; }
 .op small { font-size: 12px; color: var(--hc-texto-sec); line-height: 1.2; }
 .op input:focus-visible + span { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
-.op input:checked + span { border-color: var(--hc-petroleo); background: var(--hc-petroleo); color: #fff; }
+.op input:checked + span { border-color: var(--hc-petroleo); background: var(--hc-petroleo-fundo); color: #fff; }
 .op input:checked + span small { color: inherit; }
-.item.marcado .op input:checked + span { background: var(--c3); border-color: var(--c3); }
+.item.marcado .op input:checked + span { background: var(--c3); border-color: var(--c3); color: var(--sobre-c3); }
 @media (max-width: 520px) {
   .ops { margin-left: 0; grid-template-columns: 1fr; gap: 6px; }
   .op span { flex-direction: row; justify-content: flex-start; gap: 12px; min-height: 46px; padding: 6px 14px; text-align: left; }
@@ -105,7 +105,7 @@ fieldset.item legend { display: flex; gap: 12px; padding: 0; margin-bottom: 10px
 .medidor { position: relative; height: 44px; margin-top: 4px; }
 .medidor .trilho { position: absolute; left: 0; right: 0; top: 14px; height: 14px; border-radius: 7px; overflow: hidden; display: flex; }
 .medidor .trilho i { display: block; height: 100%; }
-.z1 { background: var(--c1-bg); border-right: 2px solid #fff; } .z2 { background: var(--c2-bg); border-right: 2px solid #fff; } .z3 { background: var(--c3-bg); }
+.z1 { background: var(--c1-bg); border-right: 2px solid var(--sup); } .z2 { background: var(--c2-bg); border-right: 2px solid var(--sup); } .z3 { background: var(--c3-bg); }
 .banda { position: absolute; top: 8px; height: 26px; border: 2px solid var(--hc-texto); border-radius: 6px; transition: left .25s, width .25s; }
 .ponteiro { position: absolute; top: 2px; width: 4px; height: 38px; margin-left: -2px; background: var(--hc-texto); border-radius: 2px; display: none; }
 .marcas { position: relative; height: 18px; font-size: 12px; color: var(--hc-texto-sec); }
@@ -126,9 +126,9 @@ fieldset.item legend { display: flex; gap: 12px; padding: 0; margin-bottom: 10px
 .chips.marcados a { background: var(--c3-bg); border-color: var(--c3); }
 .vazio { color: var(--hc-texto-sec); font-style: italic; }
 table.faixas { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 4px; }
-table.faixas th { background: var(--hc-petroleo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 6px 8px; }
+table.faixas th { background: var(--hc-petroleo-fundo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 6px 8px; }
 table.faixas td { padding: 5px 8px; border-bottom: 1px solid var(--hc-linha); }
-table.faixas tr.atual td { background: #fdf4ec; font-weight: 700; color: var(--c3); }
+table.faixas tr.atual td { background: var(--lar-suave); font-weight: 700; color: var(--c3); }
 .acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 
 .assin { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
@@ -136,6 +136,18 @@ table.faixas tr.atual td { background: #fdf4ec; font-weight: 700; color: var(--c
 .fonte { font-size: 12px; color: var(--hc-texto-sec); margin-top: 18px; }
 footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--hc-linha); font-size: 12px; color: var(--hc-texto-sec); text-align: center; }
 .so-print, .espelho { display: none; }
+details.intro { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 8px 14px; margin: 10px 0 6px; background: var(--sup); }
+details.intro summary { cursor: pointer; font-family: var(--font-titulo); color: var(--hc-petroleo); font-size: 15px; min-height: 28px; }
+details.intro h3 { font: 600 13px var(--font-titulo); color: var(--hc-petroleo); text-transform: uppercase; letter-spacing: .04em; margin: 12px 0 4px; }
+details.intro p { margin: 0 0 6px; font-size: 15px; }
+details.intro ol { margin: 4px 0 4px; padding-left: 1.3em; font-size: 12px; color: var(--hc-texto-sec); }
+/* Resultado escondido (ex.: autopreenchimento pelo cuidador) — o PDF mostra sempre */
+.res-escondido-msg { display: none; }
+body.res-oculto #resultado .conteudo-res, body.res-oculto #res-barra { display: none; }
+body.res-oculto .res-escondido-msg { display: block; }
+body.res-oculto .item.marcado .num { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
+body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
+.evol-sobe { color: var(--c3); font-weight: 700; } .evol-desce { color: var(--c1); font-weight: 700; }
 
 @page {
   size: A4; margin: 1.3cm 1.5cm 1.6cm;
@@ -143,7 +155,7 @@ footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--h
   @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Lato", sans-serif; color: #5a6a6e; }
 }
 @media print {
-  body { background: #fff; font-size: 9.5pt; }
+  body { background: var(--sup); font-size: 9.5pt; }
   .folha { max-width: none; margin: 0; padding: 0; box-shadow: none; }
   .faixa { margin: 0; height: 4px; }
   .nao-imprimir, .so-ecra { display: none !important; }
@@ -159,7 +171,7 @@ footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--h
   input.espelhado, textarea.espelhado { display: none; }
   .espelho { display: block; white-space: pre-wrap; font: 400 9.5pt/1.4 var(--font-corpo); border-bottom: 1px solid #b8c4c6; min-height: 1.3em; padding: 1px 0; }
   table.respostas { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
-  table.respostas th { background: var(--hc-petroleo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 3px 6px; }
+  table.respostas th { background: var(--hc-petroleo-fundo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 3px 6px; }
   table.respostas td { padding: 2px 6px; border-bottom: 1px solid var(--hc-linha); vertical-align: top; }
   table.respostas td.n, table.respostas td.v { text-align: center; white-space: nowrap; font-weight: 700; color: var(--hc-petroleo); }
   table.respostas tr.marcado td { background: var(--c3-bg); }
@@ -174,8 +186,91 @@ footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--h
   .assin { margin-top: 14px; break-inside: avoid; } .assin .linha { margin-top: 24px; }
   .fonte { font-size: 7.5pt; margin-top: 8px; }
   footer.legal { display: none; }
+  body.res-oculto #resultado .conteudo-res { display: block !important; }
+  .res-escondido-msg { display: none !important; }
 }
+/* Tema claro/escuro partilhado por todas as páginas do hc-dom.
+   Embebido no fim do <style> de cada página (depois dos tokens da marca).
+   A impressão é sempre clara. */
+:root {
+  --sup: #ffffff;              /* superfícies: folha, campos, botões secundários */
+  --campo-borda: #c9d4d6;
+  --turq-suave: #e3f7f5;
+  --lar-suave: #fdf4ec;
+  --hc-petroleo-fundo: #0e5b6b; /* fundos petróleo com texto branco (cabeçalhos de tabela, botões) */
+  --sombra: rgba(0, 0, 0, .08);
+  --sobre-c3: #ffffff;          /* texto sobre o laranja de alerta */
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hc-texto: #e4f1f1; --hc-texto-sec: #a2bec2; --hc-linha: #24474f; --hc-fundo-alt: #0b2228;
+    --sup: #103039; --campo-borda: #3a5f66; --turq-suave: #123e45; --lar-suave: #3a2a22;
+    --hc-petroleo: #7fd6cf; --hc-laranja-forte: #f08a5d; --sombra: rgba(0, 0, 0, .4);
+    --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620; --sobre-c3: #06262c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --hc-texto: #e4f1f1; --hc-texto-sec: #a2bec2; --hc-linha: #24474f; --hc-fundo-alt: #0b2228;
+  --sup: #103039; --campo-borda: #3a5f66; --turq-suave: #123e45; --lar-suave: #3a2a22;
+  --hc-petroleo: #7fd6cf; --hc-laranja-forte: #f08a5d; --sombra: rgba(0, 0, 0, .4);
+  --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620; --sobre-c3: #06262c;
+  color-scheme: dark;
+}
+/* O logótipo tem letras escuras: em modo escuro vai sobre uma placa clara */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) header img { background: #fff; border-radius: 6px; padding: 4px 8px; } }
+:root[data-theme="dark"] header img { background: #fff; border-radius: 6px; padding: 4px 8px; }
+
+.tema-btn {
+  font: 600 12px/1 var(--font-corpo, system-ui); cursor: pointer; border-radius: 6px; padding: 6px 10px; min-height: 32px;
+  border: 1px solid var(--hc-linha); background: var(--sup); color: var(--hc-petroleo); margin-top: 6px;
+}
+.tema-btn:hover { border-color: var(--hc-petroleo); }
+header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
+
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
+    --sup: #ffffff; --campo-borda: #c9d4d6; --turq-suave: #e3f7f5; --lar-suave: #fdf4ec;
+    --hc-petroleo: #0e5b6b; --hc-laranja-forte: #E86031; --sombra: none;
+    --c1: #0E7A6F; --c1-bg: #DDF4F1; --c2: #9A5A12; --c2-bg: #FCEBD6; --c3: #B8441A; --c3-bg: #FADFD3; --sobre-c3: #ffffff;
+    color-scheme: light;
+  }
+  header img { background: none !important; padding: 0 !important; }
+  .tema-btn { display: none !important; }
+}
+
 </style>
+<script>
+/* Alternância claro/escuro. Corre no <head> para aplicar a preferência antes de pintar.
+   A escolha fica em localStorage (só neste browser); sem escolha, segue o sistema. */
+(function () {
+  "use strict";
+  var K = "hc-tema", r = document.documentElement;
+  try { var t = localStorage.getItem(K); if (t === "dark" || t === "light") r.setAttribute("data-theme", t); } catch (e) {}
+  function escuro() {
+    var t = r.getAttribute("data-theme");
+    return t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    var alvo = document.querySelector("header.cab .doc-id") || document.querySelector("header");
+    if (!alvo) return;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "tema-btn nao-imprimir";
+    function rotulo() { b.textContent = escuro() ? "Modo claro" : "Modo escuro"; b.setAttribute("aria-pressed", String(escuro())); }
+    b.addEventListener("click", function () {
+      var novo = escuro() ? "light" : "dark";
+      r.setAttribute("data-theme", novo);
+      try { localStorage.setItem(K, novo); } catch (e) {}
+      rotulo();
+    });
+    rotulo();
+    alvo.appendChild(b);
+  });
+})();
+
+</script>
 </head>
 <body>
 <a class="saltar" href="#itens">Saltar para os itens</a>
@@ -189,10 +284,16 @@ footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--h
   <h1>Escala de Sobrecarga do Cuidador</h1>
   <p class="subtitulo">Versão portuguesa da Zarit Burden Interview (Sequeira, 2010)</p>
 
+  <details class="intro nao-imprimir" open>
+    <summary>Descrição / Uso</summary>
+    <div id="intro-corpo"></div>
+  </details>
+
   <div class="barra nao-imprimir" role="region" aria-label="Progresso e resultado">
     <div class="prog"><div class="trilho" aria-hidden="true"><div class="enchimento" id="pb"></div></div><span class="n" id="pb-n">0/22</span></div>
     <span class="res" id="res-barra" aria-live="polite"></span>
     <button type="button" class="sec" id="btn-seguinte">Próximo por responder</button>
+    <button type="button" class="sec" id="btn-ver-res" aria-pressed="false">Esconder resultado</button>
     <button type="button" class="prim" id="btn-imprimir">Imprimir / PDF</button>
   </div>
 
@@ -225,12 +326,22 @@ footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--h
     </div>
   </section>
 
+  <section class="id-bloco" aria-labelledby="reav-t">
+    <h2 id="reav-t">Reavaliação <span style="font-size:13px;color:var(--hc-texto-sec)">(opcional)</span></h2>
+    <div class="g">
+      <label class="campo">Total da avaliação anterior <input type="text" name="r_total" inputmode="numeric" maxlength="3" placeholder="22–110"></label>
+      <label class="campo">Data da avaliação anterior <input type="date" name="r_data"></label>
+    </div>
+  </section>
+
   <h2 class="so-ecra">Itens</h2>
   <div id="itens" class="so-ecra" aria-label="Itens da escala"></div>
   <div class="so-print" id="print-itens"></div>
 
   <section class="resultado" id="resultado" aria-labelledby="res-t">
     <h2 id="res-t" style="margin-top:0">Resultado</h2>
+    <p class="res-escondido-msg vazio">Resultado escondido. Use “Mostrar resultado” na barra de cima; o PDF inclui sempre o resultado.</p>
+    <div class="conteudo-res">
     <div class="medidor" aria-hidden="true">
       <div class="trilho"><i class="z1" id="z1"></i><i class="z2" id="z2"></i><i class="z3" id="z3"></i></div>
       <div class="banda" id="banda"></div>
@@ -238,11 +349,13 @@ footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--h
     </div>
     <div class="marcas" aria-hidden="true" id="marcas"></div>
     <div class="pontuacao" id="pontuacao" aria-live="polite"></div>
+    <div class="bloco" id="bloco-evol" hidden><h3>Evolução</h3><p id="evolucao"></p></div>
     <div class="bloco"><h3>Avaliação global (item 22)</h3><p id="global" class="vazio">Por responder.</p></div>
     <div class="bloco"><h3>Itens com cotação 4 ou 5</h3><ul class="chips marcados" id="marcados"></ul><p id="sem-marcados" class="vazio">Nenhum item assinalado.</p></div>
     <div class="bloco so-ecra" id="bloco-falta"><h3>Por responder</h3><ul class="chips" id="falta"></ul></div>
     <div class="bloco">
       <table class="faixas" id="faixas"><thead><tr><th>Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
+    </div>
     </div>
   </section>
 
@@ -311,6 +424,17 @@ var ESC_CLASSES = [[57, "Sobrecarga intensa", "c3"], [46, "Sobrecarga ligeira", 
 var ESC_FAIXAS = [["22–45", "Sem sobrecarga"], ["46–56", "Sobrecarga ligeira"], ["57–110", "Sobrecarga intensa"]];
 var ESC_LIMIAR = 4; // itens com 4 ou 5 ficam assinalados para orientar a conversa
 
+/* Descrição / Uso — a partir de Sequeira (2010), lido em texto integral, e de Zarit et al. (1980). */
+var ESC_INFO = {
+  descricao: "A Escala de Sobrecarga do Cuidador (ESC) é a versão portuguesa (Sequeira, 2010) da Zarit Burden Interview (Zarit, Reever & Bach-Peterson, 1980). Avalia a sobrecarga objetiva e subjetiva do cuidador informal em 22 itens sobre saúde, vida social, vida pessoal, situação financeira, situação emocional e tipo de relacionamento, cada um cotado de 1 (nunca) a 5 (quase sempre). Na validação portuguesa, com 184 cuidadores de idosos dependentes, mostrou boa consistência interna (alfa de Cronbach 0,93) e quatro fatores: impacto da prestação de cuidados (11 itens), relação interpessoal (5), expectativas face ao cuidar (4) e perceção de autoeficácia (2).",
+  leitura: "O total varia entre 22 e 110 e, quanto mais alto, maior a perceção de sobrecarga. Pontos de corte: inferior a 46, sem sobrecarga; 46 a 56, sobrecarga ligeira; superior a 56, sobrecarga intensa. Os itens cotados com 4 ou 5 mostram onde a sobrecarga se concentra e ajudam a orientar a conversa e o plano. Na validação, os cuidadores de pessoas com demência apresentaram níveis de sobrecarga mais elevados.",
+  uso: "Cuidadores informais de pessoas dependentes, por causa física ou mental: identificar e monitorizar a sobrecarga, orientar a intervenção junto do cuidador e avaliar programas dirigidos a cuidadores. Aplica-se em entrevista, lendo cada afirmação ao cuidador. Repetida no tempo, a variação do total mostra a evolução. O autor da escala original autorizou a validação e o uso da versão portuguesa em investigação e na prática clínica.",
+  fontes: [
+    "Zarit SH, Reever KE, Bach-Peterson J. Relatives of the impaired elderly: correlates of feelings of burden. The Gerontologist. 1980;20(6):649–655. doi:10.1093/geront/20.6.649",
+    "Sequeira CAC. Adaptação e validação da Escala de Sobrecarga do Cuidador de Zarit. Revista de Enfermagem Referência. 2010;II(12):9–16. (Sem DOI.)"
+  ]
+};
+
 </script>
 <script>
 /* Escala de Sobrecarga do Cuidador (Zarit, versão de Sequeira) — lógica da página.
@@ -351,6 +475,19 @@ var ESC_LIMIAR = 4; // itens com 4 ou 5 ficam assinalados para orientar a conver
     aviso.appendChild(document.createTextNode("O texto dos itens ainda não foi confirmado palavra a palavra contra a versão de Sequeira (2010). Não usar para decisão clínica até essa verificação."));
     $("nota-verif").hidden = false;
   }
+
+  /* ---------- descrição / uso ---------- */
+  (function () {
+    var ic = $("intro-corpo");
+    if (!ic || typeof ESC_INFO === "undefined") return;
+    [["Descrição", ESC_INFO.descricao], ["Leitura", ESC_INFO.leitura], ["Uso", ESC_INFO.uso]].forEach(function (p) {
+      ic.appendChild(el("h3", null, p[0])); ic.appendChild(el("p", null, p[1]));
+    });
+    ic.appendChild(el("h3", null, "Fontes"));
+    var ol = el("ol");
+    ESC_INFO.fontes.forEach(function (f) { ol.appendChild(el("li", null, f)); });
+    ic.appendChild(ol);
+  })();
 
   /* ---------- itens ---------- */
   ESC_ITENS.forEach(function (txt, i) {
@@ -424,6 +561,25 @@ var ESC_LIMIAR = 4; // itens com 4 ou 5 ficam assinalados para orientar a conver
       $("res-barra").textContent = feitos ? "intervalo " + lo + "–" + hi : "";
     }
     tbF.querySelectorAll("tr").forEach(function (tr) { tr.classList.toggle("atual", !!cat && tr.getAttribute("data-cls") === cat[1]); });
+
+    // Evolução face à avaliação anterior
+    var prevTxt = (campo("r_total").value || "").trim(), be = $("bloco-evol"), ev = $("evolucao");
+    ev.textContent = "";
+    if (prevTxt === "") { be.hidden = true; }
+    else {
+      be.hidden = false;
+      var prev = parseInt(prevTxt, 10), quando = campo("r_data").value ? " em " + dataPT(campo("r_data").value) : "";
+      if (isNaN(prev) || prev < MIN || prev > MAX) {
+        ev.textContent = "O total anterior tem de estar entre " + MIN + " e " + MAX + ".";
+      } else if (falta > 0) {
+        ev.textContent = "Anterior: " + prev + " (" + categoria(prev)[1] + ")" + quando + ". A variação aparece com os " + N + " itens respondidos.";
+      } else {
+        var d = soma - prev;
+        var sinal = el("span", { "class": d > 0 ? "evol-sobe" : d < 0 ? "evol-desce" : "" }, (d > 0 ? "+" : "") + d + " pontos");
+        ev.appendChild(sinal);
+        ev.appendChild(document.createTextNode(" face à avaliação anterior" + quando + ": " + prev + " (" + categoria(prev)[1] + ") → " + soma + " (" + categoria(soma)[1] + ")."));
+      }
+    }
 
     var g = r[N - 1];
     $("global").textContent = g === null ? "Por responder." : rotulo(g) + " (" + g + ")";
@@ -535,6 +691,18 @@ var ESC_LIMIAR = 4; // itens com 4 ou 5 ficam assinalados para orientar a conver
     document.querySelectorAll("fieldset.item").forEach(function (f) { f.classList.remove("falta"); });
     atualizar(); window.scrollTo({ top: 0 });
   });
+
+  /* ---------- esconder / mostrar resultado (visível por omissão) ---------- */
+  var KEY_RES = KEY + "-ocultar";
+  function aplicarOculto(oculto) {
+    document.body.classList.toggle("res-oculto", oculto);
+    var b = $("btn-ver-res");
+    b.textContent = oculto ? "Mostrar resultado" : "Esconder resultado";
+    b.setAttribute("aria-pressed", String(oculto));
+    try { sessionStorage.setItem(KEY_RES, oculto ? "1" : "0"); } catch (err) {}
+  }
+  $("btn-ver-res").addEventListener("click", function () { aplicarOculto(!document.body.classList.contains("res-oculto")); });
+  try { aplicarOculto(sessionStorage.getItem(KEY_RES) === "1"); } catch (err) { aplicarOculto(false); }
 
   /* ---------- eventos e arranque ---------- */
   function autosize(t) { t.style.height = "auto"; t.style.height = t.scrollHeight + 2 + "px"; }

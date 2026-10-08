@@ -37,6 +37,19 @@
     $("nota-verif").hidden = false;
   }
 
+  /* ---------- descrição / uso ---------- */
+  (function () {
+    var ic = $("intro-corpo");
+    if (!ic || typeof ESC_INFO === "undefined") return;
+    [["Descrição", ESC_INFO.descricao], ["Leitura", ESC_INFO.leitura], ["Uso", ESC_INFO.uso]].forEach(function (p) {
+      ic.appendChild(el("h3", null, p[0])); ic.appendChild(el("p", null, p[1]));
+    });
+    ic.appendChild(el("h3", null, "Fontes"));
+    var ol = el("ol");
+    ESC_INFO.fontes.forEach(function (f) { ol.appendChild(el("li", null, f)); });
+    ic.appendChild(ol);
+  })();
+
   /* ---------- itens ---------- */
   ESC_ITENS.forEach(function (txt, i) {
     var n = i + 1;
@@ -109,6 +122,25 @@
       $("res-barra").textContent = feitos ? "intervalo " + lo + "–" + hi : "";
     }
     tbF.querySelectorAll("tr").forEach(function (tr) { tr.classList.toggle("atual", !!cat && tr.getAttribute("data-cls") === cat[1]); });
+
+    // Evolução face à avaliação anterior
+    var prevTxt = (campo("r_total").value || "").trim(), be = $("bloco-evol"), ev = $("evolucao");
+    ev.textContent = "";
+    if (prevTxt === "") { be.hidden = true; }
+    else {
+      be.hidden = false;
+      var prev = parseInt(prevTxt, 10), quando = campo("r_data").value ? " em " + dataPT(campo("r_data").value) : "";
+      if (isNaN(prev) || prev < MIN || prev > MAX) {
+        ev.textContent = "O total anterior tem de estar entre " + MIN + " e " + MAX + ".";
+      } else if (falta > 0) {
+        ev.textContent = "Anterior: " + prev + " (" + categoria(prev)[1] + ")" + quando + ". A variação aparece com os " + N + " itens respondidos.";
+      } else {
+        var d = soma - prev;
+        var sinal = el("span", { "class": d > 0 ? "evol-sobe" : d < 0 ? "evol-desce" : "" }, (d > 0 ? "+" : "") + d + " pontos");
+        ev.appendChild(sinal);
+        ev.appendChild(document.createTextNode(" face à avaliação anterior" + quando + ": " + prev + " (" + categoria(prev)[1] + ") → " + soma + " (" + categoria(soma)[1] + ")."));
+      }
+    }
 
     var g = r[N - 1];
     $("global").textContent = g === null ? "Por responder." : rotulo(g) + " (" + g + ")";
@@ -220,6 +252,18 @@
     document.querySelectorAll("fieldset.item").forEach(function (f) { f.classList.remove("falta"); });
     atualizar(); window.scrollTo({ top: 0 });
   });
+
+  /* ---------- esconder / mostrar resultado (visível por omissão) ---------- */
+  var KEY_RES = KEY + "-ocultar";
+  function aplicarOculto(oculto) {
+    document.body.classList.toggle("res-oculto", oculto);
+    var b = $("btn-ver-res");
+    b.textContent = oculto ? "Mostrar resultado" : "Esconder resultado";
+    b.setAttribute("aria-pressed", String(oculto));
+    try { sessionStorage.setItem(KEY_RES, oculto ? "1" : "0"); } catch (err) {}
+  }
+  $("btn-ver-res").addEventListener("click", function () { aplicarOculto(!document.body.classList.contains("res-oculto")); });
+  try { aplicarOculto(sessionStorage.getItem(KEY_RES) === "1"); } catch (err) { aplicarOculto(false); }
 
   /* ---------- eventos e arranque ---------- */
   function autosize(t) { t.style.height = "auto"; t.style.height = t.scrollHeight + 2 + "px"; }

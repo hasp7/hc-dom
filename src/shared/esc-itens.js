@@ -41,3 +41,14 @@ var ESC_OPCOES = [["1", "Nunca"], ["2", "Quase nunca"], ["3", "Às vezes"], ["4"
 var ESC_CLASSES = [[57, "Sobrecarga intensa", "c3"], [46, "Sobrecarga ligeira", "c2"], [22, "Sem sobrecarga", "c1"]];
 var ESC_FAIXAS = [["22–45", "Sem sobrecarga"], ["46–56", "Sobrecarga ligeira"], ["57–110", "Sobrecarga intensa"]];
 var ESC_LIMIAR = 4; // itens com 4 ou 5 ficam assinalados para orientar a conversa
+
+/* Descrição / Uso — a partir de Sequeira (2010), lido em texto integral, e de Zarit et al. (1980). */
+var ESC_INFO = {
+  descricao: "A Escala de Sobrecarga do Cuidador (ESC) é a versão portuguesa (Sequeira, 2010) da Zarit Burden Interview (Zarit, Reever & Bach-Peterson, 1980). Avalia a sobrecarga objetiva e subjetiva do cuidador informal em 22 itens sobre saúde, vida social, vida pessoal, situação financeira, situação emocional e tipo de relacionamento, cada um cotado de 1 (nunca) a 5 (quase sempre). Na validação portuguesa, com 184 cuidadores de idosos dependentes, mostrou boa consistência interna (alfa de Cronbach 0,93) e quatro fatores: impacto da prestação de cuidados (11 itens), relação interpessoal (5), expectativas face ao cuidar (4) e perceção de autoeficácia (2).",
+  leitura: "O total varia entre 22 e 110 e, quanto mais alto, maior a perceção de sobrecarga. Pontos de corte: inferior a 46, sem sobrecarga; 46 a 56, sobrecarga ligeira; superior a 56, sobrecarga intensa. Os itens cotados com 4 ou 5 mostram onde a sobrecarga se concentra e ajudam a orientar a conversa e o plano. Na validação, os cuidadores de pessoas com demência apresentaram níveis de sobrecarga mais elevados.",
+  uso: "Cuidadores informais de pessoas dependentes, por causa física ou mental: identificar e monitorizar a sobrecarga, orientar a intervenção junto do cuidador e avaliar programas dirigidos a cuidadores. Aplica-se em entrevista, lendo cada afirmação ao cuidador. Repetida no tempo, a variação do total mostra a evolução. O autor da escala original autorizou a validação e o uso da versão portuguesa em investigação e na prática clínica.",
+  fontes: [
+    "Zarit SH, Reever KE, Bach-Peterson J. Relatives of the impaired elderly: correlates of feelings of burden. The Gerontologist. 1980;20(6):649–655. doi:10.1093/geront/20.6.649",
+    "Sequeira CAC. Adaptação e validação da Escala de Sobrecarga do Cuidador de Zarit. Revista de Enfermagem Referência. 2010;II(12):9–16. (Sem DOI.)"
+  ]
+};

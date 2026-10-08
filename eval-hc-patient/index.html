@@ -252,13 +252,14 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
   --lar-suave: #fdf4ec;
   --hc-petroleo-fundo: #0e5b6b; /* fundos petróleo com texto branco (cabeçalhos de tabela, botões) */
   --sombra: rgba(0, 0, 0, .08);
+  --sobre-c3: #ffffff;          /* texto sobre o laranja de alerta */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --hc-texto: #e4f1f1; --hc-texto-sec: #a2bec2; --hc-linha: #24474f; --hc-fundo-alt: #0b2228;
     --sup: #103039; --campo-borda: #3a5f66; --turq-suave: #123e45; --lar-suave: #3a2a22;
     --hc-petroleo: #7fd6cf; --hc-laranja-forte: #f08a5d; --sombra: rgba(0, 0, 0, .4);
-    --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620;
+    --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620; --sobre-c3: #06262c;
     color-scheme: dark;
   }
 }
@@ -266,7 +267,7 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
   --hc-texto: #e4f1f1; --hc-texto-sec: #a2bec2; --hc-linha: #24474f; --hc-fundo-alt: #0b2228;
   --sup: #103039; --campo-borda: #3a5f66; --turq-suave: #123e45; --lar-suave: #3a2a22;
   --hc-petroleo: #7fd6cf; --hc-laranja-forte: #f08a5d; --sombra: rgba(0, 0, 0, .4);
-  --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620;
+  --c1: #5fd9ce; --c1-bg: #123e45; --c2: #f2b46d; --c2-bg: #3a2e1e; --c3: #f08a5d; --c3-bg: #3a2620; --sobre-c3: #06262c;
   color-scheme: dark;
 }
 /* O logótipo tem letras escuras: em modo escuro vai sobre uma placa clara */
@@ -285,7 +286,7 @@ header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
     --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
     --sup: #ffffff; --campo-borda: #c9d4d6; --turq-suave: #e3f7f5; --lar-suave: #fdf4ec;
     --hc-petroleo: #0e5b6b; --hc-laranja-forte: #E86031; --sombra: none;
-    --c1: #0E7A6F; --c1-bg: #DDF4F1; --c2: #9A5A12; --c2-bg: #FCEBD6; --c3: #B8441A; --c3-bg: #FADFD3;
+    --c1: #0E7A6F; --c1-bg: #DDF4F1; --c2: #9A5A12; --c2-bg: #FCEBD6; --c3: #B8441A; --c3-bg: #FADFD3; --sobre-c3: #ffffff;
     color-scheme: light;
   }
   header img { background: none !important; padding: 0 !important; }
