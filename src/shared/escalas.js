@@ -52,28 +52,51 @@ var BARTHEL_CLASSES = [[100, "Independente"], [91, "Dependência ligeira"], [61,
 var BARTHEL_FAIXAS = [["100", "Independente"], ["91–99", "Dependência ligeira"], ["61–90", "Dependência moderada"],
   ["21–60", "Dependência grave"], ["0–20", "Dependência total"]];
 
-/* Escala de Quedas de Morse (Morse, 1989), versão portuguesa. */
+/* Escala de Quedas de Morse (Morse, Morse & Tylko, 1989). Redação da versão portuguesa validada:
+   Costa-Dias, Ferreira & Oliveira (2014), Tabela 1. */
 var MORSE_ITENS = [
-  ["mo_hist", "Historial de quedas", [
+  ["mo_hist", "Historial de quedas (neste internamento/urgência ou nos últimos três meses)", [
     ["0", "Não", ""],
-    ["25", "Sim", "Queda nos últimos 3 meses"]]],
+    ["25", "Sim", ""]]],
   ["mo_diag", "Diagnóstico(s) secundário(s)", [
     ["0", "Não", ""],
     ["15", "Sim", "Mais do que um diagnóstico médico"]]],
   ["mo_apoio", "Ajuda para caminhar", [
-    ["0", "Nenhuma / acamado / apoio de profissional", ""],
-    ["15", "Canadianas / bengala / andarilho", ""],
+    ["0", "Nenhuma / ajuda de enfermeiro / acamado / cadeira de rodas", ""],
+    ["15", "Muletas / canadianas / bengala / andarilho", ""],
     ["30", "Apoia-se no mobiliário para andar", ""]]],
-  ["mo_ev", "Terapia endovenosa / cateter EV", [
+  ["mo_ev", "Terapia intravenosa", [
     ["0", "Não", ""],
     ["20", "Sim", ""]]],
   ["mo_marcha", "Postura no andar e na transferência", [
     ["0", "Normal / acamado / imóvel", ""],
-    ["10", "Debilitada", "Passos curtos, pode arrastar os pés; mantém a cabeça erguida"],
+    ["10", "Debilitado", "Passos curtos, pode arrastar os pés; mantém a cabeça erguida"],
     ["20", "Dependente de ajuda", "Dificuldade em levantar-se; cabeça baixa; apoia-se no mobiliário ou em pessoas"]]],
   ["mo_mental", "Estado mental", [
     ["0", "Consciente das suas capacidades", ""],
-    ["15", "Esquece-se das suas limitações", "Sobrestima as próprias capacidades"]]]
+    ["15", "Esquece-se das suas limitações", ""]]]
 ];
 var MORSE_CLASSES = [[51, "Alto risco de queda"], [25, "Baixo risco de queda"], [0, "Sem risco de queda"]];
 var MORSE_FAIXAS = [["0–24", "Sem risco de queda"], ["25–50", "Baixo risco de queda"], ["≥ 51", "Alto risco de queda"]];
+
+/* Descrição / Uso — texto de apoio por escala, a partir das fontes indicadas (verificadas em 2026-10-08). */
+var BARTHEL_INFO = {
+  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Nesta versão (a original) a pontuação vai de 0 a 100, em intervalos de 5: 0 corresponde à dependência máxima e 100 à independência nas atividades avaliadas.",
+  leitura: "O total distribui-se habitualmente em cinco faixas (Shah, Vanclay & Cooper, 1989, propostas para o índice modificado e usadas com frequência na versão original): 100 independente, 91–99 dependência ligeira, 61–90 moderada, 21–60 grave e 0–20 total. O valor 60 é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes, consoante as atividades em que estão dependentes.",
+  uso: "Avaliação inicial e reavaliação periódica da dependência funcional, planeamento de cuidados e monitorização da evolução (a diferença entre duas avaliações indica melhoria ou agravamento). Regista o que a pessoa faz, não o que poderia fazer. É rápido de aplicar e pode ser respondido pela própria pessoa ou pelo cuidador principal; em Portugal foi validado em idosos a viver no domicílio, na versão de 0 a 20 (Araújo et al., 2007).",
+  fontes: [
+    "Mahoney FI, Barthel DW. Functional evaluation: the Barthel Index. Maryland State Medical Journal. 1965;14:61–65.",
+    "Shah S, Vanclay F, Cooper B. Improving the sensitivity of the Barthel Index for stroke rehabilitation. J Clin Epidemiol. 1989;42(8):703–709. doi:10.1016/0895-4356(89)90065-6",
+    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740"
+  ]
+};
+
+var MORSE_INFO = {
+  descricao: "A Escala de Quedas de Morse (Morse, Morse & Tylko, 1989) avalia o risco de queda a partir de seis itens: historial de quedas, diagnóstico secundário, ajuda para caminhar, terapia intravenosa, postura no andar e na transferência e estado mental. A pontuação vai de 0 a 125. Foi desenhada para ser aplicada por enfermeiros e tem versão portuguesa validada (Costa-Dias, Ferreira & Oliveira, 2014).",
+  leitura: "Na versão portuguesa: sem risco 0–24, baixo risco 25–50, alto risco a partir de 51. No estudo original, a escala classificou corretamente 80,5% dos doentes (sensibilidade 78%, especificidade 83%). Os pontos de corte podem precisar de ajuste ao contexto em que a escala é usada.",
+  uso: "Triagem rápida do risco de queda, para orientar medidas de prevenção. Aplica-se na avaliação inicial e repete-se quando o estado clínico muda, depois de uma queda e periodicamente. Foi desenvolvida e validada em internamento hospitalar: no domicílio, o item da terapia intravenosa raramente se aplica e os cortes não foram validados para este contexto, pelo que o resultado apoia, mas não substitui, o juízo clínico.",
+  fontes: [
+    "Morse JM, Morse RM, Tylko SJ. Development of a scale to identify the fall-prone patient. Canadian Journal on Aging. 1989;8(4):366–377. doi:10.1017/S0714980800008576",
+    "Costa-Dias MJM, Ferreira PL, Oliveira AS. Adaptação cultural e linguística e validação da Escala de Quedas de Morse. Revista de Enfermagem Referência. 2014;IV(2):7–17. doi:10.12707/RIII1382"
+  ]
+};

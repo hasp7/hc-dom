@@ -52,6 +52,20 @@
   });
   document.getElementById("fonte").textContent = C.fonte;
 
+  // Descrição / Uso
+  if (C.info) {
+    var ic = document.getElementById("intro-corpo");
+    [["Descrição", C.info.descricao], ["Leitura", C.info.leitura], ["Uso", C.info.uso]].forEach(function (p) {
+      ic.appendChild(el("h3", null, p[0])); ic.appendChild(el("p", null, p[1]));
+    });
+    ic.appendChild(el("h3", null, "Fontes"));
+    var ol = el("ol");
+    C.info.fontes.forEach(function (f) { ol.appendChild(el("li", null, f)); });
+    ic.appendChild(ol);
+  } else {
+    document.querySelector("details.intro").remove();
+  }
+
   /* ---------- cálculo ---------- */
   function classe(t) {
     for (var i = 0; i < C.classes.length; i++) if (t >= C.classes[i][0]) return C.classes[i][1];
