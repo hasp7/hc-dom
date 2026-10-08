@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<!-- Sem pedidos de rede nem envio de dados: tudo embebido, rascunho só no separador. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'none'; base-uri 'none'">
+<title>Escala de Sobrecarga do Cuidador · HC</title>
+<style>
+@font-face { font-family: "Lato"; font-weight: 400; font-display: swap; src: url("{{FONT_LATO_400}}") format("woff2"); }
+@font-face { font-family: "Lato"; font-weight: 700; font-display: swap; src: url("{{FONT_LATO_700}}") format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 300 700; font-display: swap; src: url("{{FONT_MONTSERRAT}}") format("woff2-variations"); }
+
+/* Marca: claude/design-md/hc/DESIGN.md (hasp-HQ) */
+:root {
+  --hc-turquesa: #00C0B5; --hc-petroleo: #0e5b6b; --hc-laranja: #E9994A; --hc-laranja-forte: #E86031;
+  --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
+  /* Categorias: cores com contraste suficiente para texto (o turquesa e o laranja claros não têm) */
+  --c1: #0E7A6F; --c1-bg: #DDF4F1; --c2: #9A5A12; --c2-bg: #FCEBD6; --c3: #B8441A; --c3-bg: #FADFD3;
+  --font-titulo: "Montserrat", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-corpo: "Lato", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html { scroll-padding-top: 120px; }
+body { margin: 0; background: var(--hc-fundo-alt); color: var(--hc-texto); font: 16px/1.5 var(--font-corpo); accent-color: var(--hc-petroleo); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.saltar { position: absolute; left: 12px; top: -60px; background: var(--hc-petroleo); color: #fff; padding: 10px 14px; border-radius: 6px; z-index: 20; }
+.saltar:focus { top: 12px; }
+.folha { max-width: 860px; margin: 0 auto; background: #fff; padding: 0 16px 32px; }
+@media (min-width: 900px) { .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px rgba(0,0,0,.08); } }
+.faixa { height: 6px; margin: 0 -16px; background: linear-gradient(90deg, var(--hc-turquesa), var(--hc-laranja)); }
+@media (min-width: 900px) { .faixa { margin: 0 -40px; } }
+header.cab { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0 12px; border-bottom: 1px solid var(--hc-linha); }
+header.cab img { height: 52px; width: auto; }
+header.cab .doc-id { text-align: right; font-size: 12px; color: var(--hc-texto-sec); line-height: 1.4; }
+header.cab a { color: var(--hc-petroleo); }
+h1, h2, legend { font-family: var(--font-titulo); color: var(--hc-petroleo); font-weight: 300; }
+h1 { font-size: 26px; margin: 20px 0 2px; line-height: 1.2; }
+.subtitulo { font-family: var(--font-titulo); font-weight: 300; color: var(--hc-turquesa); margin: 0 0 12px; font-size: 16px; }
+h2 { font-size: 18px; margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 2px solid var(--hc-turquesa); }
+:focus-visible { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
+
+/* Barra fixa: progresso e resultado */
+.barra { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 0; background: #fff; border-bottom: 1px solid var(--hc-linha); }
+.prog { flex: 1 1 160px; display: flex; align-items: center; gap: 10px; }
+.prog .trilho { flex: 1; height: 8px; background: var(--hc-linha); border-radius: 4px; overflow: hidden; }
+.prog .enchimento { height: 100%; width: 0; background: var(--hc-turquesa); transition: width .25s; }
+.prog .n { font-weight: 700; min-width: 4.5ch; text-align: right; font-size: 14px; }
+.barra .res { font-size: 14px; color: var(--hc-texto-sec); }
+.barra .res strong { font: 600 18px var(--font-titulo); color: var(--hc-petroleo); }
+button { font: 600 14px/1 var(--font-corpo); cursor: pointer; border-radius: 6px; padding: 10px 14px; min-height: 44px; border: 1px solid var(--hc-petroleo); }
+button.prim { background: var(--hc-petroleo); color: #fff; }
+button.sec { background: #fff; color: var(--hc-petroleo); }
+button.aviso-btn { background: #fff; color: var(--c3); border-color: var(--c3); }
+@media (prefers-reduced-motion: reduce) { .prog .enchimento, .banda { transition: none; } }
+
+.aviso { background: var(--hc-fundo-alt); border-left: 4px solid var(--hc-turquesa); padding: 10px 14px; margin: 14px 0; font-size: 14px; }
+.alerta { background: var(--c3-bg); border-left: 4px solid var(--c3); padding: 10px 14px; margin: 14px 0; font-size: 14px; color: var(--hc-texto); }
+.alerta strong { color: var(--c3); }
+details.como { margin: 14px 0; font-size: 14px; }
+details.como summary { cursor: pointer; font-family: var(--font-titulo); color: var(--hc-petroleo); min-height: 28px; }
+details.como ol { margin: 8px 0 0; padding-left: 1.3em; }
+kbd { font-family: var(--font-corpo); font-size: .85em; border: 1px solid var(--hc-linha); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--hc-fundo-alt); }
+
+/* Identificação */
+.id-bloco { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 4px 14px 10px; margin: 16px 0 8px; }
+.id-bloco h2 { border: 0; margin: 8px 0 6px; font-size: 16px; }
+.g { display: grid; gap: 10px 16px; grid-template-columns: 1fr; align-items: end; }
+@media (min-width: 640px) { .g { grid-template-columns: 1.4fr 1fr 1fr; } .g .dois { grid-column: span 2; } }
+label.campo { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 700; color: var(--hc-petroleo); }
+input[type=text], input[type=date], textarea { font: 16px/1.4 var(--font-corpo); color: var(--hc-texto); border: 1px solid #c9d4d6; border-radius: 6px; padding: 8px 10px; background: #fff; width: 100%; min-height: 44px; }
+textarea { min-height: 90px; resize: vertical; overflow: hidden; }
+
+/* Itens */
+fieldset.item { border: 0; border-top: 1px solid var(--hc-linha); margin: 0; padding: 16px 0 18px; min-width: 0; }
+fieldset.item legend { display: flex; gap: 12px; padding: 0; margin-bottom: 10px; width: 100%; font-family: var(--font-corpo); font-weight: 400; color: var(--hc-texto); font-size: 16px; }
+.num { flex: 0 0 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--hc-linha); font-weight: 700; color: var(--hc-texto-sec); }
+.item.resp .num { border-color: var(--hc-petroleo); background: var(--hc-petroleo); color: #fff; }
+.item.marcado .num { border-color: var(--c3); background: var(--c3); color: #fff; }
+.item.global { background: #e3f7f5; border: 0; border-radius: 6px; padding: 16px 10px 18px; margin: 8px -10px 0; }
+.etiqueta { display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 700; color: var(--hc-petroleo); border: 1px solid currentColor; border-radius: 4px; padding: 0 6px; }
+.item.falta { box-shadow: inset 4px 0 0 var(--c3); }
+.ops { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-left: calc(2.2rem + 12px); }
+.op { position: relative; }
+.op input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.op span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 58px; padding: 6px 4px; border: 1px solid var(--hc-linha); border-radius: 6px; background: #fff; text-align: center; cursor: pointer; }
+.op:hover span { border-color: var(--hc-petroleo); }
+.op b { font-size: 17px; }
+.op small { font-size: 12px; color: var(--hc-texto-sec); line-height: 1.2; }
+.op input:focus-visible + span { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
+.op input:checked + span { border-color: var(--hc-petroleo); background: var(--hc-petroleo); color: #fff; }
+.op input:checked + span small { color: inherit; }
+.item.marcado .op input:checked + span { background: var(--c3); border-color: var(--c3); }
+@media (max-width: 520px) {
+  .ops { margin-left: 0; grid-template-columns: 1fr; gap: 6px; }
+  .op span { flex-direction: row; justify-content: flex-start; gap: 12px; min-height: 46px; padding: 6px 14px; text-align: left; }
+  .op small { font-size: 15px; color: inherit; }
+}
+
+/* Resultado */
+.resultado { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 14px; margin: 20px 0; }
+.medidor { position: relative; height: 44px; margin-top: 4px; }
+.medidor .trilho { position: absolute; left: 0; right: 0; top: 14px; height: 14px; border-radius: 7px; overflow: hidden; display: flex; }
+.medidor .trilho i { display: block; height: 100%; }
+.z1 { background: var(--c1-bg); border-right: 2px solid #fff; } .z2 { background: var(--c2-bg); border-right: 2px solid #fff; } .z3 { background: var(--c3-bg); }
+.banda { position: absolute; top: 8px; height: 26px; border: 2px solid var(--hc-texto); border-radius: 6px; transition: left .25s, width .25s; }
+.ponteiro { position: absolute; top: 2px; width: 4px; height: 38px; margin-left: -2px; background: var(--hc-texto); border-radius: 2px; display: none; }
+.marcas { position: relative; height: 18px; font-size: 12px; color: var(--hc-texto-sec); }
+.marcas span { position: absolute; transform: translateX(-50%); }
+.marcas span:first-child { transform: none; } .marcas span:last-child { transform: translateX(-100%); }
+.pontuacao { margin: 12px 0 0; color: var(--hc-texto-sec); font-size: 15px; }
+.pontuacao strong { display: block; font: 500 34px/1.1 var(--font-titulo); color: var(--hc-petroleo); }
+.cat { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; padding: 5px 12px; border-radius: 6px; font-weight: 700; }
+.cat::before { content: ""; width: 10px; height: 10px; border-radius: 50%; }
+.cat.c1 { background: var(--c1-bg); color: var(--c1); } .cat.c1::before { background: var(--c1); }
+.cat.c2 { background: var(--c2-bg); color: var(--c2); } .cat.c2::before { background: var(--c2); }
+.cat.c3 { background: var(--c3-bg); color: var(--c3); } .cat.c3::before { background: var(--c3); }
+.bloco { border-top: 1px solid var(--hc-linha); margin-top: 14px; padding-top: 12px; }
+.bloco h3 { font: 600 14px var(--font-titulo); color: var(--hc-petroleo); margin: 0 0 8px; }
+.bloco p { margin: 0; font-size: 15px; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.chips a { display: inline-grid; place-items: center; min-width: 44px; min-height: 44px; padding: 0 8px; border-radius: 6px; text-decoration: none; font-weight: 700; color: var(--hc-texto); border: 1px solid var(--hc-linha); background: var(--hc-fundo-alt); }
+.chips.marcados a { background: var(--c3-bg); border-color: var(--c3); }
+.vazio { color: var(--hc-texto-sec); font-style: italic; }
+table.faixas { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 4px; }
+table.faixas th { background: var(--hc-petroleo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 6px 8px; }
+table.faixas td { padding: 5px 8px; border-bottom: 1px solid var(--hc-linha); }
+table.faixas tr.atual td { background: #fdf4ec; font-weight: 700; color: var(--c3); }
+.acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+.assin { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.assin .linha { border-top: 1px solid var(--hc-texto); padding-top: 4px; margin-top: 40px; font-size: 13px; color: var(--hc-texto-sec); }
+.fonte { font-size: 12px; color: var(--hc-texto-sec); margin-top: 18px; }
+footer.legal { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--hc-linha); font-size: 12px; color: var(--hc-texto-sec); text-align: center; }
+.so-print, .espelho { display: none; }
+
+@page {
+  size: A4; margin: 1.3cm 1.5cm 1.6cm;
+  @bottom-left { content: "HC Healthcare & Innovation · Intuição e Consenso, Lda · NIPC 517684608 · Documento confidencial — contém dados de saúde"; font: 7pt "Lato", sans-serif; color: #5a6a6e; }
+  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Lato", sans-serif; color: #5a6a6e; }
+}
+@media print {
+  body { background: #fff; font-size: 9.5pt; }
+  .folha { max-width: none; margin: 0; padding: 0; box-shadow: none; }
+  .faixa { margin: 0; height: 4px; }
+  .nao-imprimir, .so-ecra { display: none !important; }
+  .so-print { display: block; }
+  header.cab { padding: 8px 0 6px; } header.cab img { height: 1.2cm; }
+  h1 { font-size: 16pt; margin-top: 8px; } .subtitulo { font-size: 10.5pt; margin-bottom: 4px; }
+  h2 { font-size: 11pt; margin: 10px 0 4px; }
+  .id-bloco { padding: 2px 10px 6px; margin: 6px 0 4px; break-inside: avoid; }
+  .g { grid-template-columns: 1.4fr 1fr 1fr; gap: 4px 12px; } .g .dois { grid-column: span 2; }
+  label.campo { font-size: 8pt; gap: 1px; }
+  input[type=text], input[type=date], textarea { font-size: 9.5pt; border: 0; border-bottom: 1px solid #b8c4c6; border-radius: 0; padding: 1px 0; min-height: 0; background: transparent; }
+  input::-webkit-calendar-picker-indicator { display: none; }
+  input.espelhado, textarea.espelhado { display: none; }
+  .espelho { display: block; white-space: pre-wrap; font: 400 9.5pt/1.4 var(--font-corpo); border-bottom: 1px solid #b8c4c6; min-height: 1.3em; padding: 1px 0; }
+  table.respostas { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+  table.respostas th { background: var(--hc-petroleo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 3px 6px; }
+  table.respostas td { padding: 2px 6px; border-bottom: 1px solid var(--hc-linha); vertical-align: top; }
+  table.respostas td.n, table.respostas td.v { text-align: center; white-space: nowrap; font-weight: 700; color: var(--hc-petroleo); }
+  table.respostas tr.marcado td { background: var(--c3-bg); }
+  table.respostas tr.marcado td.v { color: var(--c3); }
+  table.respostas tr { break-inside: avoid; }
+  .resultado { padding: 6px 10px; margin: 8px 0; break-inside: avoid; }
+  .pontuacao strong { font-size: 18pt; }
+  .medidor { display: none; } .marcas { display: none; }
+  .bloco { margin-top: 6px; padding-top: 6px; }
+  .chips a { min-width: 0; min-height: 0; padding: 0 6px; }
+  table.faixas { font-size: 8.5pt; } table.faixas th, table.faixas td { padding: 2px 6px; }
+  .assin { margin-top: 14px; break-inside: avoid; } .assin .linha { margin-top: 24px; }
+  .fonte { font-size: 7.5pt; margin-top: 8px; }
+  footer.legal { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="saltar" href="#itens">Saltar para os itens</a>
+<main class="folha">
+  <div class="faixa" aria-hidden="true"></div>
+  <header class="cab">
+    <img src="{{LOGO_PNG}}" alt="HC Healthcare &amp; Innovation">
+    <div class="doc-id"><span class="nao-imprimir"><a href="../">← Ferramentas</a><br></span>Documento confidencial · contém dados de saúde</div>
+  </header>
+
+  <h1>Escala de Sobrecarga do Cuidador</h1>
+  <p class="subtitulo">Versão portuguesa da Zarit Burden Interview (Sequeira, 2010)</p>
+
+  <div class="barra nao-imprimir" role="region" aria-label="Progresso e resultado">
+    <div class="prog"><div class="trilho" aria-hidden="true"><div class="enchimento" id="pb"></div></div><span class="n" id="pb-n">0/22</span></div>
+    <span class="res" id="res-barra" aria-live="polite"></span>
+    <button type="button" class="sec" id="btn-seguinte">Próximo por responder</button>
+    <button type="button" class="prim" id="btn-imprimir">Imprimir / PDF</button>
+  </div>
+
+  <div class="alerta nao-imprimir" id="aviso-itens" hidden><strong>Textos dos itens por transcrever.</strong> Esta página ainda tem marcadores no lugar das afirmações da escala. Não usar em contexto real até serem transcritos da versão portuguesa licenciada.</div>
+
+  <p class="aviso nao-imprimir"><strong>Privacidade.</strong> Nada é enviado. O preenchimento fica só neste separador do browser e apaga-se ao fechá-lo ou ao carregar em <em>Limpar</em>. Guarde o PDF e entregue-o pelo canal da HC.</p>
+
+  <details class="como nao-imprimir">
+    <summary>Como aplicar</summary>
+    <ol>
+      <li>Leia cada afirmação ao cuidador e registe a frequência que ele indicar (1 = nunca a 5 = quase sempre).</li>
+      <li>Responda aos 22 itens. Enquanto faltarem respostas, o resultado mostra o intervalo possível; a classificação aparece com os 22 respondidos.</li>
+      <li>Os itens cotados com 4 ou 5 ficam assinalados para orientar a conversa e o plano.</li>
+      <li>Teclado: com o foco num item, <kbd>1</kbd> a <kbd>5</kbd> registam a resposta e passam ao seguinte.</li>
+    </ol>
+  </details>
+
+<form id="f" autocomplete="off" novalidate>
+  <section class="id-bloco" aria-labelledby="id-t">
+    <h2 id="id-t">Identificação</h2>
+    <div class="g">
+      <label class="campo">Cuidador <input type="text" name="c_nome"></label>
+      <label class="campo">Relação com a pessoa cuidada <input type="text" name="c_relacao" placeholder="ex.: filha, cônjuge"></label>
+      <label class="campo">Data <input type="date" name="a_data"></label>
+      <label class="campo">Pessoa cuidada <input type="text" name="u_nome"></label>
+      <label class="campo">N.º de utente SNS <input type="text" name="u_sns" inputmode="numeric" maxlength="9"></label>
+      <label class="campo">Enfermeiro <input type="text" name="a_avaliador"></label>
+      <label class="campo dois">Contexto <input type="text" name="a_contexto" placeholder="ex.: avaliação inicial, reavaliação aos 3 meses"></label>
+      <label class="campo">Referência do processo <input type="text" name="a_ref"></label>
+    </div>
+  </section>
+
+  <h2 class="so-ecra">Itens</h2>
+  <div id="itens" class="so-ecra" aria-label="Itens da escala"></div>
+  <div class="so-print" id="print-itens"></div>
+
+  <section class="resultado" id="resultado" aria-labelledby="res-t">
+    <h2 id="res-t" style="margin-top:0">Resultado</h2>
+    <div class="medidor" aria-hidden="true">
+      <div class="trilho"><i class="z1" id="z1"></i><i class="z2" id="z2"></i><i class="z3" id="z3"></i></div>
+      <div class="banda" id="banda"></div>
+      <div class="ponteiro" id="ponteiro"></div>
+    </div>
+    <div class="marcas" aria-hidden="true" id="marcas"></div>
+    <div class="pontuacao" id="pontuacao" aria-live="polite"></div>
+    <div class="bloco"><h3>Avaliação global (item 22)</h3><p id="global" class="vazio">Por responder.</p></div>
+    <div class="bloco"><h3>Itens com cotação 4 ou 5</h3><ul class="chips marcados" id="marcados"></ul><p id="sem-marcados" class="vazio">Nenhum item assinalado.</p></div>
+    <div class="bloco so-ecra" id="bloco-falta"><h3>Por responder</h3><ul class="chips" id="falta"></ul></div>
+    <div class="bloco">
+      <table class="faixas" id="faixas"><thead><tr><th>Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <label class="campo">Notas da avaliação <textarea name="notas" rows="3"></textarea></label>
+
+  <div class="acoes nao-imprimir">
+    <button type="button" class="aviso-btn" id="btn-limpar">Limpar avaliação</button>
+  </div>
+
+  <div class="assin">
+    <div><div class="linha">Enfermeiro</div></div>
+    <div><div class="linha">Data</div></div>
+  </div>
+  <p class="fonte">Classificação: inferior a 46, sem sobrecarga; 46 a 56, sobrecarga ligeira; superior a 56, sobrecarga intensa.
+    Sequeira C. (2010). Adaptação e validação da Escala de Sobrecarga do Cuidador de Zarit. <em>Revista de Enfermagem Referência</em>.
+    Original: Zarit SH, Reever KE, Bach-Peterson J. (1980). <em>The Gerontologist</em>, 20(6), 649–655.
+    Os pontos de corte categorizam um contínuo e interpretam-se com a avaliação clínica (Gonçalves-Pereira &amp; Zarit, <em>Acta Médica Portuguesa</em>, 2014).
+    Instrumento protegido por direitos de autor; uso sem fins comerciais.</p>
+  <p class="fonte" id="nota-verif" hidden>Versão de desenvolvimento e testes de usabilidade — texto dos itens por confirmar contra o original.</p>
+</form>
+
+  <footer class="legal">HC Healthcare &amp; Innovation · Intuição e Consenso, Lda · NIPC 517684608</footer>
+</main>
+<script>
+{{ESC_ITENS_JS}}
+</script>
+<script>
+{{ESC_JS}}
+</script>
+</body>
+</html>

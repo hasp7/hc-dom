@@ -72,6 +72,12 @@ PAGINAS = [
         },
         saida=RAIZ / "morse" / "index.html",
     ),
+    dict(
+        template=SRC / "esc" / "esc.src.html",
+        scripts={"{{ESC_ITENS_JS}}": SRC / "shared" / "esc-itens.js", "{{ESC_JS}}": SRC / "esc" / "esc.js"},
+        textos={},
+        saida=RAIZ / "esc-zarit" / "index.html",
+    ),
 ]
 
 
