@@ -76,6 +76,17 @@ footer { margin-top: 32px; padding-top: 8px; border-top: 1px solid var(--hc-linh
 .tema-btn:hover { border-color: var(--hc-petroleo); }
 header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
 
+/* Interruptor (ex.: Barthel 0–20 ↔ 0–100) */
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font: 700 13px var(--font-corpo, system-ui); color: var(--hc-petroleo); user-select: none; min-height: 32px; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch .trilho-sw { width: 40px; height: 22px; border-radius: 11px; background: var(--campo-borda); position: relative; transition: background .2s; flex: none; }
+.switch .trilho-sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--sup); transition: left .2s; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.switch input:checked + .trilho-sw { background: var(--hc-petroleo-fundo); }
+.switch input:checked + .trilho-sw::after { left: 21px; }
+.switch input:focus-visible + .trilho-sw { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .switch .trilho-sw, .switch .trilho-sw::after { transition: none; } }
+@media print { .switch { display: none !important; } }
+
 @media print {
   :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
     --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
@@ -137,7 +148,7 @@ header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
   <ul>
     <li><a href="barthel/">
       <strong>Índice de Barthel</strong>
-      <span>Independência nas atividades de vida diária (0–100), com classificação automática. Para reavaliações rápidas. Exporta PDF.</span>
+      <span>Independência nas atividades de vida diária, com a classificação da validação portuguesa (0–20) e opção 0–100. Para reavaliações rápidas. Exporta PDF.</span>
     </a></li>
     <li><a href="morse/">
       <strong>Escala de Morse</strong>

@@ -46,11 +46,16 @@ var BARTHEL_ITENS = [
     ["5", "Precisa de ajuda", "Ajuda física ou supervisão"],
     ["0", "Incapaz", ""]]]
 ];
-/* Faixas de interpretação do total (0–100), de Shah et al. (1989). */
-var BARTHEL_CLASSES = [[100, "Independente"], [91, "Dependência ligeira"], [61, "Dependência moderada"],
-  [21, "Dependência grave"], [0, "Dependência total"]];
-var BARTHEL_FAIXAS = [["100", "Independente"], ["91–99", "Dependência ligeira"], ["61–90", "Dependência moderada"],
-  ["21–60", "Dependência grave"], ["0–20", "Dependência total"]];
+/* Classificação portuguesa: cortes de Martins (2004), usados na validação de Araújo et al. (2007)
+   na versão 0–20 (Wade & Collin: cada nível 0/5/10/15 corresponde a 0/1/2/3).
+   Os valores guardam-se sempre em 0–100; a apresentação em 0–20 divide por BARTHEL_DIVISOR.
+   Limiares abaixo em 0–100: 0–40 total, 45–60 grave, 65–95 moderada, 100 independência total. */
+var BARTHEL_DIVISOR = 5;
+var BARTHEL_CLASSES = [[100, "Independência total"], [65, "Dependência moderada"], [45, "Dependência grave"],
+  [0, "Dependência total"]];
+/* [faixa 0–20, faixa 0–100, classificação] */
+var BARTHEL_FAIXAS = [["20", "100", "Independência total"], ["13–19", "65–95", "Dependência moderada"],
+  ["9–12", "45–60", "Dependência grave"], ["0–8", "0–40", "Dependência total"]];
 
 /* Escala de Quedas de Morse (Morse, Morse & Tylko, 1989). Redação da versão portuguesa validada:
    Costa-Dias, Ferreira & Oliveira (2014), Tabela 1. */
@@ -81,13 +86,14 @@ var MORSE_FAIXAS = [["0–24", "Sem risco de queda"], ["25–50", "Baixo risco d
 
 /* Descrição / Uso — texto de apoio por escala, a partir das fontes indicadas (verificadas em 2026-10-08). */
 var BARTHEL_INFO = {
-  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Nesta versão (a original) a pontuação vai de 0 a 100, em intervalos de 5: 0 corresponde à dependência máxima e 100 à independência nas atividades avaliadas.",
-  leitura: "O total distribui-se habitualmente em cinco faixas (Shah, Vanclay & Cooper, 1989, propostas para o índice modificado e usadas com frequência na versão original): 100 independente, 91–99 dependência ligeira, 61–90 moderada, 21–60 grave e 0–20 total. O valor 60 é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes, consoante as atividades em que estão dependentes.",
+  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Esta página usa a pontuação de 0 a 20 (Wade & Collin, 1988), a da validação portuguesa, em que cada nível vale 0, 1, 2 ou 3; o interruptor mostra a mesma avaliação na escala original de 0 a 100 (multiplicar por 5). 0 corresponde à dependência máxima e o máximo à independência nas atividades avaliadas.",
+  leitura: "Classificação usada na validação portuguesa (Araújo et al., 2007, com os cortes de Martins, 2004): 0–8 dependência total, 9–12 grave, 13–19 moderada e 20 independência total (em 0–100: 0–40, 45–60, 65–95 e 100). Não há faixa de dependência ligeira: qualquer dependência abaixo do máximo conta como moderada ou pior. Os cortes foram propostos num estudo com doentes com AVC e adotados no estudo português para comparação; a validação portuguesa demonstrou a fiabilidade da escala (alfa de Cronbach 0,96), não derivou novos cortes. O valor 60 em 0–100 (12 em 0–20) é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes.",
   uso: "Avaliação inicial e reavaliação periódica da dependência funcional, planeamento de cuidados e monitorização da evolução (a diferença entre duas avaliações indica melhoria ou agravamento). Regista o que a pessoa faz, não o que poderia fazer. É rápido de aplicar e pode ser respondido pela própria pessoa ou pelo cuidador principal; em Portugal foi validado em idosos a viver no domicílio, na versão de 0 a 20 (Araújo et al., 2007).",
   fontes: [
     "Mahoney FI, Barthel DW. Functional evaluation: the Barthel Index. Maryland State Medical Journal. 1965;14:61–65.",
-    "Shah S, Vanclay F, Cooper B. Improving the sensitivity of the Barthel Index for stroke rehabilitation. J Clin Epidemiol. 1989;42(8):703–709. doi:10.1016/0895-4356(89)90065-6",
-    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740"
+    "Wade DT, Collin C. The Barthel ADL Index: a standard measure of physical disability? International Disability Studies. 1988;10(2):64–67.",
+    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740",
+    "Martins AT. Dependência funcional, qualidade de vida pós AVC e sobrecarga física, emocional e social do cuidador informal. Tese de doutoramento, Faculdade de Psicologia, Porto; 2004. (Origem dos pontos de corte, citada por Araújo et al., 2007; não consultada diretamente.)"
   ]
 };
 

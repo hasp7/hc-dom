@@ -71,6 +71,7 @@ fieldset.item legend .pts { font-weight: 600; color: var(--hc-laranja-forte); wh
 .total { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; padding: 12px 14px; background: var(--hc-fundo-alt); border: 1px solid var(--hc-linha); border-radius: 6px; margin: 14px 0; }
 .total output { font: 600 26px var(--font-titulo); color: var(--hc-petroleo); }
 .total .cls { font-weight: 700; color: var(--hc-laranja-forte); font-size: 17px; }
+.total .sub { font-size: 14px; color: var(--hc-texto-sec); }
 table.faixas { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 12px; }
 table.faixas th { background: var(--hc-petroleo-fundo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 6px 8px; }
 table.faixas td { padding: 5px 8px; border-bottom: 1px solid var(--hc-linha); }
@@ -164,6 +165,17 @@ details.intro ol { margin: 4px 0 4px; padding-left: 1.3em; font-size: 12px; colo
 .tema-btn:hover { border-color: var(--hc-petroleo); }
 header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
 
+/* Interruptor (ex.: Barthel 0–20 ↔ 0–100) */
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font: 700 13px var(--font-corpo, system-ui); color: var(--hc-petroleo); user-select: none; min-height: 32px; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch .trilho-sw { width: 40px; height: 22px; border-radius: 11px; background: var(--campo-borda); position: relative; transition: background .2s; flex: none; }
+.switch .trilho-sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--sup); transition: left .2s; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.switch input:checked + .trilho-sw { background: var(--hc-petroleo-fundo); }
+.switch input:checked + .trilho-sw::after { left: 21px; }
+.switch input:focus-visible + .trilho-sw { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .switch .trilho-sw, .switch .trilho-sw::after { transition: none; } }
+@media print { .switch { display: none !important; } }
+
 @media print {
   :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
     --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
@@ -252,9 +264,10 @@ header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
   <div class="total">
     <span>Total</span> <output id="total">—</output><span>/ <span id="max"></span></span>
     <span class="cls" id="cls"></span>
+    <span class="sub" id="total-alt"></span>
   </div>
 
-  <table class="faixas" id="faixas"><thead><tr><th>Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
+  <table class="faixas" id="faixas"><thead><tr><th id="faixas-th">Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
 
   <label class="campo">Observações <textarea name="obs" rows="3"></textarea></label>
 
@@ -316,11 +329,16 @@ var BARTHEL_ITENS = [
     ["5", "Precisa de ajuda", "Ajuda física ou supervisão"],
     ["0", "Incapaz", ""]]]
 ];
-/* Faixas de interpretação do total (0–100), de Shah et al. (1989). */
-var BARTHEL_CLASSES = [[100, "Independente"], [91, "Dependência ligeira"], [61, "Dependência moderada"],
-  [21, "Dependência grave"], [0, "Dependência total"]];
-var BARTHEL_FAIXAS = [["100", "Independente"], ["91–99", "Dependência ligeira"], ["61–90", "Dependência moderada"],
-  ["21–60", "Dependência grave"], ["0–20", "Dependência total"]];
+/* Classificação portuguesa: cortes de Martins (2004), usados na validação de Araújo et al. (2007)
+   na versão 0–20 (Wade & Collin: cada nível 0/5/10/15 corresponde a 0/1/2/3).
+   Os valores guardam-se sempre em 0–100; a apresentação em 0–20 divide por BARTHEL_DIVISOR.
+   Limiares abaixo em 0–100: 0–40 total, 45–60 grave, 65–95 moderada, 100 independência total. */
+var BARTHEL_DIVISOR = 5;
+var BARTHEL_CLASSES = [[100, "Independência total"], [65, "Dependência moderada"], [45, "Dependência grave"],
+  [0, "Dependência total"]];
+/* [faixa 0–20, faixa 0–100, classificação] */
+var BARTHEL_FAIXAS = [["20", "100", "Independência total"], ["13–19", "65–95", "Dependência moderada"],
+  ["9–12", "45–60", "Dependência grave"], ["0–8", "0–40", "Dependência total"]];
 
 /* Escala de Quedas de Morse (Morse, Morse & Tylko, 1989). Redação da versão portuguesa validada:
    Costa-Dias, Ferreira & Oliveira (2014), Tabela 1. */
@@ -351,13 +369,14 @@ var MORSE_FAIXAS = [["0–24", "Sem risco de queda"], ["25–50", "Baixo risco d
 
 /* Descrição / Uso — texto de apoio por escala, a partir das fontes indicadas (verificadas em 2026-10-08). */
 var BARTHEL_INFO = {
-  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Nesta versão (a original) a pontuação vai de 0 a 100, em intervalos de 5: 0 corresponde à dependência máxima e 100 à independência nas atividades avaliadas.",
-  leitura: "O total distribui-se habitualmente em cinco faixas (Shah, Vanclay & Cooper, 1989, propostas para o índice modificado e usadas com frequência na versão original): 100 independente, 91–99 dependência ligeira, 61–90 moderada, 21–60 grave e 0–20 total. O valor 60 é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes, consoante as atividades em que estão dependentes.",
+  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Esta página usa a pontuação de 0 a 20 (Wade & Collin, 1988), a da validação portuguesa, em que cada nível vale 0, 1, 2 ou 3; o interruptor mostra a mesma avaliação na escala original de 0 a 100 (multiplicar por 5). 0 corresponde à dependência máxima e o máximo à independência nas atividades avaliadas.",
+  leitura: "Classificação usada na validação portuguesa (Araújo et al., 2007, com os cortes de Martins, 2004): 0–8 dependência total, 9–12 grave, 13–19 moderada e 20 independência total (em 0–100: 0–40, 45–60, 65–95 e 100). Não há faixa de dependência ligeira: qualquer dependência abaixo do máximo conta como moderada ou pior. Os cortes foram propostos num estudo com doentes com AVC e adotados no estudo português para comparação; a validação portuguesa demonstrou a fiabilidade da escala (alfa de Cronbach 0,96), não derivou novos cortes. O valor 60 em 0–100 (12 em 0–20) é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes.",
   uso: "Avaliação inicial e reavaliação periódica da dependência funcional, planeamento de cuidados e monitorização da evolução (a diferença entre duas avaliações indica melhoria ou agravamento). Regista o que a pessoa faz, não o que poderia fazer. É rápido de aplicar e pode ser respondido pela própria pessoa ou pelo cuidador principal; em Portugal foi validado em idosos a viver no domicílio, na versão de 0 a 20 (Araújo et al., 2007).",
   fontes: [
     "Mahoney FI, Barthel DW. Functional evaluation: the Barthel Index. Maryland State Medical Journal. 1965;14:61–65.",
-    "Shah S, Vanclay F, Cooper B. Improving the sensitivity of the Barthel Index for stroke rehabilitation. J Clin Epidemiol. 1989;42(8):703–709. doi:10.1016/0895-4356(89)90065-6",
-    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740"
+    "Wade DT, Collin C. The Barthel ADL Index: a standard measure of physical disability? International Disability Studies. 1988;10(2):64–67.",
+    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740",
+    "Martins AT. Dependência funcional, qualidade de vida pós AVC e sobrecarga física, emocional e social do cuidador informal. Tese de doutoramento, Faculdade de Psicologia, Porto; 2004. (Origem dos pontos de corte, citada por Araújo et al., 2007; não consultada diretamente.)"
   ]
 };
 
@@ -373,7 +392,7 @@ var MORSE_INFO = {
 
 </script>
 <script>
-var ESCALA = { chave: "morse", nome: "Morse", itens: MORSE_ITENS, classes: MORSE_CLASSES, faixas: MORSE_FAIXAS, fonte: "Escala de Quedas de Morse: Morse JM, Morse RM, Tylko SJ (1989); versão portuguesa: Costa-Dias, Ferreira, Oliveira (2014). Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico.", info: MORSE_INFO };
+var ESCALA = { chave: "morse", nome: "Morse", itens: MORSE_ITENS, classes: MORSE_CLASSES, faixas: MORSE_FAIXAS, fonte: "Escala de Quedas de Morse: Morse JM, Morse RM, Tylko SJ (1989); versão portuguesa: Costa-Dias, Ferreira, Oliveira (2014). Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico.", info: MORSE_INFO, divisor: null };
 </script>
 <script>
 /* Motor das ferramentas de escala isolada (barthel/, morse/).
@@ -412,7 +431,7 @@ var ESCALA = { chave: "morse", nome: "Morse", itens: MORSE_ITENS, classes: MORSE
       var l = el("label", { "class": "op" });
       l.appendChild(el("input", { type: "radio", name: it[0], value: o[0] }));
       var s = el("span");
-      s.appendChild(el("span", { "class": "v" }, o[0]));
+      s.appendChild(el("span", { "class": "v", "data-v": o[0] }, o[0]));
       s.appendChild(document.createTextNode(" " + o[1]));
       s.appendChild(el("span", { "class": "d" }, o[2] || ""));
       l.appendChild(s);
@@ -421,13 +440,40 @@ var ESCALA = { chave: "morse", nome: "Morse", itens: MORSE_ITENS, classes: MORSE
     max += maxItem;
     itensEl.appendChild(fs);
   });
-  document.getElementById("max").textContent = max;
+  /* Apresentação alternativa (Barthel: 0–20 por omissão, 0–100 no interruptor).
+     Os valores guardam-se sempre na escala original; só a apresentação muda. */
+  var KEY_ALT = "hc-" + C.chave + "-0a100";
+  var modo100 = false;
+  if (C.divisor) { try { modo100 = localStorage.getItem(KEY_ALT) === "1"; } catch (err) {} }
+  function f(v) { return C.divisor && !modo100 ? v / C.divisor : v; }
+  function escalaTxt() { return C.divisor ? (modo100 ? "0–" + max : "0–" + (max / C.divisor)) : ""; }
   var tbF = document.querySelector("#faixas tbody");
-  C.faixas.forEach(function (f) {
-    var tr = el("tr", { "data-cls": f[1] });
-    tr.appendChild(el("td", null, f[0])); tr.appendChild(el("td", null, f[1]));
-    tbF.appendChild(tr);
-  });
+  function preencherApresentacao() {
+    itensEl.querySelectorAll(".op .v").forEach(function (s) { s.textContent = f(+s.getAttribute("data-v")); });
+    document.getElementById("max").textContent = f(max);
+    document.getElementById("faixas-th").textContent = C.divisor ? "Pontuação (" + escalaTxt() + ")" : "Pontuação";
+    tbF.textContent = "";
+    C.faixas.forEach(function (fx) {
+      var rot = fx[fx.length - 1], faixa = fx.length === 3 ? (modo100 ? fx[1] : fx[0]) : fx[0];
+      var tr = el("tr", { "data-cls": rot });
+      tr.appendChild(el("td", null, faixa)); tr.appendChild(el("td", null, rot));
+      tbF.appendChild(tr);
+    });
+  }
+  if (C.divisor) {
+    var sw = el("label", { "class": "switch", title: "Mostrar a pontuação na escala de 0 a " + max });
+    var cb = el("input", { type: "checkbox", role: "switch", "aria-label": "Pontuação de 0 a " + max });
+    cb.checked = modo100;
+    sw.appendChild(cb); sw.appendChild(el("span", { "class": "trilho-sw", "aria-hidden": "true" })); sw.appendChild(el("span", null, "0–" + max));
+    var barra = document.querySelector(".barra");
+    barra.insertBefore(sw, document.getElementById("btn-imprimir"));
+    cb.addEventListener("change", function () {
+      modo100 = cb.checked;
+      try { localStorage.setItem(KEY_ALT, modo100 ? "1" : "0"); } catch (err) {}
+      preencherApresentacao(); calcular();
+    });
+  }
+  preencherApresentacao();
   document.getElementById("fonte").textContent = C.fonte;
 
   // Descrição / Uso
@@ -455,14 +501,16 @@ var ESCALA = { chave: "morse", nome: "Morse", itens: MORSE_ITENS, classes: MORSE
       var v = form.elements[it[0]].value;
       var fs = itensEl.querySelector('[data-n="' + it[0] + '"]');
       fs.classList.toggle("feito", v !== "");
-      document.getElementById("pts_" + it[0]).textContent = v !== "" ? v + " pts" : "";
+      document.getElementById("pts_" + it[0]).textContent = v !== "" ? f(+v) + " pts" : "";
       if (v !== "") { total += +v; n++; }
     });
     var completo = n === C.itens.length;
     var cls = !n ? "" : completo ? classe(total) : "incompleto (" + n + "/" + C.itens.length + ")";
-    document.getElementById("total").textContent = n ? total : "—";
+    document.getElementById("total").textContent = n ? f(total) : "—";
+    document.getElementById("total-alt").textContent = n && C.divisor
+      ? (modo100 ? "= " + total / C.divisor + "/" + max / C.divisor + " (0–" + max / C.divisor + ")" : "= " + total + "/" + max + " (0–" + max + ")") : "";
     document.getElementById("cls").textContent = cls;
-    document.getElementById("t-barra").textContent = n ? total + "/" + max : "—";
+    document.getElementById("t-barra").textContent = n ? f(total) + "/" + f(max) : "—";
     document.getElementById("c-barra").textContent = cls;
     tbF.querySelectorAll("tr").forEach(function (tr) { tr.classList.toggle("atual", completo && tr.getAttribute("data-cls") === cls); });
     // idade

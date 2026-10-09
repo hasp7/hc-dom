@@ -34,7 +34,7 @@
       var l = el("label", { "class": "op" });
       l.appendChild(el("input", { type: "radio", name: it[0], value: o[0] }));
       var s = el("span");
-      s.appendChild(el("span", { "class": "v" }, o[0]));
+      s.appendChild(el("span", { "class": "v", "data-v": o[0] }, o[0]));
       s.appendChild(document.createTextNode(" " + o[1]));
       s.appendChild(el("span", { "class": "d" }, o[2] || ""));
       l.appendChild(s);
@@ -43,13 +43,40 @@
     max += maxItem;
     itensEl.appendChild(fs);
   });
-  document.getElementById("max").textContent = max;
+  /* Apresentação alternativa (Barthel: 0–20 por omissão, 0–100 no interruptor).
+     Os valores guardam-se sempre na escala original; só a apresentação muda. */
+  var KEY_ALT = "hc-" + C.chave + "-0a100";
+  var modo100 = false;
+  if (C.divisor) { try { modo100 = localStorage.getItem(KEY_ALT) === "1"; } catch (err) {} }
+  function f(v) { return C.divisor && !modo100 ? v / C.divisor : v; }
+  function escalaTxt() { return C.divisor ? (modo100 ? "0–" + max : "0–" + (max / C.divisor)) : ""; }
   var tbF = document.querySelector("#faixas tbody");
-  C.faixas.forEach(function (f) {
-    var tr = el("tr", { "data-cls": f[1] });
-    tr.appendChild(el("td", null, f[0])); tr.appendChild(el("td", null, f[1]));
-    tbF.appendChild(tr);
-  });
+  function preencherApresentacao() {
+    itensEl.querySelectorAll(".op .v").forEach(function (s) { s.textContent = f(+s.getAttribute("data-v")); });
+    document.getElementById("max").textContent = f(max);
+    document.getElementById("faixas-th").textContent = C.divisor ? "Pontuação (" + escalaTxt() + ")" : "Pontuação";
+    tbF.textContent = "";
+    C.faixas.forEach(function (fx) {
+      var rot = fx[fx.length - 1], faixa = fx.length === 3 ? (modo100 ? fx[1] : fx[0]) : fx[0];
+      var tr = el("tr", { "data-cls": rot });
+      tr.appendChild(el("td", null, faixa)); tr.appendChild(el("td", null, rot));
+      tbF.appendChild(tr);
+    });
+  }
+  if (C.divisor) {
+    var sw = el("label", { "class": "switch", title: "Mostrar a pontuação na escala de 0 a " + max });
+    var cb = el("input", { type: "checkbox", role: "switch", "aria-label": "Pontuação de 0 a " + max });
+    cb.checked = modo100;
+    sw.appendChild(cb); sw.appendChild(el("span", { "class": "trilho-sw", "aria-hidden": "true" })); sw.appendChild(el("span", null, "0–" + max));
+    var barra = document.querySelector(".barra");
+    barra.insertBefore(sw, document.getElementById("btn-imprimir"));
+    cb.addEventListener("change", function () {
+      modo100 = cb.checked;
+      try { localStorage.setItem(KEY_ALT, modo100 ? "1" : "0"); } catch (err) {}
+      preencherApresentacao(); calcular();
+    });
+  }
+  preencherApresentacao();
   document.getElementById("fonte").textContent = C.fonte;
 
   // Descrição / Uso
@@ -77,14 +104,16 @@
       var v = form.elements[it[0]].value;
       var fs = itensEl.querySelector('[data-n="' + it[0] + '"]');
       fs.classList.toggle("feito", v !== "");
-      document.getElementById("pts_" + it[0]).textContent = v !== "" ? v + " pts" : "";
+      document.getElementById("pts_" + it[0]).textContent = v !== "" ? f(+v) + " pts" : "";
       if (v !== "") { total += +v; n++; }
     });
     var completo = n === C.itens.length;
     var cls = !n ? "" : completo ? classe(total) : "incompleto (" + n + "/" + C.itens.length + ")";
-    document.getElementById("total").textContent = n ? total : "—";
+    document.getElementById("total").textContent = n ? f(total) : "—";
+    document.getElementById("total-alt").textContent = n && C.divisor
+      ? (modo100 ? "= " + total / C.divisor + "/" + max / C.divisor + " (0–" + max / C.divisor + ")" : "= " + total + "/" + max + " (0–" + max + ")") : "";
     document.getElementById("cls").textContent = cls;
-    document.getElementById("t-barra").textContent = n ? total + "/" + max : "—";
+    document.getElementById("t-barra").textContent = n ? f(total) + "/" + f(max) : "—";
     document.getElementById("c-barra").textContent = cls;
     tbF.querySelectorAll("tr").forEach(function (tr) { tr.classList.toggle("atual", completo && tr.getAttribute("data-cls") === cls); });
     // idade

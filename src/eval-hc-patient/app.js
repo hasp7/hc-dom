@@ -82,6 +82,38 @@
   tabelaEscala("barthel-corpo", BARTHEL_ITENS);
   tabelaEscala("morse-corpo", MORSE_ITENS);
 
+  // Barthel: apresentação 0–20 (validação portuguesa) ou 0–100. Os valores guardam-se sempre em 0–100.
+  // A preferência é partilhada com a página barthel/ (mesma chave, só neste browser).
+  var KEY_B100 = "hc-barthel-0a100", bModo100 = false;
+  try { bModo100 = localStorage.getItem(KEY_B100) === "1"; } catch (err) {}
+  var BARTHEL_MAX = {};
+  BARTHEL_ITENS.forEach(function (it) { BARTHEL_MAX[it[0]] = Math.max.apply(null, it[2].map(function (o) { return +o[0]; })); });
+  function fB(v) { return bModo100 ? v : v / BARTHEL_DIVISOR; }
+  function bPts(nome, v) { return fB(v) + "/" + fB(BARTHEL_MAX[nome]); }
+  function rotularBarthel() {
+    BARTHEL_ITENS.forEach(function (it) {
+      Array.prototype.forEach.call(campo(it[0]).options, function (o) {
+        if (o.value === "") return;
+        var op = it[2].filter(function (x) { return x[0] === o.value; })[0];
+        o.textContent = fB(+o.value) + " · " + op[1];
+      });
+    });
+    document.getElementById("b_max").textContent = "/ " + fB(100);
+  }
+  (function () {
+    var sw = el("label", { "class": "switch", title: "Mostrar a pontuação do Barthel na escala de 0 a 100" });
+    var cb = el("input", { type: "checkbox", role: "switch", "aria-label": "Barthel de 0 a 100" });
+    cb.checked = bModo100;
+    sw.appendChild(cb); sw.appendChild(el("span", { "class": "trilho-sw", "aria-hidden": "true" })); sw.appendChild(el("span", null, "0–100"));
+    document.getElementById("b_sw").appendChild(sw);
+    cb.addEventListener("change", function () {
+      bModo100 = cb.checked;
+      try { localStorage.setItem(KEY_B100, bModo100 ? "1" : "0"); } catch (err) {}
+      rotularBarthel(); atualizar();
+    });
+  })();
+  rotularBarthel();
+
   var sinaisCorpo = document.getElementById("sinais-corpo");
   SINAIS.forEach(function (s) {
     var r = el("tr");
@@ -211,6 +243,9 @@
   function escalas() {
     esc.barthel = soma(BARTHEL);
     mostrar("b_total", "b_cls", esc.barthel, BARTHEL_CLASSES);
+    if (esc.barthel.n) document.getElementById("b_total").textContent = fB(esc.barthel.total);
+    document.getElementById("b_alt").textContent = !esc.barthel.n ? "" : bModo100
+      ? "= " + esc.barthel.total / BARTHEL_DIVISOR + "/20 (0–20)" : "= " + esc.barthel.total + "/100 (0–100)";
     esc.mif = soma(MIF_NOMES);
     mostrar("mif_total", "mif_cls", esc.mif, MIF_CLASSES);
     var cog = soma(MIF_COGNITIVOS), mot = esc.mif.total - cog.total;
@@ -279,19 +314,19 @@
       var mm = mins.length ? Math.min.apply(null, mins) : null;
       if (mm != null && mm <= 5) add(a[0], a[1], GRAU_MIF(mm), "MIF " + mm);
       var b = num(a[2]);
-      if (b != null && b < a[3]) add(a[0], a[1], b === 0 ? "dependente" : "dependente em grau moderado", "Barthel " + b);
+      if (b != null && b < a[3]) add(a[0], a[1], b === 0 ? "dependente" : "dependente em grau moderado", "Barthel " + bPts(a[2], b));
     });
 
     // Eliminação
     var bex = num("b_bex"), mbex = num("mif_bexiga");
     if ((bex != null && bex < 10) || (mbex != null && mbex <= 5))
       add("inc_ur", "Incontinência urinária", (bex === 0 || (mbex != null && mbex <= 2)) ? "presente" : "presente (ocasional)",
-        bex != null ? "Barthel bexiga " + bex : "MIF bexiga " + mbex);
+        bex != null ? "Barthel bexiga " + bPts("b_bex", bex) : "MIF bexiga " + mbex);
     temCid(["R32"]).forEach(function (d) { add("inc_ur", "Incontinência urinária", "presente", d); });
     var intt = num("b_int"), mint = num("mif_intestino");
     if ((intt != null && intt < 10) || (mint != null && mint <= 5))
       add("inc_int", "Incontinência intestinal", (intt === 0 || (mint != null && mint <= 2)) ? "presente" : "presente (ocasional)",
-        intt != null ? "Barthel intestino " + intt : "MIF intestino " + mint);
+        intt != null ? "Barthel intestino " + bPts("b_int", intt) : "MIF intestino " + mint);
     temCid(["R15"]).forEach(function (d) { add("inc_int", "Incontinência intestinal", "presente", d); });
 
     // Queda
@@ -310,7 +345,7 @@
       if (pele === "risco") add("up", "Úlcera por pressão", "risco", "zonas de risco na pele");
       if (val("mob") === "acamado") add("up", "Úlcera por pressão", "risco", "acamado");
       var bt = num("b_transf");
-      if (bt != null && bt <= 5) add("up", "Úlcera por pressão", "risco", "Barthel transferências " + bt);
+      if (bt != null && bt <= 5) add("up", "Úlcera por pressão", "risco", "Barthel transferências " + bPts("b_transf", bt));
     }
 
     // Respiratório

@@ -71,6 +71,7 @@ fieldset.item legend .pts { font-weight: 600; color: var(--hc-laranja-forte); wh
 .total { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; padding: 12px 14px; background: var(--hc-fundo-alt); border: 1px solid var(--hc-linha); border-radius: 6px; margin: 14px 0; }
 .total output { font: 600 26px var(--font-titulo); color: var(--hc-petroleo); }
 .total .cls { font-weight: 700; color: var(--hc-laranja-forte); font-size: 17px; }
+.total .sub { font-size: 14px; color: var(--hc-texto-sec); }
 table.faixas { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 12px; }
 table.faixas th { background: var(--hc-petroleo-fundo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 6px 8px; }
 table.faixas td { padding: 5px 8px; border-bottom: 1px solid var(--hc-linha); }
@@ -175,9 +176,10 @@ details.intro ol { margin: 4px 0 4px; padding-left: 1.3em; font-size: 12px; colo
   <div class="total">
     <span>Total</span> <output id="total">—</output><span>/ <span id="max"></span></span>
     <span class="cls" id="cls"></span>
+    <span class="sub" id="total-alt"></span>
   </div>
 
-  <table class="faixas" id="faixas"><thead><tr><th>Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
+  <table class="faixas" id="faixas"><thead><tr><th id="faixas-th">Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
 
   <label class="campo">Observações <textarea name="obs" rows="3"></textarea></label>
 

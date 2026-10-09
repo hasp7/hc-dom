@@ -32,15 +32,15 @@ GLOBAIS = {
     "{{TEMA_JS}}": SRC / "shared" / "tema.js",
 }
 
-FONTE_BARTHEL = ("Índice de Barthel: Mahoney FI, Barthel DW (1965). Faixas de interpretação: Shah S, Vanclay F, Cooper B (1989). "
+FONTE_BARTHEL = ("Índice de Barthel: Mahoney FI, Barthel DW (1965). Pontuação 0–20 (Wade & Collin, 1988) e classificação de Martins (2004) usada na validação portuguesa (Araújo et al., 2007). "
                  "Instrumento de apoio à avaliação; a interpretação é sempre do profissional.")
 FONTE_MORSE = ("Escala de Quedas de Morse: Morse JM, Morse RM, Tylko SJ (1989); versão portuguesa: Costa-Dias, Ferreira, Oliveira (2014). "
                "Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico.")
 
 
-def config_escala(chave, nome, itens, classes, faixas, fonte, info):
+def config_escala(chave, nome, itens, classes, faixas, fonte, info, divisor="null"):
     return (f'var ESCALA = {{ chave: "{chave}", nome: "{nome}", itens: {itens}, classes: {classes}, '
-            f'faixas: {faixas}, fonte: "{fonte}", info: {info} }};')
+            f'faixas: {faixas}, fonte: "{fonte}", info: {info}, divisor: {divisor} }};')
 
 
 # Cada página: template, scripts embebidos (ficheiros), textos a substituir, saída
@@ -63,7 +63,7 @@ PAGINAS = [
             "{{TITULO}}": "Índice de Barthel",
             "{{SUBTITULO}}": "Avaliação da independência nas atividades de vida diária",
             "{{CONFIG_JS}}": config_escala("barthel", "Barthel", "BARTHEL_ITENS", "BARTHEL_CLASSES",
-                                           "BARTHEL_FAIXAS", FONTE_BARTHEL, "BARTHEL_INFO"),
+                                           "BARTHEL_FAIXAS", FONTE_BARTHEL, "BARTHEL_INFO", "BARTHEL_DIVISOR"),
         },
         saida=RAIZ / "barthel" / "index.html",
     ),
