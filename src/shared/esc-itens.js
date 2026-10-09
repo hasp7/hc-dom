@@ -57,6 +57,34 @@ var ESC_FATORES = [
     dimensao: "Perceção do cuidador sobre a qualidade e a suficiência dos cuidados que presta" }
 ];
 
+/* Pistas para a conversa e o plano, por subescala. Orientação clínica de apoio — NÃO fazem parte da
+   escala validada. Só as que o enfermeiro selecionar vão para o PDF. [id, texto] */
+var ESC_PISTAS = {
+  IPC: [
+    ["p_ipc_descanso", "Explorar períodos de descanso do cuidador e quem o pode substituir (família, apoio domiciliário, descanso do cuidador)"],
+    ["p_ipc_tarefas", "Rever a distribuição das tarefas de cuidado e o que pode ser assegurado pela equipa"],
+    ["p_ipc_saude", "Perguntar pela saúde do próprio cuidador (sono, dor, consultas em atraso) e encaminhar se necessário"]
+  ],
+  RI: [
+    ["p_ri_comport", "Explorar os comportamentos da pessoa cuidada que geram tensão e estratégias para lidar com eles"],
+    ["p_ri_emocoes", "Validar emoções como irritação ou vergonha; ponderar apoio psicológico ou grupo de suporte"],
+    ["p_ri_limites", "Conversar sobre limites e sobre a hipótese de partilhar ou transferir cuidados"]
+  ],
+  EC: [
+    ["p_ec_info", "Dar informação sobre a doença, a evolução esperada e o plano de cuidados"],
+    ["p_ec_social", "Encaminhar para o serviço social: apoios económicos e Estatuto do Cuidador Informal"],
+    ["p_ec_futuro", "Planear com a família a continuidade dos cuidados e as alternativas"]
+  ],
+  PA: [
+    ["p_pa_ensino", "Ensino e treino de cuidados (posicionamentos, transferências, higiene, medicação)"],
+    ["p_pa_reforco", "Reconhecer e reforçar o que o cuidador já faz bem"],
+    ["p_pa_reaval", "Reavaliar a perceção de autoeficácia depois do ensino"]
+  ]
+};
+
+/* Âncoras da escala de resposta, para descrever a média por item em linguagem da própria escala. */
+var ESC_ANCORAS = [[4.5, "quase sempre"], [3.5, "muitas vezes"], [2.5, "às vezes"], [1.5, "quase nunca"], [0, "nunca"]];
+
 /* Descrição / Uso — a partir de Sequeira (2010), lido em texto integral, e de Zarit et al. (1980). */
 var ESC_INFO = {
   descricao: "A Escala de Sobrecarga do Cuidador (ESC) é a versão portuguesa (Sequeira, 2010) da Zarit Burden Interview (Zarit, Reever & Bach-Peterson, 1980). Avalia a sobrecarga objetiva e subjetiva do cuidador informal em 22 itens sobre saúde, vida social, vida pessoal, situação financeira, situação emocional e tipo de relacionamento, cada um cotado de 1 (nunca) a 5 (quase sempre). Na validação portuguesa, com 184 cuidadores de idosos dependentes, mostrou boa consistência interna (alfa de Cronbach 0,93) e quatro fatores: impacto da prestação de cuidados (11 itens), relação interpessoal (5), expectativas face ao cuidar (4) e perceção de autoeficácia (2).",

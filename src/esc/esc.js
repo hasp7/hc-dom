@@ -80,6 +80,83 @@
   var tbF = document.querySelector("#faixas tbody");
   ESC_FAIXAS.forEach(function (f) { var tr = el("tr", { "data-cls": f[1] }); tr.appendChild(el("td", null, f[0])); tr.appendChild(el("td", null, f[1])); tbF.appendChild(tr); });
 
+  /* ---------- subescalas: cartões construídos uma vez, atualizados a cada resposta ---------- */
+  function ancora(m) { for (var i = 0; i < ESC_ANCORAS.length; i++) if (m >= ESC_ANCORAS[i][0]) return ESC_ANCORAS[i][1]; return ""; }
+  function dec(x) { return x.toFixed(1).replace(".", ","); }
+  var subEl = $("subescalas"), cartoes = {};
+  ESC_FATORES.forEach(function (fx) {
+    var c = el("div", { "class": "sub-card", "data-f": fx.id });
+    var topo = el("div", { "class": "topo" });
+    var nome = el("span", { "class": "nome" }, fx.nome + " (" + fx.id + ")");
+    topo.appendChild(nome);
+    topo.appendChild(el("span", { "class": "valores" }));
+    c.appendChild(topo);
+    c.appendChild(el("div", { "class": "dica", style: "font-size:12px;color:var(--hc-texto-sec)" },
+      fx.dimensao + " · itens " + fx.itens.join(", ") + " · α " + fx.alfa + (fx.prudencia ? " — consistência interna mais baixa, ler com prudência" : "")));
+    var eixo = el("div", { "class": "eixo", "aria-hidden": "true" }); eixo.appendChild(el("i")); c.appendChild(eixo);
+    var rot = el("div", { "class": "eixo-rot", "aria-hidden": "true" });
+    ["Nunca", "Quase nunca", "Às vezes", "Muitas vezes", "Quase sempre"].forEach(function (t) { rot.appendChild(el("span", null, t)); });
+    c.appendChild(rot);
+    c.appendChild(el("p", { "class": "leitura" }));
+    c.appendChild(el("p", { "class": "alerta-pa", hidden: "" }));
+    var ps = el("div", { "class": "pistas" });
+    ps.appendChild(el("div", { "class": "tit" }, "Pistas para a conversa e o plano"));
+    (ESC_PISTAS[fx.id] || []).forEach(function (p) {
+      var l = el("label", { "class": "pista" });
+      l.appendChild(el("input", { type: "checkbox", name: p[0] }));
+      l.appendChild(el("span", null, p[1]));
+      ps.appendChild(l);
+    });
+    c.appendChild(ps);
+    subEl.appendChild(c);
+    cartoes[fx.id] = c;
+  });
+
+  function atualizarSubescalas(r, totalCompleto) {
+    var dados = ESC_FATORES.map(function (fx) {
+      var vals = fx.itens.map(function (n) { return r[n - 1]; });
+      var resp = vals.filter(function (v) { return v !== null; });
+      var k = fx.itens.length, somaF = resp.reduce(function (a, v) { return a + v; }, 0);
+      var criticos = fx.itens.filter(function (n) { return r[n - 1] !== null && r[n - 1] >= ESC_LIMIAR; });
+      return { fx: fx, k: k, n: resp.length, soma: somaF, media: resp.length === k ? somaF / k : null, criticos: criticos };
+    });
+    var completos = dados.filter(function (d) { return d.media !== null; });
+    var maxMedia = completos.length ? Math.max.apply(null, completos.map(function (d) { return d.media; })) : null;
+    // ordenar: completos por média decrescente, depois os incompletos pela ordem original
+    dados.slice().sort(function (a, b) {
+      if (a.media === null && b.media === null) return 0;
+      if (a.media === null) return 1; if (b.media === null) return -1;
+      return b.media - a.media;
+    }).forEach(function (d) { subEl.appendChild(cartoes[d.fx.id]); });
+
+    dados.forEach(function (d) {
+      var c = cartoes[d.fx.id], val = c.querySelector(".valores"), le = c.querySelector(".leitura"), pa = c.querySelector(".alerta-pa");
+      var predominante = d.media !== null && completos.length > 1 && d.media === maxMedia && d.media >= 2.5;
+      c.classList.toggle("predominante", predominante);
+      // Dimensões leves (média abaixo de «às vezes»): pistas recolhidas, salvo se já houver alguma marcada
+      c.classList.toggle("leve", d.media !== null && d.media < 2.5);
+      val.textContent = "";
+      if (d.media === null) {
+        val.appendChild(document.createTextNode(d.n + "/" + d.k + " itens"));
+        c.querySelector(".eixo i").style.width = "0";
+        le.textContent = "Aparece quando os " + d.k + " itens desta subescala estiverem respondidos.";
+        pa.hidden = true;
+        return;
+      }
+      val.appendChild(el("strong", null, String(d.soma)));
+      val.appendChild(document.createTextNode(" (" + d.k + "–" + d.k * 5 + ") · média " + dec(d.media)));
+      if (predominante) val.appendChild(el("span", { "class": "selo" }, "Predominante"));
+      c.querySelector(".eixo i").style.width = ((d.media - 1) / 4 * 100) + "%";
+      le.textContent = "Em média, «" + ancora(d.media) + "»." + (d.criticos.length ? " Itens a 4 ou 5: " + d.criticos.join(", ") + "." : " Nenhum item a 4 ou 5.");
+      // Autoeficácia: o total quase não a reflete (r = 0,208 com o total na validação)
+      if (d.fx.id === "PA" && d.media >= 3.5) {
+        pa.hidden = false;
+        pa.textContent = "O cuidador sente, " + ancora(d.media) + ", que poderia fazer mais ou cuidar melhor. O total da escala quase não reflete esta dimensão" +
+          (totalCompleto !== null && totalCompleto < 46 ? " — aqui o total indica ausência de sobrecarga, o que pode esconder esta dificuldade." : ".");
+      } else { pa.hidden = true; }
+    });
+  }
+
   function respostas() { var r = []; for (var n = 1; n <= N; n++) { var v = form.elements["i" + n].value; r.push(v === "" ? null : +v); } return r; }
 
   function chip(cont, n, titulo) {
@@ -151,28 +228,7 @@
     r.forEach(function (v, i) { if (v !== null && v >= ESC_LIMIAR) { marc.push(i + 1); chip(mc, i + 1, "Item " + (i + 1) + ", " + rotulo(v)); } });
     $("sem-marcados").style.display = marc.length ? "none" : "block";
 
-    // Subescalas (fatores de Sequeira): pontuação, intervalo e média por item
-    var tbS = document.querySelector("#subescalas tbody"); tbS.textContent = "";
-    ESC_FATORES.forEach(function (fx) {
-      var vals = fx.itens.map(function (n) { return r[n - 1]; }).filter(function (v) { return v !== null; });
-      var k = fx.itens.length, somaF = vals.reduce(function (a, v) { return a + v; }, 0);
-      var tr = el("tr");
-      var c1 = el("td"); c1.appendChild(document.createTextNode(fx.nome + " (" + fx.id + ")"));
-      c1.appendChild(el("small", null, "Itens " + fx.itens.join(", ") + " · α " + fx.alfa));
-      if (fx.prudencia) c1.appendChild(el("span", { "class": "aviso-ec" }, "Consistência interna mais baixa — ler com prudência"));
-      tr.appendChild(c1);
-      if (vals.length === k) {
-        var media = somaF / k;
-        tr.appendChild(el("td", null, somaF + " (" + k + "–" + k * 5 + ")"));
-        var c3 = el("td"); c3.appendChild(document.createTextNode(media.toFixed(1).replace(".", ",")));
-        var b = el("span", { "class": "barra-media", "aria-hidden": "true" }), i = el("i"); i.style.width = ((media - 1) / 4 * 100) + "%";
-        b.appendChild(i); c3.appendChild(b); tr.appendChild(c3);
-      } else {
-        tr.appendChild(el("td", { "class": "vazio" }, vals.length + "/" + k + " itens"));
-        tr.appendChild(el("td", { "class": "vazio" }, "—"));
-      }
-      tbS.appendChild(tr);
-    });
+    atualizarSubescalas(r, falta === 0 ? soma : null);
 
     var fl = $("falta"); fl.textContent = "";
     var em = [];

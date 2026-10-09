@@ -148,6 +148,25 @@ body.res-oculto .res-escondido-msg { display: block; }
 body.res-oculto .item.marcado .num { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
 body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
 .sub-tab td small { display: block; color: var(--hc-texto-sec); font-size: 12px; }
+/* Cartões das subescalas */
+.sub-card { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-linha); border-radius: 6px; padding: 10px 12px; margin: 8px 0; }
+.sub-card.predominante { border-left-color: var(--c3); }
+.sub-card .topo { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; align-items: baseline; }
+.sub-card .nome { font: 600 14px var(--font-titulo); color: var(--hc-petroleo); }
+.sub-card .valores { font-size: 14px; }
+.sub-card .valores strong { color: var(--hc-petroleo); }
+.sub-card .selo { display: inline-block; font-size: 11px; font-weight: 700; color: var(--c3); border: 1px solid var(--c3); border-radius: 4px; padding: 0 6px; margin-left: 6px; }
+.eixo { position: relative; height: 10px; background: var(--hc-linha); border-radius: 5px; margin: 8px 0 2px; }
+.eixo i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--hc-turquesa); border-radius: 5px; }
+.sub-card.predominante .eixo i { background: var(--c3); }
+.eixo-rot { display: flex; justify-content: space-between; font-size: 11px; color: var(--hc-texto-sec); }
+.sub-card .leitura { font-size: 14px; margin: 6px 0 0; }
+.sub-card .alerta-pa { font-size: 13px; color: var(--c2); font-weight: 700; margin: 4px 0 0; }
+.pistas { margin: 8px 0 0; }
+.pistas .tit { font-size: 12px; font-weight: 700; color: var(--hc-texto-sec); text-transform: uppercase; letter-spacing: .04em; }
+.pista { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; padding: 3px 0; cursor: pointer; }
+.pista input { width: 18px; height: 18px; margin: 2px 0 0; flex: none; }
+.sub-card.leve .pistas:not(:has(input:checked)) { display: none; }
 .sub-tab .aviso-ec { color: var(--c2); font-weight: 700; font-size: 12px; }
 .barra-media { display: inline-block; width: 90px; height: 8px; background: var(--hc-linha); border-radius: 4px; vertical-align: middle; margin-left: 8px; overflow: hidden; }
 .barra-media i { display: block; height: 100%; background: var(--hc-turquesa); }
@@ -182,7 +201,8 @@ body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-pe
   table.respostas tr.marcado td { background: var(--c3-bg); }
   table.respostas tr.marcado td.v { color: var(--c3); }
   table.respostas tr { break-inside: avoid; }
-  .resultado { padding: 6px 10px; margin: 8px 0; break-inside: avoid; }
+  .resultado { padding: 6px 10px; margin: 8px 0; break-inside: auto; }
+  .resultado .bloco, .pontuacao { break-inside: avoid; }
   .pontuacao strong { font-size: 18pt; }
   .medidor { display: none; } .marcas { display: none; }
   .bloco { margin-top: 6px; padding-top: 6px; }
@@ -192,6 +212,12 @@ body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-pe
   .fonte { font-size: 7.5pt; margin-top: 8px; }
   footer.legal { display: none; }
   .nota-sub, .sub-tab td small, .sub-tab .aviso-ec { font-size: 7.5pt; }
+  .sub-card { padding: 4px 8px; margin: 4px 0; break-inside: avoid; }
+  .sub-card .nome, .sub-card .valores, .sub-card .leitura, .pista { font-size: 8.5pt; }
+  .sub-card .alerta-pa { font-size: 8pt; }
+  .eixo { height: 6px; margin: 4px 0 1px; } .eixo-rot { font-size: 6.5pt; }
+  .pista:not(:has(input:checked)), .pistas:not(:has(input:checked)) { display: none; }
+  .pista input { width: 10px; height: 10px; }
   #resultado .bloco p, .pontuacao { font-size: 9pt; }
   .bloco h3 { font-size: 9.5pt; margin-bottom: 3px; }
   .cat { padding: 2px 8px; font-size: 9.5pt; }
@@ -288,8 +314,9 @@ body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-pe
     <div class="bloco"><h3>Itens com cotação 4 ou 5</h3><ul class="chips marcados" id="marcados"></ul><p id="sem-marcados" class="vazio">Nenhum item assinalado.</p></div>
     <div class="bloco" id="bloco-sub">
       <h3>Subescalas</h3>
-      <table class="faixas sub-tab" id="subescalas"><thead><tr><th>Subescala</th><th>Pontuação</th><th>Média por item (1–5)</th></tr></thead><tbody></tbody></table>
-      <p class="nota-sub">Sem pontos de corte próprios: os cortes da escala global não se aplicam às subescalas. A média por item permite comparar dimensões com números diferentes de itens (1 = nunca, 5 = quase sempre). Correspondência entre itens e fatores reproduzida de Sequeira (2010) por Viegas e Rodrigues (2022).</p>
+      <p class="nota-sub so-ecra">Ordenadas da dimensão mais pesada para a mais leve. Marque as pistas que quer levar para o plano; só essas saem no PDF.</p>
+      <div id="subescalas"></div>
+      <p class="nota-sub">Sem pontos de corte próprios: os cortes da escala global não se aplicam às subescalas. A média por item permite comparar dimensões com números diferentes de itens e descreve-se com as palavras da própria escala. As pistas são orientação clínica de apoio e não fazem parte da escala validada. Correspondência entre itens e fatores reproduzida de Sequeira (2010) por Viegas e Rodrigues (2022).</p>
     </div>
     <div class="bloco so-ecra" id="bloco-falta"><h3>Por responder</h3><ul class="chips" id="falta"></ul></div>
     <div class="bloco">
