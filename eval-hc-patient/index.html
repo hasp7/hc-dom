@@ -280,6 +280,17 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
 .tema-btn:hover { border-color: var(--hc-petroleo); }
 header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
 
+/* Interruptor (ex.: Barthel 0–20 ↔ 0–100) */
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font: 700 13px var(--font-corpo, system-ui); color: var(--hc-petroleo); user-select: none; min-height: 32px; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch .trilho-sw { width: 40px; height: 22px; border-radius: 11px; background: var(--campo-borda); position: relative; transition: background .2s; flex: none; }
+.switch .trilho-sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--sup); transition: left .2s; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.switch input:checked + .trilho-sw { background: var(--hc-petroleo-fundo); }
+.switch input:checked + .trilho-sw::after { left: 21px; }
+.switch input:focus-visible + .trilho-sw { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .switch .trilho-sw, .switch .trilho-sw::after { transition: none; } }
+@media print { .switch { display: none !important; } }
+
 @media print {
   :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
     --hc-texto: #1a1a1a; --hc-texto-sec: #5a6a6e; --hc-linha: #e4eaeb; --hc-fundo-alt: #f5f9f9;
@@ -539,8 +550,10 @@ header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
     </table>
     </div>
     <div class="total">
-      <span>Total Barthel</span> <output id="b_total">—</output><span>/ 100</span>
+      <span>Total Barthel</span> <output id="b_total">—</output><span id="b_max">/ 20</span>
       <span class="cls" id="b_cls"></span>
+      <span class="sub" id="b_alt"></span>
+      <span id="b_sw" class="nao-imprimir" style="margin-left:auto"></span>
     </div>
 
     <h3>MIF — Medida de Independência Funcional</h3>
@@ -882,11 +895,16 @@ var BARTHEL_ITENS = [
     ["5", "Precisa de ajuda", "Ajuda física ou supervisão"],
     ["0", "Incapaz", ""]]]
 ];
-/* Faixas de interpretação do total (0–100), de Shah et al. (1989). */
-var BARTHEL_CLASSES = [[100, "Independente"], [91, "Dependência ligeira"], [61, "Dependência moderada"],
-  [21, "Dependência grave"], [0, "Dependência total"]];
-var BARTHEL_FAIXAS = [["100", "Independente"], ["91–99", "Dependência ligeira"], ["61–90", "Dependência moderada"],
-  ["21–60", "Dependência grave"], ["0–20", "Dependência total"]];
+/* Classificação portuguesa: cortes de Martins (2004), usados na validação de Araújo et al. (2007)
+   na versão 0–20 (Wade & Collin: cada nível 0/5/10/15 corresponde a 0/1/2/3).
+   Os valores guardam-se sempre em 0–100; a apresentação em 0–20 divide por BARTHEL_DIVISOR.
+   Limiares abaixo em 0–100: 0–40 total, 45–60 grave, 65–95 moderada, 100 independência total. */
+var BARTHEL_DIVISOR = 5;
+var BARTHEL_CLASSES = [[100, "Independência total"], [65, "Dependência moderada"], [45, "Dependência grave"],
+  [0, "Dependência total"]];
+/* [faixa 0–20, faixa 0–100, classificação] */
+var BARTHEL_FAIXAS = [["20", "100", "Independência total"], ["13–19", "65–95", "Dependência moderada"],
+  ["9–12", "45–60", "Dependência grave"], ["0–8", "0–40", "Dependência total"]];
 
 /* Escala de Quedas de Morse (Morse, Morse & Tylko, 1989). Redação da versão portuguesa validada:
    Costa-Dias, Ferreira & Oliveira (2014), Tabela 1. */
@@ -917,13 +935,14 @@ var MORSE_FAIXAS = [["0–24", "Sem risco de queda"], ["25–50", "Baixo risco d
 
 /* Descrição / Uso — texto de apoio por escala, a partir das fontes indicadas (verificadas em 2026-10-08). */
 var BARTHEL_INFO = {
-  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Nesta versão (a original) a pontuação vai de 0 a 100, em intervalos de 5: 0 corresponde à dependência máxima e 100 à independência nas atividades avaliadas.",
-  leitura: "O total distribui-se habitualmente em cinco faixas (Shah, Vanclay & Cooper, 1989, propostas para o índice modificado e usadas com frequência na versão original): 100 independente, 91–99 dependência ligeira, 61–90 moderada, 21–60 grave e 0–20 total. O valor 60 é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes, consoante as atividades em que estão dependentes.",
+  descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Esta página usa a pontuação de 0 a 20 (Wade & Collin, 1988), a da validação portuguesa, em que cada nível vale 0, 1, 2 ou 3; o interruptor mostra a mesma avaliação na escala original de 0 a 100 (multiplicar por 5). 0 corresponde à dependência máxima e o máximo à independência nas atividades avaliadas.",
+  leitura: "Classificação usada na validação portuguesa (Araújo et al., 2007, com os cortes de Martins, 2004): 0–8 dependência total, 9–12 grave, 13–19 moderada e 20 independência total (em 0–100: 0–40, 45–60, 65–95 e 100). Não há faixa de dependência ligeira: qualquer dependência abaixo do máximo conta como moderada ou pior. Os cortes foram propostos num estudo com doentes com AVC e adotados no estudo português para comparação; a validação portuguesa demonstrou a fiabilidade da escala (alfa de Cronbach 0,96), não derivou novos cortes. O valor 60 em 0–100 (12 em 0–20) é apontado como ponto de viragem entre independência e dependência (Granger, citado por Araújo et al., 2007). Mais do que o total, contam as pontuações parciais: duas pessoas com o mesmo total podem precisar de cuidados diferentes.",
   uso: "Avaliação inicial e reavaliação periódica da dependência funcional, planeamento de cuidados e monitorização da evolução (a diferença entre duas avaliações indica melhoria ou agravamento). Regista o que a pessoa faz, não o que poderia fazer. É rápido de aplicar e pode ser respondido pela própria pessoa ou pelo cuidador principal; em Portugal foi validado em idosos a viver no domicílio, na versão de 0 a 20 (Araújo et al., 2007).",
   fontes: [
     "Mahoney FI, Barthel DW. Functional evaluation: the Barthel Index. Maryland State Medical Journal. 1965;14:61–65.",
-    "Shah S, Vanclay F, Cooper B. Improving the sensitivity of the Barthel Index for stroke rehabilitation. J Clin Epidemiol. 1989;42(8):703–709. doi:10.1016/0895-4356(89)90065-6",
-    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740"
+    "Wade DT, Collin C. The Barthel ADL Index: a standard measure of physical disability? International Disability Studies. 1988;10(2):64–67.",
+    "Araújo F, Ribeiro JLP, Oliveira A, Pinto C. Validação do Índice de Barthel numa amostra de idosos não institucionalizados. Revista Portuguesa de Saúde Pública. 2007;25(2):59–66. hdl:10216/15740",
+    "Martins AT. Dependência funcional, qualidade de vida pós AVC e sobrecarga física, emocional e social do cuidador informal. Tese de doutoramento, Faculdade de Psicologia, Porto; 2004. (Origem dos pontos de corte, citada por Araújo et al., 2007; não consultada diretamente.)"
   ]
 };
 
@@ -1258,6 +1277,38 @@ var SINAIS = [
   tabelaEscala("barthel-corpo", BARTHEL_ITENS);
   tabelaEscala("morse-corpo", MORSE_ITENS);
 
+  // Barthel: apresentação 0–20 (validação portuguesa) ou 0–100. Os valores guardam-se sempre em 0–100.
+  // A preferência é partilhada com a página barthel/ (mesma chave, só neste browser).
+  var KEY_B100 = "hc-barthel-0a100", bModo100 = false;
+  try { bModo100 = localStorage.getItem(KEY_B100) === "1"; } catch (err) {}
+  var BARTHEL_MAX = {};
+  BARTHEL_ITENS.forEach(function (it) { BARTHEL_MAX[it[0]] = Math.max.apply(null, it[2].map(function (o) { return +o[0]; })); });
+  function fB(v) { return bModo100 ? v : v / BARTHEL_DIVISOR; }
+  function bPts(nome, v) { return fB(v) + "/" + fB(BARTHEL_MAX[nome]); }
+  function rotularBarthel() {
+    BARTHEL_ITENS.forEach(function (it) {
+      Array.prototype.forEach.call(campo(it[0]).options, function (o) {
+        if (o.value === "") return;
+        var op = it[2].filter(function (x) { return x[0] === o.value; })[0];
+        o.textContent = fB(+o.value) + " · " + op[1];
+      });
+    });
+    document.getElementById("b_max").textContent = "/ " + fB(100);
+  }
+  (function () {
+    var sw = el("label", { "class": "switch", title: "Mostrar a pontuação do Barthel na escala de 0 a 100" });
+    var cb = el("input", { type: "checkbox", role: "switch", "aria-label": "Barthel de 0 a 100" });
+    cb.checked = bModo100;
+    sw.appendChild(cb); sw.appendChild(el("span", { "class": "trilho-sw", "aria-hidden": "true" })); sw.appendChild(el("span", null, "0–100"));
+    document.getElementById("b_sw").appendChild(sw);
+    cb.addEventListener("change", function () {
+      bModo100 = cb.checked;
+      try { localStorage.setItem(KEY_B100, bModo100 ? "1" : "0"); } catch (err) {}
+      rotularBarthel(); atualizar();
+    });
+  })();
+  rotularBarthel();
+
   var sinaisCorpo = document.getElementById("sinais-corpo");
   SINAIS.forEach(function (s) {
     var r = el("tr");
@@ -1387,6 +1438,9 @@ var SINAIS = [
   function escalas() {
     esc.barthel = soma(BARTHEL);
     mostrar("b_total", "b_cls", esc.barthel, BARTHEL_CLASSES);
+    if (esc.barthel.n) document.getElementById("b_total").textContent = fB(esc.barthel.total);
+    document.getElementById("b_alt").textContent = !esc.barthel.n ? "" : bModo100
+      ? "= " + esc.barthel.total / BARTHEL_DIVISOR + "/20 (0–20)" : "= " + esc.barthel.total + "/100 (0–100)";
     esc.mif = soma(MIF_NOMES);
     mostrar("mif_total", "mif_cls", esc.mif, MIF_CLASSES);
     var cog = soma(MIF_COGNITIVOS), mot = esc.mif.total - cog.total;
@@ -1455,19 +1509,19 @@ var SINAIS = [
       var mm = mins.length ? Math.min.apply(null, mins) : null;
       if (mm != null && mm <= 5) add(a[0], a[1], GRAU_MIF(mm), "MIF " + mm);
       var b = num(a[2]);
-      if (b != null && b < a[3]) add(a[0], a[1], b === 0 ? "dependente" : "dependente em grau moderado", "Barthel " + b);
+      if (b != null && b < a[3]) add(a[0], a[1], b === 0 ? "dependente" : "dependente em grau moderado", "Barthel " + bPts(a[2], b));
     });
 
     // Eliminação
     var bex = num("b_bex"), mbex = num("mif_bexiga");
     if ((bex != null && bex < 10) || (mbex != null && mbex <= 5))
       add("inc_ur", "Incontinência urinária", (bex === 0 || (mbex != null && mbex <= 2)) ? "presente" : "presente (ocasional)",
-        bex != null ? "Barthel bexiga " + bex : "MIF bexiga " + mbex);
+        bex != null ? "Barthel bexiga " + bPts("b_bex", bex) : "MIF bexiga " + mbex);
     temCid(["R32"]).forEach(function (d) { add("inc_ur", "Incontinência urinária", "presente", d); });
     var intt = num("b_int"), mint = num("mif_intestino");
     if ((intt != null && intt < 10) || (mint != null && mint <= 5))
       add("inc_int", "Incontinência intestinal", (intt === 0 || (mint != null && mint <= 2)) ? "presente" : "presente (ocasional)",
-        intt != null ? "Barthel intestino " + intt : "MIF intestino " + mint);
+        intt != null ? "Barthel intestino " + bPts("b_int", intt) : "MIF intestino " + mint);
     temCid(["R15"]).forEach(function (d) { add("inc_int", "Incontinência intestinal", "presente", d); });
 
     // Queda
@@ -1486,7 +1540,7 @@ var SINAIS = [
       if (pele === "risco") add("up", "Úlcera por pressão", "risco", "zonas de risco na pele");
       if (val("mob") === "acamado") add("up", "Úlcera por pressão", "risco", "acamado");
       var bt = num("b_transf");
-      if (bt != null && bt <= 5) add("up", "Úlcera por pressão", "risco", "Barthel transferências " + bt);
+      if (bt != null && bt <= 5) add("up", "Úlcera por pressão", "risco", "Barthel transferências " + bPts("b_transf", bt));
     }
 
     // Respiratório
