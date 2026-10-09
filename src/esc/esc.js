@@ -151,6 +151,29 @@
     r.forEach(function (v, i) { if (v !== null && v >= ESC_LIMIAR) { marc.push(i + 1); chip(mc, i + 1, "Item " + (i + 1) + ", " + rotulo(v)); } });
     $("sem-marcados").style.display = marc.length ? "none" : "block";
 
+    // Subescalas (fatores de Sequeira): pontuação, intervalo e média por item
+    var tbS = document.querySelector("#subescalas tbody"); tbS.textContent = "";
+    ESC_FATORES.forEach(function (fx) {
+      var vals = fx.itens.map(function (n) { return r[n - 1]; }).filter(function (v) { return v !== null; });
+      var k = fx.itens.length, somaF = vals.reduce(function (a, v) { return a + v; }, 0);
+      var tr = el("tr");
+      var c1 = el("td"); c1.appendChild(document.createTextNode(fx.nome + " (" + fx.id + ")"));
+      c1.appendChild(el("small", null, "Itens " + fx.itens.join(", ") + " · α " + fx.alfa));
+      if (fx.prudencia) c1.appendChild(el("span", { "class": "aviso-ec" }, "Consistência interna mais baixa — ler com prudência"));
+      tr.appendChild(c1);
+      if (vals.length === k) {
+        var media = somaF / k;
+        tr.appendChild(el("td", null, somaF + " (" + k + "–" + k * 5 + ")"));
+        var c3 = el("td"); c3.appendChild(document.createTextNode(media.toFixed(1).replace(".", ",")));
+        var b = el("span", { "class": "barra-media", "aria-hidden": "true" }), i = el("i"); i.style.width = ((media - 1) / 4 * 100) + "%";
+        b.appendChild(i); c3.appendChild(b); tr.appendChild(c3);
+      } else {
+        tr.appendChild(el("td", { "class": "vazio" }, vals.length + "/" + k + " itens"));
+        tr.appendChild(el("td", { "class": "vazio" }, "—"));
+      }
+      tbS.appendChild(tr);
+    });
+
     var fl = $("falta"); fl.textContent = "";
     var em = [];
     r.forEach(function (v, i) { if (v === null) { em.push(i + 1); chip(fl, i + 1, "Ir para o item " + (i + 1)); } });

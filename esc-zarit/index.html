@@ -147,6 +147,11 @@ body.res-oculto #resultado .conteudo-res, body.res-oculto #res-barra { display: 
 body.res-oculto .res-escondido-msg { display: block; }
 body.res-oculto .item.marcado .num { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
 body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
+.sub-tab td small { display: block; color: var(--hc-texto-sec); font-size: 12px; }
+.sub-tab .aviso-ec { color: var(--c2); font-weight: 700; font-size: 12px; }
+.barra-media { display: inline-block; width: 90px; height: 8px; background: var(--hc-linha); border-radius: 4px; vertical-align: middle; margin-left: 8px; overflow: hidden; }
+.barra-media i { display: block; height: 100%; background: var(--hc-turquesa); }
+.nota-sub { font-size: 12px; color: var(--hc-texto-sec); margin: 4px 0 0; }
 .evol-sobe { color: var(--c3); font-weight: 700; } .evol-desce { color: var(--c1); font-weight: 700; }
 
 @page {
@@ -186,6 +191,12 @@ body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-pe
   .assin { margin-top: 14px; break-inside: avoid; } .assin .linha { margin-top: 24px; }
   .fonte { font-size: 7.5pt; margin-top: 8px; }
   footer.legal { display: none; }
+  .nota-sub, .sub-tab td small, .sub-tab .aviso-ec { font-size: 7.5pt; }
+  #resultado .bloco p, .pontuacao { font-size: 9pt; }
+  .bloco h3 { font-size: 9.5pt; margin-bottom: 3px; }
+  .cat { padding: 2px 8px; font-size: 9.5pt; }
+  .sub-tab td { padding: 2px 6px; }
+  .barra-media { width: 60px; height: 6px; }
   body.res-oculto #resultado .conteudo-res { display: block !important; }
   .res-escondido-msg { display: none !important; }
 }
@@ -227,6 +238,17 @@ body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-pe
 }
 .tema-btn:hover { border-color: var(--hc-petroleo); }
 header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
+
+/* Interruptor (ex.: Barthel 0–20 ↔ 0–100) */
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font: 700 13px var(--font-corpo, system-ui); color: var(--hc-petroleo); user-select: none; min-height: 32px; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch .trilho-sw { width: 40px; height: 22px; border-radius: 11px; background: var(--campo-borda); position: relative; transition: background .2s; flex: none; }
+.switch .trilho-sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--sup); transition: left .2s; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.switch input:checked + .trilho-sw { background: var(--hc-petroleo-fundo); }
+.switch input:checked + .trilho-sw::after { left: 21px; }
+.switch input:focus-visible + .trilho-sw { outline: 3px solid var(--hc-turquesa); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .switch .trilho-sw, .switch .trilho-sw::after { transition: none; } }
+@media print { .switch { display: none !important; } }
 
 @media print {
   :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
@@ -352,6 +374,11 @@ header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
     <div class="bloco" id="bloco-evol" hidden><h3>Evolução</h3><p id="evolucao"></p></div>
     <div class="bloco"><h3>Avaliação global (item 22)</h3><p id="global" class="vazio">Por responder.</p></div>
     <div class="bloco"><h3>Itens com cotação 4 ou 5</h3><ul class="chips marcados" id="marcados"></ul><p id="sem-marcados" class="vazio">Nenhum item assinalado.</p></div>
+    <div class="bloco" id="bloco-sub">
+      <h3>Subescalas</h3>
+      <table class="faixas sub-tab" id="subescalas"><thead><tr><th>Subescala</th><th>Pontuação</th><th>Média por item (1–5)</th></tr></thead><tbody></tbody></table>
+      <p class="nota-sub">Sem pontos de corte próprios: os cortes da escala global não se aplicam às subescalas. A média por item permite comparar dimensões com números diferentes de itens (1 = nunca, 5 = quase sempre). Correspondência entre itens e fatores reproduzida de Sequeira (2010) por Viegas e Rodrigues (2022).</p>
+    </div>
     <div class="bloco so-ecra" id="bloco-falta"><h3>Por responder</h3><ul class="chips" id="falta"></ul></div>
     <div class="bloco">
       <table class="faixas" id="faixas"><thead><tr><th>Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>
@@ -424,14 +451,30 @@ var ESC_CLASSES = [[57, "Sobrecarga intensa", "c3"], [46, "Sobrecarga ligeira", 
 var ESC_FAIXAS = [["22–45", "Sem sobrecarga"], ["46–56", "Sobrecarga ligeira"], ["57–110", "Sobrecarga intensa"]];
 var ESC_LIMIAR = 4; // itens com 4 ou 5 ficam assinalados para orientar a conversa
 
+/* Subescalas (fatores) de Sequeira (2010). Dimensões, alfas e correlações com o total confirmados no
+   artigo original (Tabela 1); a correspondência item → fator vem de Viegas & Rodrigues (2022), que a
+   reproduzem de Sequeira — o artigo de 2010 indica só o número de itens por fator.
+   Sem pontos de corte próprios: NÃO aplicar os cortes da escala global às subescalas. */
+var ESC_FATORES = [
+  { id: "IPC", nome: "Impacto da prestação de cuidados", itens: [1, 2, 3, 6, 9, 10, 11, 12, 13, 17, 22], alfa: "0,93", rTotal: "0,962",
+    dimensao: "Saúde, tempo disponível, vida social e familiar, desgaste físico e psicológico" },
+  { id: "RI", nome: "Relação interpessoal", itens: [4, 5, 16, 18, 19], alfa: "0,83", rTotal: "0,833",
+    dimensao: "Dificuldades relacionais e tensão emocional na interação com a pessoa cuidada" },
+  { id: "EC", nome: "Expectativas face ao cuidar", itens: [7, 8, 14, 15], alfa: "0,67", rTotal: "0,690", prudencia: true,
+    dimensao: "Receios, preocupações e expectativas sobre a continuidade e as exigências do cuidar" },
+  { id: "PA", nome: "Perceção de autoeficácia", itens: [20, 21], alfa: "0,80", rTotal: "0,208",
+    dimensao: "Perceção do cuidador sobre a qualidade e a suficiência dos cuidados que presta" }
+];
+
 /* Descrição / Uso — a partir de Sequeira (2010), lido em texto integral, e de Zarit et al. (1980). */
 var ESC_INFO = {
   descricao: "A Escala de Sobrecarga do Cuidador (ESC) é a versão portuguesa (Sequeira, 2010) da Zarit Burden Interview (Zarit, Reever & Bach-Peterson, 1980). Avalia a sobrecarga objetiva e subjetiva do cuidador informal em 22 itens sobre saúde, vida social, vida pessoal, situação financeira, situação emocional e tipo de relacionamento, cada um cotado de 1 (nunca) a 5 (quase sempre). Na validação portuguesa, com 184 cuidadores de idosos dependentes, mostrou boa consistência interna (alfa de Cronbach 0,93) e quatro fatores: impacto da prestação de cuidados (11 itens), relação interpessoal (5), expectativas face ao cuidar (4) e perceção de autoeficácia (2).",
-  leitura: "O total varia entre 22 e 110 e, quanto mais alto, maior a perceção de sobrecarga. Pontos de corte: inferior a 46, sem sobrecarga; 46 a 56, sobrecarga ligeira; superior a 56, sobrecarga intensa. Os itens cotados com 4 ou 5 mostram onde a sobrecarga se concentra e ajudam a orientar a conversa e o plano. Na validação, os cuidadores de pessoas com demência apresentaram níveis de sobrecarga mais elevados.",
+  leitura: "O total varia entre 22 e 110 e, quanto mais alto, maior a perceção de sobrecarga. Pontos de corte: inferior a 46, sem sobrecarga; 46 a 56, sobrecarga ligeira; superior a 56, sobrecarga intensa. Os itens cotados com 4 ou 5 mostram onde a sobrecarga se concentra e ajudam a orientar a conversa e o plano. Na validação, os cuidadores de pessoas com demência apresentaram níveis de sobrecarga mais elevados. As quatro subescalas mostram de onde vem a sobrecarga e apresentam-se com a média por item (1 a 5), para comparar dimensões com números diferentes de itens; não têm pontos de corte próprios, e os da escala global não se lhes aplicam. O total depende sobretudo do impacto da prestação de cuidados (correlação 0,962) e quase nada da perceção de autoeficácia (0,208): um total baixo pode esconder um cuidador que sente que não cuida bem. A subescala das expectativas tem consistência interna mais baixa (alfa 0,67) e lê-se com prudência.",
   uso: "Cuidadores informais de pessoas dependentes, por causa física ou mental: identificar e monitorizar a sobrecarga, orientar a intervenção junto do cuidador e avaliar programas dirigidos a cuidadores. Aplica-se em entrevista, lendo cada afirmação ao cuidador. Repetida no tempo, a variação do total mostra a evolução. O autor da escala original autorizou a validação e o uso da versão portuguesa em investigação e na prática clínica.",
   fontes: [
     "Zarit SH, Reever KE, Bach-Peterson J. Relatives of the impaired elderly: correlates of feelings of burden. The Gerontologist. 1980;20(6):649–655. doi:10.1093/geront/20.6.649",
-    "Sequeira CAC. Adaptação e validação da Escala de Sobrecarga do Cuidador de Zarit. Revista de Enfermagem Referência. 2010;II(12):9–16. (Sem DOI.)"
+    "Sequeira CAC. Adaptação e validação da Escala de Sobrecarga do Cuidador de Zarit. Revista de Enfermagem Referência. 2010;II(12):9–16. (Sem DOI.)",
+    "Viegas e Rodrigues (2022). Intervenção de enfermagem centrada no cuidador familiar em sobrecarga — correspondência entre itens e fatores reproduzida de Sequeira (fonte secundária; não consultada diretamente)."
   ]
 };
 
@@ -589,6 +632,29 @@ var ESC_INFO = {
     var marc = [];
     r.forEach(function (v, i) { if (v !== null && v >= ESC_LIMIAR) { marc.push(i + 1); chip(mc, i + 1, "Item " + (i + 1) + ", " + rotulo(v)); } });
     $("sem-marcados").style.display = marc.length ? "none" : "block";
+
+    // Subescalas (fatores de Sequeira): pontuação, intervalo e média por item
+    var tbS = document.querySelector("#subescalas tbody"); tbS.textContent = "";
+    ESC_FATORES.forEach(function (fx) {
+      var vals = fx.itens.map(function (n) { return r[n - 1]; }).filter(function (v) { return v !== null; });
+      var k = fx.itens.length, somaF = vals.reduce(function (a, v) { return a + v; }, 0);
+      var tr = el("tr");
+      var c1 = el("td"); c1.appendChild(document.createTextNode(fx.nome + " (" + fx.id + ")"));
+      c1.appendChild(el("small", null, "Itens " + fx.itens.join(", ") + " · α " + fx.alfa));
+      if (fx.prudencia) c1.appendChild(el("span", { "class": "aviso-ec" }, "Consistência interna mais baixa — ler com prudência"));
+      tr.appendChild(c1);
+      if (vals.length === k) {
+        var media = somaF / k;
+        tr.appendChild(el("td", null, somaF + " (" + k + "–" + k * 5 + ")"));
+        var c3 = el("td"); c3.appendChild(document.createTextNode(media.toFixed(1).replace(".", ",")));
+        var b = el("span", { "class": "barra-media", "aria-hidden": "true" }), i = el("i"); i.style.width = ((media - 1) / 4 * 100) + "%";
+        b.appendChild(i); c3.appendChild(b); tr.appendChild(c3);
+      } else {
+        tr.appendChild(el("td", { "class": "vazio" }, vals.length + "/" + k + " itens"));
+        tr.appendChild(el("td", { "class": "vazio" }, "—"));
+      }
+      tbS.appendChild(tr);
+    });
 
     var fl = $("falta"); fl.textContent = "";
     var em = [];

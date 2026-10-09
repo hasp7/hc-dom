@@ -147,6 +147,11 @@ body.res-oculto #resultado .conteudo-res, body.res-oculto #res-barra { display: 
 body.res-oculto .res-escondido-msg { display: block; }
 body.res-oculto .item.marcado .num { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
 body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-petroleo-fundo); border-color: var(--hc-petroleo); color: #fff; }
+.sub-tab td small { display: block; color: var(--hc-texto-sec); font-size: 12px; }
+.sub-tab .aviso-ec { color: var(--c2); font-weight: 700; font-size: 12px; }
+.barra-media { display: inline-block; width: 90px; height: 8px; background: var(--hc-linha); border-radius: 4px; vertical-align: middle; margin-left: 8px; overflow: hidden; }
+.barra-media i { display: block; height: 100%; background: var(--hc-turquesa); }
+.nota-sub { font-size: 12px; color: var(--hc-texto-sec); margin: 4px 0 0; }
 .evol-sobe { color: var(--c3); font-weight: 700; } .evol-desce { color: var(--c1); font-weight: 700; }
 
 @page {
@@ -186,6 +191,12 @@ body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-pe
   .assin { margin-top: 14px; break-inside: avoid; } .assin .linha { margin-top: 24px; }
   .fonte { font-size: 7.5pt; margin-top: 8px; }
   footer.legal { display: none; }
+  .nota-sub, .sub-tab td small, .sub-tab .aviso-ec { font-size: 7.5pt; }
+  #resultado .bloco p, .pontuacao { font-size: 9pt; }
+  .bloco h3 { font-size: 9.5pt; margin-bottom: 3px; }
+  .cat { padding: 2px 8px; font-size: 9.5pt; }
+  .sub-tab td { padding: 2px 6px; }
+  .barra-media { width: 60px; height: 6px; }
   body.res-oculto #resultado .conteudo-res { display: block !important; }
   .res-escondido-msg { display: none !important; }
 }
@@ -275,6 +286,11 @@ body.res-oculto .item.marcado .op input:checked + span { background: var(--hc-pe
     <div class="bloco" id="bloco-evol" hidden><h3>Evolução</h3><p id="evolucao"></p></div>
     <div class="bloco"><h3>Avaliação global (item 22)</h3><p id="global" class="vazio">Por responder.</p></div>
     <div class="bloco"><h3>Itens com cotação 4 ou 5</h3><ul class="chips marcados" id="marcados"></ul><p id="sem-marcados" class="vazio">Nenhum item assinalado.</p></div>
+    <div class="bloco" id="bloco-sub">
+      <h3>Subescalas</h3>
+      <table class="faixas sub-tab" id="subescalas"><thead><tr><th>Subescala</th><th>Pontuação</th><th>Média por item (1–5)</th></tr></thead><tbody></tbody></table>
+      <p class="nota-sub">Sem pontos de corte próprios: os cortes da escala global não se aplicam às subescalas. A média por item permite comparar dimensões com números diferentes de itens (1 = nunca, 5 = quase sempre). Correspondência entre itens e fatores reproduzida de Sequeira (2010) por Viegas e Rodrigues (2022).</p>
+    </div>
     <div class="bloco so-ecra" id="bloco-falta"><h3>Por responder</h3><ul class="chips" id="falta"></ul></div>
     <div class="bloco">
       <table class="faixas" id="faixas"><thead><tr><th>Pontuação</th><th>Interpretação</th></tr></thead><tbody></tbody></table>

@@ -42,13 +42,29 @@ var ESC_CLASSES = [[57, "Sobrecarga intensa", "c3"], [46, "Sobrecarga ligeira", 
 var ESC_FAIXAS = [["22–45", "Sem sobrecarga"], ["46–56", "Sobrecarga ligeira"], ["57–110", "Sobrecarga intensa"]];
 var ESC_LIMIAR = 4; // itens com 4 ou 5 ficam assinalados para orientar a conversa
 
+/* Subescalas (fatores) de Sequeira (2010). Dimensões, alfas e correlações com o total confirmados no
+   artigo original (Tabela 1); a correspondência item → fator vem de Viegas & Rodrigues (2022), que a
+   reproduzem de Sequeira — o artigo de 2010 indica só o número de itens por fator.
+   Sem pontos de corte próprios: NÃO aplicar os cortes da escala global às subescalas. */
+var ESC_FATORES = [
+  { id: "IPC", nome: "Impacto da prestação de cuidados", itens: [1, 2, 3, 6, 9, 10, 11, 12, 13, 17, 22], alfa: "0,93", rTotal: "0,962",
+    dimensao: "Saúde, tempo disponível, vida social e familiar, desgaste físico e psicológico" },
+  { id: "RI", nome: "Relação interpessoal", itens: [4, 5, 16, 18, 19], alfa: "0,83", rTotal: "0,833",
+    dimensao: "Dificuldades relacionais e tensão emocional na interação com a pessoa cuidada" },
+  { id: "EC", nome: "Expectativas face ao cuidar", itens: [7, 8, 14, 15], alfa: "0,67", rTotal: "0,690", prudencia: true,
+    dimensao: "Receios, preocupações e expectativas sobre a continuidade e as exigências do cuidar" },
+  { id: "PA", nome: "Perceção de autoeficácia", itens: [20, 21], alfa: "0,80", rTotal: "0,208",
+    dimensao: "Perceção do cuidador sobre a qualidade e a suficiência dos cuidados que presta" }
+];
+
 /* Descrição / Uso — a partir de Sequeira (2010), lido em texto integral, e de Zarit et al. (1980). */
 var ESC_INFO = {
   descricao: "A Escala de Sobrecarga do Cuidador (ESC) é a versão portuguesa (Sequeira, 2010) da Zarit Burden Interview (Zarit, Reever & Bach-Peterson, 1980). Avalia a sobrecarga objetiva e subjetiva do cuidador informal em 22 itens sobre saúde, vida social, vida pessoal, situação financeira, situação emocional e tipo de relacionamento, cada um cotado de 1 (nunca) a 5 (quase sempre). Na validação portuguesa, com 184 cuidadores de idosos dependentes, mostrou boa consistência interna (alfa de Cronbach 0,93) e quatro fatores: impacto da prestação de cuidados (11 itens), relação interpessoal (5), expectativas face ao cuidar (4) e perceção de autoeficácia (2).",
-  leitura: "O total varia entre 22 e 110 e, quanto mais alto, maior a perceção de sobrecarga. Pontos de corte: inferior a 46, sem sobrecarga; 46 a 56, sobrecarga ligeira; superior a 56, sobrecarga intensa. Os itens cotados com 4 ou 5 mostram onde a sobrecarga se concentra e ajudam a orientar a conversa e o plano. Na validação, os cuidadores de pessoas com demência apresentaram níveis de sobrecarga mais elevados.",
+  leitura: "O total varia entre 22 e 110 e, quanto mais alto, maior a perceção de sobrecarga. Pontos de corte: inferior a 46, sem sobrecarga; 46 a 56, sobrecarga ligeira; superior a 56, sobrecarga intensa. Os itens cotados com 4 ou 5 mostram onde a sobrecarga se concentra e ajudam a orientar a conversa e o plano. Na validação, os cuidadores de pessoas com demência apresentaram níveis de sobrecarga mais elevados. As quatro subescalas mostram de onde vem a sobrecarga e apresentam-se com a média por item (1 a 5), para comparar dimensões com números diferentes de itens; não têm pontos de corte próprios, e os da escala global não se lhes aplicam. O total depende sobretudo do impacto da prestação de cuidados (correlação 0,962) e quase nada da perceção de autoeficácia (0,208): um total baixo pode esconder um cuidador que sente que não cuida bem. A subescala das expectativas tem consistência interna mais baixa (alfa 0,67) e lê-se com prudência.",
   uso: "Cuidadores informais de pessoas dependentes, por causa física ou mental: identificar e monitorizar a sobrecarga, orientar a intervenção junto do cuidador e avaliar programas dirigidos a cuidadores. Aplica-se em entrevista, lendo cada afirmação ao cuidador. Repetida no tempo, a variação do total mostra a evolução. O autor da escala original autorizou a validação e o uso da versão portuguesa em investigação e na prática clínica.",
   fontes: [
     "Zarit SH, Reever KE, Bach-Peterson J. Relatives of the impaired elderly: correlates of feelings of burden. The Gerontologist. 1980;20(6):649–655. doi:10.1093/geront/20.6.649",
-    "Sequeira CAC. Adaptação e validação da Escala de Sobrecarga do Cuidador de Zarit. Revista de Enfermagem Referência. 2010;II(12):9–16. (Sem DOI.)"
+    "Sequeira CAC. Adaptação e validação da Escala de Sobrecarga do Cuidador de Zarit. Revista de Enfermagem Referência. 2010;II(12):9–16. (Sem DOI.)",
+    "Viegas e Rodrigues (2022). Intervenção de enfermagem centrada no cuidador familiar em sobrecarga — correspondência entre itens e fatores reproduzida de Sequeira (fonte secundária; não consultada diretamente)."
   ]
 };
