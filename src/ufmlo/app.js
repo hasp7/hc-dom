@@ -86,12 +86,12 @@
   tabelaEscala("morse-corpo", MORSE_ITENS);
   tabelaEscala("braden-corpo", BRADEN_ITENS, true);
 
-  // Sinais vitais: só os parâmetros vitais (sem O₂ no momento, dor nem glicemia). A TA vai em dois campos,
-  // TAS e TAD, com os mesmos limites que o eval-hc-patient aplica à TA (≥ 140/90 alta, < 90/60 baixa).
+  // Sinais vitais: só os parâmetros vitais, com a dor como 5.º sinal vital (sem O₂ no momento nem glicemia).
+  // A TA vai em dois campos, TAS e TAD, com os mesmos limites que o eval-hc-patient aplica à TA (≥ 140/90 alta, < 90/60 baixa).
   var SINAIS_VITAIS = [
     ["tas", "TA sistólica — TAS (mmHg)", "90–139", 90, 139],
     ["tad", "TA diastólica — TAD (mmHg)", "60–89", 60, 89]
-  ].concat(SINAIS.filter(function (s) { return ["fc", "fr", "spo2", "temp"].indexOf(s[0]) !== -1; }));
+  ].concat(SINAIS.filter(function (s) { return ["fc", "fr", "spo2", "temp", "dor"].indexOf(s[0]) !== -1; }));
   var sinaisCorpo = document.getElementById("sinais-corpo");
   SINAIS_VITAIS.forEach(function (s) {
     var r = el("tr");
@@ -341,8 +341,11 @@
     if (val("noite_nec")) add("sono", "Sono", "comprometido", "alterações nas noites referidas");
     temCid(["G47.0"]).forEach(function (d) { add("sono", "Sono", "comprometido", d); });
 
-    // Dor (sem escala de dor nesta variante: só diagnóstico e opioides)
-    temCid(["R52.2"]).forEach(function (d) { add("dor", "Dor", "a avaliar", d); });
+    // Dor
+    var dorV = num("sv_dor_vis"), dorH = num("sv_dor_hab");
+    var dor = Math.max(dorV != null ? dorV : -1, dorH != null ? dorH : -1);
+    if (dor >= 4) add("dor", "Dor", dor >= 7 ? "presente — intensa" : "presente — moderada", "dor " + dor + "/10");
+    temCid(["R52.2"]).forEach(function (d) { add("dor", "Dor", focos.dor ? focos.dor.j : "a avaliar", d); });
     if (focos.dor && op.length) add("dor", "Dor", focos.dor.j, "sob opioides");
 
     // Planeamento de cuidados
