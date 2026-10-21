@@ -41,6 +41,16 @@ FONTE_BRADEN = ("Escala de Braden (adulto): Bergstrom N, Braden BJ et al. (1987)
                 "Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico nem a avaliação da pele.")
 
 
+# Registo da UFMLO. Projeto de TESTES (hc-ufmlo-dev, org nex7, Frankfurt): só dados fictícios.
+# A chave é a publicável (pública por desenho); quem protege os dados é a base de dados (MFA + perfil).
+# Para produção: projeto da HC, ambiente "producao" — ver HC-Health/uf-lordelo-massarelos-centros-convivio/registo-dados/.
+REGISTO_UFMLO = {
+    "{{REGISTO_URL}}": "https://rvhevyavbfumnnddfksm.supabase.co",
+    "{{REGISTO_CHAVE}}": "sb_publishable_FoEVdikUnlh4SOcOFNXwlA_aTnADXlI",
+    "{{REGISTO_AMBIENTE}}": "testes",
+}
+
+
 def config_escala(chave, nome, itens, classes, faixas, fonte, info, divisor="null"):
     return (f'var ESCALA = {{ chave: "{chave}", nome: "{nome}", itens: {itens}, classes: {classes}, '
             f'faixas: {faixas}, fonte: "{fonte}", info: {info}, divisor: {divisor} }};')
@@ -60,14 +70,16 @@ PAGINAS = [
         saida=RAIZ / "eval-hc-patient" / "index.html",
     ),
     dict(
-        # Variante do formulário para os centros de convívio UFMLO (partilha escalas e dados)
+        # Variante do formulário para os centros de convívio UFMLO (partilha escalas e dados),
+        # com registo na base de dados da HC (src/ufmlo/registo.js)
         template=SRC / "ufmlo" / "form.src.html",
         scripts={
             "{{ESCALAS_JS}}": ESCALAS_JS,
             "{{DADOS_JS}}": SRC / "eval-hc-patient" / "dados.js",
             "{{APP_JS}}": SRC / "ufmlo" / "app.js",
+            "{{REGISTO_JS}}": SRC / "ufmlo" / "registo.js",
         },
-        textos={},
+        textos=REGISTO_UFMLO,
         saida=RAIZ / "ufmlo" / "index.html",
     ),
     dict(

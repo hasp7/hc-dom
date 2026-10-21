@@ -393,7 +393,17 @@
   }
 
   /* ---------- rascunho (sessionStorage) ---------- */
-  function guardar() {
+  // Identificador da avaliação: fixo para o rascunho, para que reenviar ao registo não duplique.
+  function novoId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+    var h = Array.prototype.map.call(b, function (x) { return (x + 256).toString(16).slice(1); }).join("");
+    return h.slice(0, 8) + "-" + h.slice(8, 12) + "-" + h.slice(12, 16) + "-" + h.slice(16, 20) + "-" + h.slice(20);
+  }
+  var idAval = novoId();
+
+  function recolher() {
     var dados = {};
     Array.prototype.forEach.call(form.elements, function (e) {
       if (!e.name) return;
@@ -401,9 +411,14 @@
       else if (e.type === "radio") { if (e.checked) dados[e.name] = e.value; }
       else dados[e.name] = e.value;
     });
+    dados.__id = idAval;
     dados.__meds = linhas(medsEl);
     dados.__diags = linhas(diagsEl);
     dados.__focos = Array.from(validados);
+    return dados;
+  }
+  function guardar() {
+    var dados = recolher();
     try {
       sessionStorage.setItem(KEY, JSON.stringify(dados));
       estado.textContent = "Rascunho guardado só neste separador · " + new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" });
@@ -423,6 +438,7 @@
     (dados.__diags || []).forEach(addDiag);
     (dados.__meds || []).forEach(addMed);
     validados = new Set(dados.__focos || []);
+    if (dados.__id) idAval = dados.__id;
     return true;
   }
 
@@ -529,10 +545,12 @@
     diagsEl.textContent = ""; medsEl.textContent = "";
     addDiag(); addMed();
     validados.clear();
+    idAval = novoId();
     campo("v_data").value = hojeISO();
     form.querySelectorAll("textarea").forEach(autosize);
     atualizar();
     estado.textContent = "Formulário limpo";
+    document.dispatchEvent(new CustomEvent("hc:limpo"));
   });
 
   /* ---------- arranque ---------- */
@@ -540,4 +558,10 @@
   if (!repor()) { campo("v_data").value = hojeISO(); addDiag(); addMed(); }
   form.querySelectorAll("textarea").forEach(autosize);
   atualizar();
+
+  // Para o registo (registo.js): o objeto do formulário e o identificador do rascunho atual.
+  window.HCForm = {
+    recolher: function () { guardar(); return recolher(); },
+    id: function () { return idAval; }
+  };
 })();

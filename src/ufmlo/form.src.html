@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<!-- Nada sai deste ficheiro: sem pedidos de rede, sem envio de formulário.
-     Tudo (fontes, logótipo, CSS, JS) vai embebido. Os dados ficam só no browser. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'none'; base-uri 'none'">
+<!-- Só um destino de rede: o registo da HC ({{REGISTO_URL}}), e só quando a enfermeira carrega em
+     "Guardar no registo" depois de entrar com password e segundo fator. Sem envio de formulário HTML.
+     Tudo o resto (fontes, logótipo, CSS, JS) vai embebido. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src {{REGISTO_URL}}; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'none'; base-uri 'none'">
 <title>Avaliação Inicial · Centros de Convívio UFMLO · HC</title>
 <style>
 @font-face { font-family: "Lato"; font-weight: 400; font-style: normal; font-display: swap;
@@ -87,6 +88,22 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 }
 
 .aviso { background: var(--hc-fundo-alt); border-left: 4px solid var(--hc-turquesa); padding: 10px 14px; margin: 14px 0; font-size: 14px; }
+
+/* Registo (registo.js) */
+.barra-reg { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--hc-linha); }
+.barra-reg .estado { font-size: 13px; color: var(--hc-texto-sec); margin-right: auto; }
+.testes { margin: 12px 0 0; padding: 10px 14px; font-size: 14px; color: #fff; background: var(--hc-laranja-forte); border-radius: 6px; }
+dialog#dlg-registo { width: min(440px, calc(100vw - 32px)); border: 1px solid var(--hc-linha); border-radius: 10px;
+  padding: 20px; background: var(--sup); color: var(--hc-texto); box-shadow: 0 8px 32px var(--sombra); }
+dialog#dlg-registo::backdrop { background: rgba(0, 0, 0, .45); }
+dialog#dlg-registo h2 { margin-top: 0; }
+dialog#dlg-registo form, dialog#dlg-registo [data-passo] { display: flex; flex-direction: column; gap: 12px; }
+dialog#dlg-registo [hidden] { display: none; }
+dialog#dlg-registo img { align-self: center; background: #fff; padding: 8px; border-radius: 6px; }
+dialog#dlg-registo code { word-break: break-all; }
+.dlg-acoes { display: flex; justify-content: flex-end; gap: 8px; }
+.dlg-msg { margin: 0; font-size: 14px; min-height: 0; }
+.dlg-msg.erro { color: var(--hc-laranja-forte); font-weight: 700; }
 .dica { font-size: 13px; color: var(--hc-texto-sec); margin: 2px 0 8px; }
 
 /* Grelha de campos */
@@ -263,17 +280,26 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
   <h1>Avaliação Inicial</h1>
   <p class="subtitulo">Centros de convívio · União de Freguesias de Lordelo do Ouro e Massarelos</p>
 
+  <div class="testes nao-imprimir" id="faixa-testes" hidden role="alert">
+    <strong>Ambiente de testes.</strong> Use só dados fictícios — nada do que for registado aqui é um registo clínico.
+  </div>
+
   <div class="barra nao-imprimir">
     <span class="estado" id="estado" aria-live="polite">Rascunho guardado só neste separador</span>
-    <button type="button" class="prim" id="btn-imprimir">Imprimir / Guardar PDF</button>
+    <button type="button" class="prim" id="btn-registo">Guardar no registo</button>
+    <button type="button" class="sec" id="btn-imprimir">Imprimir / Guardar PDF</button>
     <button type="button" class="sec" id="btn-limpar">Limpar</button>
+  </div>
+  <div class="barra-reg nao-imprimir">
+    <span class="estado" id="estado-registo" aria-live="polite">Registo: sem sessão</span>
+    <button type="button" class="sec peq" id="btn-sessao" hidden>Terminar sessão</button>
   </div>
 
   <div class="aviso nao-imprimir">
-    <strong>Privacidade.</strong> Este formulário não envia nada para lado nenhum. O que escrever fica apenas
-    neste separador do browser (para não se perder se a página recarregar) e é apagado quando o separador
-    fechar ou quando carregar em <em>Limpar</em>. No fim, guarde o PDF e entregue-o pelo canal da HC — não por
-    WhatsApp nem email pessoal.
+    <strong>Privacidade.</strong> Enquanto escreve, o formulário fica só neste separador do browser (para não se
+    perder se a página recarregar) e é apagado quando o separador fechar ou quando carregar em <em>Limpar</em>.
+    Só sai daqui quando carregar em <em>Guardar no registo</em>: segue cifrado para o registo da HC, depois de
+    entrar com a sua conta e o código do segundo fator. Não envie PDFs por WhatsApp nem email pessoal.
   </div>
 
 <form id="f" autocomplete="off" novalidate>
@@ -573,8 +599,50 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
 <script>
 {{DADOS_JS}}
 </script>
+<dialog id="dlg-registo" class="nao-imprimir" aria-labelledby="dlg-titulo">
+  <h2 id="dlg-titulo">Registo da HC</h2>
+  <p class="dlg-msg" id="dlg-msg" aria-live="assertive"></p>
+
+  <form id="frm-login" data-passo="login" hidden>
+    <label class="campo">Email <input type="email" id="reg-email" autocomplete="username" required></label>
+    <label class="campo">Password <input type="password" id="reg-pw" autocomplete="current-password" required></label>
+    <div class="dlg-acoes"><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Entrar</button></div>
+  </form>
+
+  <form id="frm-inscrever" data-passo="inscrever" hidden>
+    <p>Primeira vez: ative o segundo fator. Leia o código QR com uma aplicação de autenticação
+      (Microsoft Authenticator, Google Authenticator, 1Password…) ou introduza a chave à mão.</p>
+    <img id="mfa-qr" alt="Código QR para a aplicação de autenticação" width="180" height="180">
+    <p class="dica">Chave: <code id="mfa-segredo"></code></p>
+    <label class="campo">Código de 6 algarismos <input type="text" id="mfa-codigo-novo" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required></label>
+    <div class="dlg-acoes"><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Ativar e continuar</button></div>
+  </form>
+
+  <form id="frm-codigo" data-passo="codigo" hidden>
+    <label class="campo">Código da aplicação de autenticação <input type="text" id="mfa-codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required></label>
+    <div class="dlg-acoes"><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Confirmar</button></div>
+  </form>
+
+  <form id="frm-motivo" data-passo="motivo" hidden>
+    <p>Esta avaliação já está registada. A alteração fica como nova versão, e a anterior mantém-se.</p>
+    <label class="campo">Motivo da correção <textarea id="reg-motivo" rows="2" required></textarea></label>
+    <div class="dlg-acoes"><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Guardar correção</button></div>
+  </form>
+
+  <div data-passo="falha" hidden>
+    <p>Não foi possível registar. O rascunho continua guardado neste separador: corrija o que for indicado e volte a carregar em <em>Guardar no registo</em>.</p>
+    <div class="dlg-acoes"><button type="button" class="prim" data-fechar>Voltar ao formulário</button></div>
+  </div>
+</dialog>
+
 <script>
 {{APP_JS}}
+</script>
+<script>
+var REGISTO = { url: "{{REGISTO_URL}}", chave: "{{REGISTO_CHAVE}}", ambiente: "{{REGISTO_AMBIENTE}}" };
+</script>
+<script>
+{{REGISTO_JS}}
 </script>
 </body>
 </html>
