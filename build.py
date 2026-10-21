@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Constrói o site hc-dom: cada página sai como ficheiro HTML único e autossuficiente.
 
-Páginas: índice, eval-hc-patient/, barthel/, morse/, braden/, esc-zarit/. As escalas vêm de src/shared/escalas.js.
+Páginas: índice, eval-hc-patient/, ufmlo/, barthel/, morse/, braden/, esc-zarit/. As escalas vêm de src/shared/escalas.js.
 
 Embebe scripts, logótipo e fontes (assets/) para que o site funcione igual no GitHub Pages,
 offline ou enviado por email — sem nenhum pedido de rede. Sem dependências: só biblioteca padrão.
@@ -58,6 +58,17 @@ PAGINAS = [
         },
         textos={},
         saida=RAIZ / "eval-hc-patient" / "index.html",
+    ),
+    dict(
+        # Variante do formulário para os centros de convívio UFMLO (partilha escalas e dados)
+        template=SRC / "ufmlo" / "form.src.html",
+        scripts={
+            "{{ESCALAS_JS}}": ESCALAS_JS,
+            "{{DADOS_JS}}": SRC / "eval-hc-patient" / "dados.js",
+            "{{APP_JS}}": SRC / "ufmlo" / "app.js",
+        },
+        textos={},
+        saida=RAIZ / "ufmlo" / "index.html",
     ),
     dict(
         template=SRC / "escala" / "escala.src.html",

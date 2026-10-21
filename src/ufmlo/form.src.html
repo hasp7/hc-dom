@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<!-- Nada sai deste ficheiro: sem pedidos de rede, sem envio de formulário.
+     Tudo (fontes, logótipo, CSS, JS) vai embebido. Os dados ficam só no browser. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'none'; base-uri 'none'">
+<title>Avaliação Inicial · Centros de Convívio UFMLO · HC</title>
+<style>
+@font-face { font-family: "Lato"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("{{FONT_LATO_400}}") format("woff2"); }
+@font-face { font-family: "Lato"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("{{FONT_LATO_700}}") format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 300 700; font-style: normal; font-display: swap;
+  src: url("{{FONT_MONTSERRAT}}") format("woff2-variations"); }
+
+/* Marca: claude/design-md/hc/DESIGN.md (fonte canónica: marca.md no HC-Health) */
+:root {
+  --hc-turquesa: #00C0B5;
+  --hc-petroleo: #0e5b6b;
+  --hc-laranja: #E9994A;
+  --hc-laranja-forte: #E86031;
+  --hc-texto: #1a1a1a;
+  --hc-texto-sec: #5a6a6e;
+  --hc-linha: #e4eaeb;
+  --hc-fundo: #ffffff;
+  --hc-fundo-alt: #f5f9f9;
+  --font-titulo: "Montserrat", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-corpo: "Lato", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0;
+  background: var(--hc-fundo-alt);
+  color: var(--hc-texto);
+  font: 16px/1.5 var(--font-corpo);
+  accent-color: var(--hc-petroleo);
+}
+
+.folha { max-width: 860px; margin: 0 auto; background: var(--hc-fundo); padding: 0 16px 32px; }
+@media (min-width: 900px) {
+  .folha { margin: 24px auto; padding: 0 40px 40px; box-shadow: 0 2px 12px var(--sombra); }
+}
+
+/* Faixa de marca: gradiente só como elemento decorativo, nunca atrás de texto. */
+.faixa { height: 6px; margin: 0 -16px; background: linear-gradient(90deg, var(--hc-turquesa), var(--hc-laranja)); }
+@media (min-width: 900px) { .faixa { margin: 0 -40px; } }
+
+header.cab {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 0 12px; border-bottom: 1px solid var(--hc-linha);
+}
+header.cab img { height: 56px; width: auto; }
+header.cab .doc-id { text-align: right; font-size: 12px; color: var(--hc-texto-sec); line-height: 1.4; }
+
+h1, h2, h3, legend { font-family: var(--font-titulo); color: var(--hc-petroleo); font-weight: 300; }
+h1 { font-size: 26px; margin: 20px 0 2px; line-height: 1.2; }
+.subtitulo { font-family: var(--font-titulo); font-weight: 300; color: var(--hc-turquesa); margin: 0 0 16px; font-size: 17px; }
+h2 {
+  font-size: 19px; margin: 32px 0 12px; padding-bottom: 4px;
+  border-bottom: 2px solid var(--hc-turquesa);
+  display: flex; align-items: baseline; gap: 10px;
+}
+h2 .n { font-weight: 600; color: var(--hc-turquesa); font-size: 15px; }
+h3 { font-size: 15px; font-weight: 500; margin: 18px 0 8px; color: var(--hc-petroleo); }
+
+.barra {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 10px 0; background: var(--hc-fundo); border-bottom: 1px solid var(--hc-linha);
+}
+.barra .estado { font-size: 13px; color: var(--hc-texto-sec); margin-right: auto; }
+button {
+  font: 600 14px/1 var(--font-corpo); cursor: pointer; border-radius: 6px;
+  padding: 10px 14px; min-height: 40px; border: 1px solid var(--hc-petroleo);
+}
+button.prim { background: var(--hc-petroleo-fundo); color: #fff; }
+button.sec { background: var(--sup); color: var(--hc-petroleo); }
+button.peq { min-height: 32px; padding: 6px 10px; font-size: 13px; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--hc-turquesa); outline-offset: 1px;
+}
+
+.aviso { background: var(--hc-fundo-alt); border-left: 4px solid var(--hc-turquesa); padding: 10px 14px; margin: 14px 0; font-size: 14px; }
+.dica { font-size: 13px; color: var(--hc-texto-sec); margin: 2px 0 8px; }
+
+/* Grelha de campos */
+.g { display: grid; gap: 12px 16px; grid-template-columns: 1fr; margin-bottom: 8px; align-items: end; }
+@media (min-width: 640px) {
+  .g.c2 { grid-template-columns: 1fr 1fr; }
+  .g.c3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g.c4 { grid-template-columns: 2fr 1fr 1fr 1fr; }
+  .g .span2 { grid-column: span 2; }
+  .g .span3 { grid-column: 1 / -1; }
+}
+label.campo { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 700; color: var(--hc-petroleo); }
+label.campo > span.opc { font-weight: 400; color: var(--hc-texto-sec); }
+input[type=text], input[type=tel], input[type=date], input[type=time], input[type=number], select, textarea {
+  font: 16px/1.4 var(--font-corpo); color: var(--hc-texto);
+  border: 1px solid var(--campo-borda); border-radius: 6px; padding: 8px 10px; background: var(--sup); width: 100%;
+}
+textarea { min-height: 72px; resize: vertical; overflow: hidden; }
+
+fieldset { border: 0; padding: 0; margin: 0 0 12px; min-width: 0; }
+fieldset > legend { font-size: 14px; font-weight: 500; padding: 0; margin-bottom: 6px; }
+.ops { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.ops label { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; min-height: 32px; }
+.ops input { width: 18px; height: 18px; margin: 0; }
+
+/* Linhas repetíveis (medicação, diagnósticos) */
+.rep { border: 1px solid var(--hc-linha); border-left: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 12px 12px 8px; margin-bottom: 10px; background: var(--sup); }
+.rep .acoes { display: flex; justify-content: flex-end; }
+.chips { gap: 6px; }
+.chips label { border: 1px solid var(--campo-borda); border-radius: 999px; padding: 2px 10px 2px 6px; font-size: 14px; }
+.chips label:has(input:checked) { background: var(--turq-suave); border-color: var(--hc-turquesa); }
+.vazio { font-size: 14px; color: var(--hc-texto-sec); font-style: italic; margin: 4px 0 10px; }
+
+/* Tabelas */
+.tab { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 12px; }
+.tab th { background: var(--hc-petroleo-fundo); color: #fff; font-family: var(--font-titulo); font-weight: 400; text-align: left; padding: 7px 8px; }
+.tab td { padding: 6px 8px; border-bottom: 1px solid var(--hc-linha); vertical-align: top; }
+.tab tbody tr:nth-child(even) { background: var(--hc-fundo-alt); }
+.tab td.rot { font-weight: 700; color: var(--hc-petroleo); }
+.tab td.ref { font-size: 13px; color: var(--hc-texto-sec); }
+.tab td.grupo { background: var(--turq-suave); color: var(--hc-petroleo); font-family: var(--font-titulo); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; }
+.tab select, .tab textarea, .tab input { font-size: 14px; }
+.tab textarea { min-height: 44px; }
+.tab .centro { text-align: center; }
+.tab input[type=radio] { width: 18px; height: 18px; }
+.rolar { overflow-x: auto; }
+
+/* Sinais vitais fora do intervalo */
+.sinal { display: flex; align-items: center; gap: 6px; }
+.sinal .ind { font-weight: 700; color: var(--hc-laranja-forte); min-width: 1.2em; font-size: 14px; }
+input.fora { border-color: var(--hc-laranja-forte); background: var(--lar-suave); }
+
+.total {
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline;
+  padding: 10px 14px; background: var(--hc-fundo-alt); border: 1px solid var(--hc-linha); border-radius: 6px; margin-bottom: 12px;
+}
+.total output { font: 600 22px var(--font-titulo); color: var(--hc-petroleo); }
+.total .cls { font-weight: 700; color: var(--hc-laranja-forte); }
+.total .sub { font-size: 14px; color: var(--hc-texto-sec); }
+
+/* Focos de atenção */
+.foco { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--hc-linha); }
+.foco input { width: 20px; height: 20px; margin-top: 2px; flex: none; }
+.foco .t { font-weight: 700; color: var(--hc-petroleo); }
+.foco .j { color: var(--hc-laranja-forte); font-weight: 700; }
+.foco .m { display: block; font-size: 13px; color: var(--hc-texto-sec); }
+.foco.enc .t { color: var(--hc-texto); }
+
+.assin { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 28px; }
+@media (min-width: 640px) { .assin { grid-template-columns: 1fr 1fr; } }
+.assin .linha { border-top: 1px solid var(--hc-texto); padding-top: 4px; margin-top: 44px; font-size: 13px; color: var(--hc-texto-sec); }
+
+footer.legal { margin-top: 32px; padding-top: 8px; border-top: 1px solid var(--hc-linha); font-size: 12px; color: var(--hc-texto-sec); text-align: center; }
+/* Cabeçalho de identificação do utente */
+.id-utente { border: 1px solid var(--hc-linha); border-top: 4px solid var(--hc-turquesa); border-radius: 6px; padding: 4px 14px 6px; margin: 16px 0 8px; background: var(--sup); }
+.id-utente h2 { margin: 8px 0 10px; border-bottom: 0; font-size: 17px; }
+@media (min-width: 640px) {
+  .g.c4u { grid-template-columns: 1.2fr 1fr .6fr 1fr; }
+  .g.c4u .span-nome { grid-column: 1 / -1; }
+}
+input.calc { background: var(--hc-fundo-alt); color: var(--hc-petroleo); font-weight: 700; }
+.valid { font-size: 12px; font-weight: 400; min-height: 1em; }
+.valid.ok { color: var(--hc-petroleo); }
+.valid.erro { color: var(--hc-laranja-forte); font-weight: 700; }
+input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-suave); }
+
+.so-print, .espelho { display: none; }
+/* Descrição do nível escolhido (Braden): o texto do original, para pontuar com rigor */
+.tab .desc { display: block; font-size: 12px; color: var(--hc-texto-sec); margin-top: 4px; }
+.tab .desc:empty { display: none; }
+
+/* ---------------- Impressão / PDF (A4) ---------------- */
+@page {
+  size: A4;
+  margin: 1.5cm 1.6cm 1.8cm;
+  @bottom-left {
+    content: "HC Healthcare & Innovation · Intuição e Consenso, Lda · NIPC 517684608 · Documento confidencial — contém dados de saúde";
+    font: 7pt "Lato", sans-serif; color: #5a6a6e;
+  }
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font: 7.5pt "Lato", sans-serif; color: #5a6a6e;
+  }
+}
+@media print {
+  body { background: var(--sup); font-size: 10pt; }
+  .folha { max-width: none; margin: 0; padding: 0; box-shadow: none; }
+  .faixa { margin: 0; height: 4px; }
+  .nao-imprimir, .so-ecra { display: none !important; }
+  .so-print { display: block; }
+  header.cab { padding: 10px 0 8px; }
+  header.cab img { height: 1.4cm; }
+  h1 { font-size: 18pt; margin-top: 10px; }
+  .subtitulo { font-size: 11.5pt; margin-bottom: 8px; }
+  h2 { font-size: 12.5pt; margin: 14px 0 6px; break-after: avoid; }
+  h3 { font-size: 10.5pt; margin: 8px 0 4px; break-after: avoid; }
+  label.campo { font-size: 8.5pt; gap: 1px; break-inside: avoid; }
+  .g { gap: 6px 14px; margin-bottom: 4px; }
+  .g.c2 { grid-template-columns: 1fr 1fr; }
+  .g.c3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g .span2 { grid-column: span 2; }
+  .g .span3 { grid-column: 1 / -1; }
+  input[type=text], input[type=tel], input[type=date], input[type=time], input[type=number], select, textarea {
+    font-size: 10pt; border: 0; border-bottom: 1px solid #b8c4c6; border-radius: 0; padding: 2px 0;
+    background: transparent; appearance: none; -webkit-appearance: none;
+  }
+  input::-webkit-calendar-picker-indicator { display: none; }
+  textarea { min-height: 0; resize: none; }
+  textarea.espelhado, input.espelhado { display: none; }
+  .espelho { display: block; white-space: pre-wrap; font: 400 10pt/1.45 var(--font-corpo); color: var(--hc-texto); border-bottom: 1px solid #b8c4c6; min-height: 1.4em; padding: 2px 0; }
+  fieldset { margin-bottom: 6px; break-inside: avoid; }
+  fieldset > legend { font-size: 9pt; margin-bottom: 2px; }
+  .ops { gap: 2px 14px; }
+  .ops label { font-size: 9.5pt; min-height: 0; }
+  .ops input { width: 12px; height: 12px; }
+  .tab { font-size: 9pt; break-inside: auto; }
+  .tab tr { break-inside: avoid; }
+  .tab th, .tab td { padding: 3px 6px; }
+  .tab td.ref { font-size: 8pt; }
+  .tab select, .tab textarea, .tab input { font-size: 9pt; }
+  .tab input[type=radio] { width: 12px; height: 12px; }
+  .tab.imp td.marca { text-align: center; font-weight: 700; color: var(--hc-petroleo); }
+  .tab.imp th { font-size: 8pt; }
+  input.fora { background: transparent; color: var(--hc-laranja-forte); font-weight: 700; }
+  .rolar { overflow: visible; }
+  .aviso { font-size: 9pt; padding: 6px 10px; margin: 8px 0; break-inside: avoid; }
+  .total { padding: 6px 10px; margin-bottom: 6px; break-inside: avoid; }
+  .total output { font-size: 14pt; }
+  .vazio { font-size: 9pt; }
+  .assin { grid-template-columns: 1fr 1fr; margin-top: 18px; break-inside: avoid; }
+  footer.legal { display: none; }
+  .id-utente { padding: 2px 10px 4px; margin: 8px 0 4px; break-inside: avoid; }
+  .id-utente h2 { font-size: 11pt; margin: 4px 0 4px; }
+  .g.c4u { grid-template-columns: 1.2fr 1fr .6fr 1fr; }
+  .g.c4u .span-nome { grid-column: 1 / -1; }
+  .valid { display: none; }
+  .tab .desc { font-size: 7.5pt; margin-top: 1px; }
+  input.calc { background: transparent; }
+}
+{{TEMA_CSS}}
+</style>
+<script>
+{{TEMA_JS}}
+</script>
+</head>
+<body>
+<main class="folha">
+  <div class="faixa" aria-hidden="true"></div>
+  <header class="cab">
+    <img src="{{LOGO_PNG}}" alt="HC Healthcare &amp; Innovation">
+    <div class="doc-id">Documento interno · confidencial<br>Contém dados de saúde (RGPD art. 9.º)</div>
+  </header>
+
+  <h1>Avaliação Inicial</h1>
+  <p class="subtitulo">Centros de convívio · União de Freguesias de Lordelo do Ouro e Massarelos</p>
+
+  <div class="barra nao-imprimir">
+    <span class="estado" id="estado" aria-live="polite">Rascunho guardado só neste separador</span>
+    <button type="button" class="prim" id="btn-imprimir">Imprimir / Guardar PDF</button>
+    <button type="button" class="sec" id="btn-limpar">Limpar</button>
+  </div>
+
+  <div class="aviso nao-imprimir">
+    <strong>Privacidade.</strong> Este formulário não envia nada para lado nenhum. O que escrever fica apenas
+    neste separador do browser (para não se perder se a página recarregar) e é apagado quando o separador
+    fechar ou quando carregar em <em>Limpar</em>. No fim, guarde o PDF e entregue-o pelo canal da HC — não por
+    WhatsApp nem email pessoal.
+  </div>
+
+<form id="f" autocomplete="off" novalidate>
+
+  <!-- Identificação do utente (cabeçalho; repete-se no topo de cada página impressa) -->
+  <section class="id-utente" aria-labelledby="id-utente-t">
+    <h2 id="id-utente-t">Identificação do utente</h2>
+    <div class="g c4u">
+      <label class="campo span-nome">Nome completo <input type="text" name="u_nome" autocomplete="off"></label>
+      <label class="campo">N.º de utente SNS <input type="text" name="u_sns" inputmode="numeric" maxlength="9" pattern="\d{9}" autocomplete="off"><span class="valid" id="v_sns" aria-live="polite"></span></label>
+      <label class="campo">Data de nascimento <input type="date" name="u_nasc" max=""></label>
+      <label class="campo">Idade <input type="text" name="u_idade" readonly tabindex="-1" class="calc"></label>
+      <label class="campo">NIF <input type="text" name="u_nif" inputmode="numeric" maxlength="9" pattern="\d{9}" autocomplete="off"><span class="valid" id="v_nif" aria-live="polite"></span></label>
+    </div>
+  </section>
+
+  <!-- 1 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">1</span> Identificação da visita</h2>
+    <div class="g c3">
+      <label class="campo span2">Centro <select name="v_centro" id="v_centro"></select></label>
+      <label class="campo">Responsável do centro <input type="text" name="v_centro_resp" readonly tabindex="-1" class="calc"></label>
+      <label class="campo span3">Morada do centro <input type="text" name="v_centro_morada" readonly tabindex="-1" class="calc"></label>
+      <label class="campo">Data <input type="date" name="v_data" id="v_data"></label>
+      <label class="campo">Hora <input type="time" name="v_hora"></label>
+      <label class="campo">Avaliador <input type="text" name="v_avaliador"></label>
+      <label class="campo span3">Localidade do utente <span class="opc">freguesia / concelho — a morada fica no processo</span><input type="text" name="u_local"></label>
+      <label class="campo">Pedido por <input type="text" name="p_nome"></label>
+      <label class="campo">Relação com o utente <input type="text" name="p_relacao"></label>
+      <label class="campo">Contacto <input type="tel" name="p_tel" inputmode="tel"></label>
+      <label class="campo">Presente na visita <input type="text" name="pr_nome"></label>
+      <label class="campo">Relação com o utente <input type="text" name="pr_relacao"></label>
+      <label class="campo">Contacto <input type="tel" name="pr_tel" inputmode="tel"></label>
+      <label class="campo span3">Quem decide / responsável <input type="text" name="decisor"></label>
+    </div>
+    <fieldset>
+      <div class="ops">
+        <label><input type="checkbox" name="inf_dados"> Explicado o tratamento dos dados; acordo verbal obtido</label>
+      </div>
+    </fieldset>
+  </section>
+
+  <!-- 2 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">2</span> Antecedentes e diagnósticos</h2>
+    <p class="dica nao-imprimir">Escreva parte do nome ou do código e escolha da lista para mapear para CID-10 (OMS). Texto livre também é aceite — fica sem código.</p>
+    <div class="so-ecra">
+      <div id="diags"></div>
+      <button type="button" class="sec peq" id="add-diag">+ Adicionar diagnóstico / antecedente</button>
+    </div>
+    <div class="so-print" id="print-diags"></div>
+  </section>
+
+  <!-- 3 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">3</span> Medicação habitual</h2>
+    <p class="dica nao-imprimir">Escreva o princípio ativo (DCI) e escolha da lista, ou escreva livremente. Na impressão sai numa tabela com os horários em colunas.</p>
+    <div class="so-ecra">
+      <div id="meds"></div>
+      <button type="button" class="sec peq" id="add-med">+ Adicionar fármaco</button>
+    </div>
+    <div class="so-print" id="print-meds"></div>
+    <div class="g c2" style="margin-top:12px">
+      <label class="campo">Quem prepara / administra <input type="text" name="med_quem"></label>
+      <label class="campo">Farmácia habitual <input type="text" name="med_farmacia"></label>
+      <label class="campo span3">Alergias / reações adversas <input type="text" name="alergias"></label>
+    </div>
+  </section>
+
+  <!-- 4 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">4</span> Escalas</h2>
+    <h3>Mobilidade</h3>
+    <fieldset>
+      <div class="ops">
+        <label><input type="radio" name="mob" value="autonomo"> Autónomo</label>
+        <label><input type="radio" name="mob" value="apoio"> Anda com apoio</label>
+        <label><input type="radio" name="mob" value="cadeirao"> Cama–cadeirão</label>
+        <label><input type="radio" name="mob" value="acamado"> Acamado</label>
+      </div>
+    </fieldset>
+    <div class="g c3">
+      <label class="campo">Transferências <span class="opc">n.º de pessoas</span><input type="number" name="transf" min="0" max="4" inputmode="numeric"></label>
+      <label class="campo span2">Quedas <span class="opc">últimos 6 meses</span><input type="text" name="quedas"></label>
+    </div>
+
+    <h3>Escala de Morse — risco de queda</h3>
+    <div class="rolar">
+    <table class="tab" id="morse">
+      <thead><tr><th>Item</th><th>Pontuação</th></tr></thead>
+      <tbody id="morse-corpo"></tbody>
+    </table>
+    </div>
+    <div class="total">
+      <span>Total Morse</span> <output id="morse_total">—</output><span>/ 125</span>
+      <span class="cls" id="morse_cls"></span>
+    </div>
+
+    <h3>Escala de Braden — risco de úlcera de pressão</h3>
+    <p class="dica nao-imprimir">Versão adulto da Orientação DGS n.º 017/2011. Ao escolher um nível aparece a descrição do original, para confirmar a pontuação. Valor mais baixo = maior risco.</p>
+    <div class="rolar">
+    <table class="tab" id="braden">
+      <thead><tr><th>Subescala</th><th>Pontuação</th></tr></thead>
+      <tbody id="braden-corpo"></tbody>
+    </table>
+    </div>
+    <div class="total">
+      <span>Total Braden</span> <output id="braden_total">—</output><span>/ 23</span>
+      <span class="cls" id="braden_cls"></span>
+      <span class="sub">≤ 16 alto risco · ≥ 17 baixo risco (DGS)</span>
+    </div>
+
+    <h3>Pele</h3>
+    <fieldset>
+      <div class="ops">
+        <label><input type="radio" name="pele" value="integra"> Íntegra</label>
+        <label><input type="radio" name="pele" value="risco"> Íntegra, com zonas de risco</label>
+        <label><input type="radio" name="pele" value="feridas"> Feridas / úlceras</label>
+      </div>
+    </fieldset>
+    <label class="campo">Localização / descrição <input type="text" name="pele_desc"></label>
+
+    <h3>Alimentação e eliminação</h3>
+    <div class="g c3">
+      <label class="campo">Disfagia / engasgamentos <input type="text" name="disfagia"></label>
+      <label class="campo">Perda de peso recente <input type="text" name="perda_peso"></label>
+      <label class="campo">Fralda / algália / outros <input type="text" name="elim"></label>
+    </div>
+  </section>
+
+  <!-- 5 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">5</span> Consciência, orientação e padrão de sono</h2>
+    <fieldset>
+      <legend>Consciência</legend>
+      <div class="ops">
+        <label><input type="radio" name="consciencia" value="consciente"> Consciente</label>
+        <label><input type="radio" name="consciencia" value="sonolento"> Sonolento</label>
+        <label><input type="radio" name="consciencia" value="confuso"> Confuso</label>
+      </div>
+    </fieldset>
+    <label class="campo">Observações sobre a consciência <input type="text" name="consciencia_obs"></label>
+    <fieldset style="margin-top:12px">
+      <legend>Orientação</legend>
+      <div class="ops">
+        <label><input type="radio" name="orient" value="orientado"> Orientado</label>
+        <label><input type="radio" name="orient" value="ocasional"> Desorientação ocasional</label>
+        <label><input type="radio" name="orient" value="desorientado"> Desorientado</label>
+      </div>
+    </fieldset>
+    <div class="g c2">
+      <label class="campo">Confusão / agitação <input type="text" name="agitacao"></label>
+      <label class="campo">Despertares por noite <input type="text" name="despertares" inputmode="numeric"></label>
+      <label class="campo span3">Padrão de sono <span class="opc">horas, sestas, medicação para dormir</span><input type="text" name="sono_padrao"></label>
+    </div>
+    <label class="campo">Observações sobre o sono e as noites <textarea name="noite_nec" rows="2"></textarea></label>
+  </section>
+
+  <!-- 6 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">6</span> Agravamento, planeamento de cuidados e sinais de alerta</h2>
+    <p class="dica nao-imprimir">Com tato. Se o utente ou a família não quiserem entrar aqui, não forçar — marcar "não abordado".</p>
+    <fieldset>
+      <legend>O que fazem hoje quando o utente piora</legend>
+      <div class="ops">
+        <label><input type="checkbox" name="agr_112"> 112</label>
+        <label><input type="checkbox" name="agr_sns24"> SNS 24</label>
+        <label><input type="checkbox" name="agr_med"> Ligam ao médico</label>
+        <label><input type="checkbox" name="agr_paliat"> Equipa paliativa</label>
+        <label><input type="checkbox" name="agr_urg"> Levam à urgência</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>O utente conhece a gravidade da doença</legend>
+      <div class="ops">
+        <label><input type="radio" name="consc" value="sim"> Sim</label>
+        <label><input type="radio" name="consc" value="parcial"> Em parte</label>
+        <label><input type="radio" name="consc" value="nao"> Não</label>
+        <label><input type="radio" name="consc" value="na"> Não abordado</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Preferência de local de cuidados</legend>
+      <div class="ops">
+        <label><input type="radio" name="local_pref" value="casa"> Casa</label>
+        <label><input type="radio" name="local_pref" value="hospital"> Hospital</label>
+        <label><input type="radio" name="local_pref" value="indef"> Não definido</label>
+        <label><input type="radio" name="local_pref" value="na"> Não abordado</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Diretiva antecipada de vontade / procurador de cuidados de saúde</legend>
+      <div class="ops">
+        <label><input type="radio" name="dav" value="sim"> Existe</label>
+        <label><input type="radio" name="dav" value="nao"> Não existe</label>
+        <label><input type="radio" name="dav" value="nao_sabe"> Não sabem</label>
+        <label><input type="radio" name="dav" value="na"> Não abordado</label>
+      </div>
+    </fieldset>
+    <label class="campo">Reanimação / idas ao hospital já discutidas com o médico? <textarea name="reanim" rows="2"></textarea></label>
+
+    <h3>Sinais de alerta</h3>
+    <p class="dica">Qualquer um destes → contactar a coordenação clínica no próprio dia.</p>
+    <fieldset>
+      <div class="ops">
+        <label><input type="checkbox" name="al_dispneia"> Dispneia grave sem plano de crise nem SOS</label>
+        <label><input type="checkbox" name="al_semmed"> Sem médico assistente ativo</label>
+        <label><input type="checkbox" name="al_exaust"> Cuidador em exaustão</label>
+        <label><input type="checkbox" name="al_fim"> Quadro de últimos dias / semanas</label>
+      </div>
+    </fieldset>
+  </section>
+
+  <!-- 7 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">7</span> Focos de atenção de enfermagem</h2>
+    <p class="dica nao-imprimir">Sugestões geradas por regras fixas a partir do que foi preenchido — sem IA. Cada uma diz porquê. <strong>Só sai no PDF o que validar.</strong></p>
+    <div class="so-ecra">
+      <div id="focos"></div>
+      <h3>Articulações / encaminhamentos a ponderar</h3>
+      <div id="encs"></div>
+    </div>
+    <div class="so-print" id="print-focos"></div>
+    <label class="campo" style="margin-top:12px">Outros focos identificados pelo enfermeiro <textarea name="focos_outros" rows="2"></textarea></label>
+  </section>
+
+  <!-- 8 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">8</span> Fecho da visita</h2>
+    <label class="campo">Resumo da visita <span class="opc">3 frases, confirmadas com o utente</span><textarea name="resumo" rows="3"></textarea></label>
+    <label class="campo">Observações <textarea name="obs" rows="3"></textarea></label>
+    <div class="assin">
+      <div><div class="linha">Avaliador</div></div>
+      <div><div class="linha">Data</div></div>
+    </div>
+  </section>
+
+</form>
+
+
+  <footer class="legal">HC Healthcare &amp; Innovation · Intuição e Consenso, Lda · NIPC 517684608 · Rua dos Prados, 185 B, 4445-176 Alfena</footer>
+</main>
+
+<!-- Linhas repetíveis -->
+<template id="tpl-diag">
+  <div class="rep diag">
+    <div class="g c3">
+      <label class="campo span2">Diagnóstico / antecedente <input type="text" data-k="txt" list="dl-cid" autocomplete="off"></label>
+      <label class="campo">CID-10 <input type="text" data-k="cod" autocomplete="off"></label>
+      <label class="campo">Tipo <select data-k="tipo"><option>Diagnóstico ativo</option><option>Antecedente</option></select></label>
+      <label class="campo span2">Ano / notas <input type="text" data-k="notas"></label>
+    </div>
+    <div class="acoes"><button type="button" class="sec peq rem">Remover</button></div>
+  </div>
+</template>
+
+<template id="tpl-med">
+  <div class="rep med">
+    <div class="g c4">
+      <label class="campo">Fármaco <span class="opc">princípio ativo (DCI)</span><input type="text" data-k="dci" list="dl-farmacos" autocomplete="off"></label>
+      <label class="campo">Dose <input type="text" data-k="dose" inputmode="decimal"></label>
+      <label class="campo">Unidade <select data-k="un"></select></label>
+      <label class="campo">Via <select data-k="via"></select></label>
+    </div>
+    <fieldset>
+      <legend>Horário</legend>
+      <div class="ops chips" data-k="h"></div>
+    </fieldset>
+    <div class="g c2">
+      <label class="campo span3">Notas <span class="opc">ex.: dias alternados, até 3×/dia em SOS</span><input type="text" data-k="notas"></label>
+    </div>
+    <div class="acoes"><button type="button" class="sec peq rem">Remover</button></div>
+  </div>
+</template>
+
+<datalist id="dl-farmacos"></datalist>
+<datalist id="dl-cid"></datalist>
+
+<script>
+{{ESCALAS_JS}}
+</script>
+<script>
+{{DADOS_JS}}
+</script>
+<script>
+{{APP_JS}}
+</script>
+</body>
+</html>

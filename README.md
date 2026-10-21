@@ -7,6 +7,7 @@ um ficheiro HTML único: não recolhe, não envia e não guarda dados fora do br
 |---|---|
 | Índice | `/` → `index.html` |
 | Avaliação inicial do utente | `/eval-hc-patient/` → `eval-hc-patient/index.html` |
+| Avaliação inicial · centros de convívio UFMLO | `/ufmlo/` → `ufmlo/index.html` (fora do índice) |
 | Índice de Barthel (isolado) | `/barthel/` → `barthel/index.html` |
 | Escala de Morse (isolada) | `/morse/` → `morse/index.html` |
 | Escala de Braden (isolada) | `/braden/` → `braden/index.html` |
@@ -21,6 +22,7 @@ um ficheiro HTML único: não recolhe, não envia e não guarda dados fora do br
 | `src/eval-hc-patient/form.src.html` | Estrutura e estilo do formulário. Marcadores `{{…}}` no lugar dos scripts, logótipo e fontes |
 | `src/eval-hc-patient/dados.js` | Dados fixos: fármacos (DCI), CID-10, MIF, sinais vitais, unidades, vias, horários |
 | `src/eval-hc-patient/app.js` | Lógica: identificação do utente, escalas, alertas, linhas repetíveis, regras dos focos, rascunho, impressão |
+| `src/ufmlo/form.src.html`, `src/ufmlo/app.js` | Variante para os centros de convívio UFMLO. Usa o `dados.js` do formulário e as escalas partilhadas |
 | `assets/` | Logótipo e fontes HC (derivados de `claude/design-md/hc/assets/` no hasp-HQ) |
 | `build.py` | Gera todas as páginas (lista em `PAGINAS`) |
 | `index.html`, `*/index.html` | **Gerados** — nunca editar à mão |
@@ -41,6 +43,17 @@ Barthel ocupa duas.
 
 Para acrescentar outra escala: definir os itens e as faixas em `src/shared/escalas.js` e juntar
 uma entrada a `PAGINAS` no `build.py`.
+
+## Variante UFMLO (ufmlo/)
+
+Formulário de avaliação inicial para os três centros de convívio da União de Freguesias de
+Lordelo do Ouro e Massarelos. Ao escolher o centro, a responsável e a morada preenchem-se
+sozinhas (definidas em `CENTROS`, no topo de `src/ufmlo/app.js`). Tem 8 secções: identificação
+da visita, antecedentes, medicação, escalas (mobilidade, Morse, Braden, pele, alimentação),
+consciência/orientação/sono, agravamento e sinais de alerta, focos e fecho. Fica de fora o que
+é próprio do domicílio: seguimento clínico, sinais vitais, respiratório, Barthel, MIF,
+cuidadores, mapa de necessidades, modelo de apoio e casa. O PDF sai como
+`HC_Avaliacao-UFMLO_<data>_<iniciais>`. A página não está ligada no índice.
 
 # Avaliação inicial do utente
 
