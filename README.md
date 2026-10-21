@@ -48,10 +48,11 @@ uma entrada a `PAGINAS` no `build.py`.
 
 Formulário de avaliação inicial para os três centros de convívio da União de Freguesias de
 Lordelo do Ouro e Massarelos. Ao escolher o centro, a responsável e a morada preenchem-se
-sozinhas (definidas em `CENTROS`, no topo de `src/ufmlo/app.js`). Tem 8 secções: identificação
+sozinhas (definidas em `CENTROS`, no topo de `src/ufmlo/app.js`). Tem 9 secções: identificação
 da visita, antecedentes, medicação, escalas (mobilidade, Morse, Braden, pele, alimentação),
-consciência/orientação/sono, agravamento e sinais de alerta, focos e fecho. Fica de fora o que
-é próprio do domicílio: seguimento clínico, sinais vitais, respiratório, Barthel, MIF,
+consciência/orientação/sono, sinais vitais (só TA, FC, FR, SpO₂ e temperatura), agravamento e
+sinais de alerta, focos e fecho. Fica de fora o que é próprio do domicílio: seguimento clínico,
+O₂/dor/glicemia na tabela de sinais, respiratório, Barthel, MIF,
 cuidadores, mapa de necessidades, modelo de apoio e casa. O PDF sai como
 `HC_Avaliacao-UFMLO_<data>_<iniciais>`. A página não está ligada no índice.
 

@@ -1,5 +1,5 @@
 /* Lógica do formulário de avaliação inicial — centros de convívio UFMLO.
-   Variante do eval-hc-patient: sem sinais vitais, respiratório, Barthel nem MIF; com centro e Braden.
+   Variante do eval-hc-patient: sem respiratório, Barthel nem MIF; com centro, Braden e só os parâmetros vitais.
    Sem rede, sem IA: escalas, alertas e focos saem de regras fixas definidas aqui. */
 (function () {
   "use strict";
@@ -85,6 +85,20 @@
   }
   tabelaEscala("morse-corpo", MORSE_ITENS);
   tabelaEscala("braden-corpo", BRADEN_ITENS, true);
+
+  // Sinais vitais: só os parâmetros vitais da lista partilhada (sem O₂ no momento, dor nem glicemia)
+  var SINAIS_VITAIS = SINAIS.filter(function (s) { return ["ta", "fc", "fr", "spo2", "temp"].indexOf(s[0]) !== -1; });
+  var sinaisCorpo = document.getElementById("sinais-corpo");
+  SINAIS_VITAIS.forEach(function (s) {
+    var r = el("tr");
+    r.appendChild(el("td", { "class": "rot" }, s[1]));
+    r.appendChild(el("td", { "class": "ref" }, s[2]));
+    var tdH = el("td"); tdH.appendChild(el("input", { type: "text", name: "sv_" + s[0] + "_hab", inputmode: s[0] === "ta" ? "text" : "decimal", "aria-label": s[1] + " habitual" }));
+    var tdV = el("td"), w = el("div", { "class": "sinal" });
+    w.appendChild(el("input", { type: "text", name: "sv_" + s[0] + "_vis", inputmode: s[0] === "ta" ? "text" : "decimal", "aria-label": s[1] + " na visita" }));
+    w.appendChild(el("span", { "class": "ind", id: "ind_" + s[0] }));
+    tdV.appendChild(w); r.appendChild(tdH); r.appendChild(tdV); sinaisCorpo.appendChild(r);
+  });
 
   /* ---------- linhas repetíveis ---------- */
   function preencher(no, d) {
@@ -218,6 +232,32 @@
     descricoes(BRADEN_ITENS);
   }
 
+  /* ---------- sinais vitais ---------- */
+  function sinais() {
+    var fora = [];
+    SINAIS_VITAIS.forEach(function (s) {
+      var inp = campo("sv_" + s[0] + "_vis"), ind = document.getElementById("ind_" + s[0]);
+      var v = inp.value.trim(), dir = "";
+      if (s[0] === "ta") {
+        var m = /(\d{2,3})\s*[\/x-]\s*(\d{2,3})/.exec(v);
+        if (m) {
+          var sis = +m[1], dia = +m[2];
+          if (sis >= 140 || dia >= 90) dir = "↑"; else if (sis < 90 || dia < 60) dir = "↓";
+        }
+      } else if (v !== "") {
+        var n = parseFloat(v.replace(",", "."));
+        if (!isNaN(n)) {
+          if (s[3] != null && n < s[3]) dir = "↓";
+          if (s[4] != null && n > s[4]) dir = "↑";
+        }
+      }
+      inp.classList.toggle("fora", !!dir);
+      ind.textContent = dir;
+      if (dir) fora.push(s[1].replace(/ \(.*\)$/, "") + " " + v + " " + dir);
+    });
+    return fora;
+  }
+
   /* ---------- focos de atenção (regras fixas) ---------- */
   var OPIOIDES = /morfina|oxicodona|fentanilo|tramadol|tapentadol|buprenorfina|hidromorfona|metadona|code[ií]na/i;
   var ANTICOAG = /varfarina|acenocumarol|apixabano|rivaroxabano|edoxabano|dabigatrano|enoxaparina/i;
@@ -227,7 +267,7 @@
   var BRADEN_CURTO = {};
   BRADEN_ITENS.forEach(function (it) { BRADEN_CURTO[it[0]] = it[1].replace(/ \(.*\)$/, ""); });
 
-  function calcularFocos() {
+  function calcularFocos(foraSinais) {
     var focos = {}, ordem = [], encs = [];
     function add(id, t, j, motivo) {
       if (!focos[id]) { focos[id] = { id: id, t: t, j: j, m: [] }; ordem.push(id); }
@@ -322,6 +362,7 @@
     if (alertas.length) enc("enc_alerta", "Contactar a coordenação clínica no próprio dia", alertas.join(" · "));
     if (val("al_semmed")) enc("enc_cs", "Articular com o centro de saúde / médico de família", "sem médico assistente ativo");
     if (val("al_fim")) enc("enc_paliat", "Ponderar articulação com equipa de cuidados paliativos", "quadro de últimos dias / semanas");
+    if (foraSinais.length) enc("enc_sv", "Sinais vitais fora do intervalo de referência", foraSinais.join(" · "));
     var invas = ms.filter(function (m) { return /Subcut|Intramusc|Endoven/.test(m.via || ""); }).map(function (m) { return m.dci + " (" + m.via + ")"; });
     if (invas.length) enc("enc_inv", "Medicação parentérica — requer enfermeiro nos horários respetivos", invas.join(", "));
 
@@ -344,9 +385,9 @@
       l.appendChild(s); cont.appendChild(l);
     });
   }
-  function focos() {
-    ultimo = calcularFocos();
-    renderItens(document.getElementById("focos"), ultimo.focos, "", "Ainda sem sugestões — preencha escalas e avaliação.");
+  function focos(fora) {
+    ultimo = calcularFocos(fora);
+    renderItens(document.getElementById("focos"), ultimo.focos, "", "Ainda sem sugestões — preencha escalas, sinais e avaliação.");
     renderItens(document.getElementById("encs"), ultimo.encs, "enc", "Nada a ponderar por agora.");
   }
 
@@ -457,7 +498,7 @@
 
   /* ---------- eventos ---------- */
   function autosize(t) { t.style.height = "auto"; t.style.height = t.scrollHeight + 2 + "px"; }
-  function atualizar() { identificacao(); escalas(); focos(); }
+  function atualizar() { identificacao(); escalas(); focos(sinais()); }
   function alterado() { atualizar(); guardar(); }
 
   form.addEventListener("input", function (e) {

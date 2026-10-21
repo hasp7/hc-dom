@@ -434,7 +434,22 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
 
   <!-- 6 ------------------------------------------------------------------ -->
   <section>
-    <h2><span class="n">6</span> Agravamento, planeamento de cuidados e sinais de alerta</h2>
+    <h2><span class="n">6</span> Sinais vitais</h2>
+    <div class="g c3">
+      <label class="campo">Hora da avaliação <input type="time" name="sv_hora"></label>
+    </div>
+    <div class="rolar">
+    <table class="tab" id="sinais">
+      <thead><tr><th>Parâmetro</th><th>Referência</th><th>Habitual do utente</th><th>Na visita</th></tr></thead>
+      <tbody id="sinais-corpo"></tbody>
+    </table>
+    </div>
+    <p class="dica">Referências para adulto em repouso. Em doença respiratória crónica o alvo de SpO₂ pode ser 88–92 % — confrontar com o alvo prescrito.</p>
+  </section>
+
+  <!-- 7 ------------------------------------------------------------------ -->
+  <section>
+    <h2><span class="n">7</span> Agravamento, planeamento de cuidados e sinais de alerta</h2>
     <p class="dica nao-imprimir">Com tato. Se o utente ou a família não quiserem entrar aqui, não forçar — marcar "não abordado".</p>
     <fieldset>
       <legend>O que fazem hoje quando o utente piora</legend>
@@ -487,9 +502,9 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
     </fieldset>
   </section>
 
-  <!-- 7 ------------------------------------------------------------------ -->
+  <!-- 8 ------------------------------------------------------------------ -->
   <section>
-    <h2><span class="n">7</span> Focos de atenção de enfermagem</h2>
+    <h2><span class="n">8</span> Focos de atenção de enfermagem</h2>
     <p class="dica nao-imprimir">Sugestões geradas por regras fixas a partir do que foi preenchido — sem IA. Cada uma diz porquê. <strong>Só sai no PDF o que validar.</strong></p>
     <div class="so-ecra">
       <div id="focos"></div>
@@ -500,9 +515,9 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
     <label class="campo" style="margin-top:12px">Outros focos identificados pelo enfermeiro <textarea name="focos_outros" rows="2"></textarea></label>
   </section>
 
-  <!-- 8 ------------------------------------------------------------------ -->
+  <!-- 9 ------------------------------------------------------------------ -->
   <section>
-    <h2><span class="n">8</span> Fecho da visita</h2>
+    <h2><span class="n">9</span> Fecho da visita</h2>
     <label class="campo">Resumo da visita <span class="opc">3 frases, confirmadas com o utente</span><textarea name="resumo" rows="3"></textarea></label>
     <label class="campo">Observações <textarea name="obs" rows="3"></textarea></label>
     <div class="assin">
