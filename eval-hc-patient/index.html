@@ -849,7 +849,7 @@ header.cab .doc-id .tema-btn { display: block; margin: 6px 0 0 auto; }
 
 <script>
 /* Definições das escalas — fonte única, partilhada pelo formulário de avaliação
-   (eval-hc-patient) e pelas ferramentas isoladas (barthel/, morse/).
+   (eval-hc-patient) e pelas ferramentas isoladas (barthel/, morse/, braden/).
    Opção: [valor, rótulo curto, descrição]. Editar aqui e correr build.py. */
 "use strict";
 
@@ -934,6 +934,44 @@ var MORSE_ITENS = [
 var MORSE_CLASSES = [[51, "Alto risco de queda"], [25, "Baixo risco de queda"], [0, "Sem risco de queda"]];
 var MORSE_FAIXAS = [["0–24", "Sem risco de queda"], ["25–50", "Baixo risco de queda"], ["≥ 51", "Alto risco de queda"]];
 
+/* Escala de Braden — adulto (Bergstrom, Braden et al., 1987). Redação da versão portuguesa de 2001
+   (Margato, Miguéns, Ferreira, Gouveia, Furtado; GAIF/CEISUC), transcrita do Anexo I da Orientação
+   DGS n.º 017/2011, só com a ortografia atualizada (AO90). Opções pela ordem do original, de 1 a 4. */
+var BRADEN_ITENS = [
+  ["br_percecao", "Perceção sensorial (capacidade de reação significativa ao desconforto)", [
+    ["1", "Completamente limitada", "Não reage a estímulos dolorosos (não geme, não se retrai nem se agarra a nada) devido a um nível reduzido de consciência ou à sedação, OU capacidade limitada de sentir a dor na maior parte do seu corpo."],
+    ["2", "Muito limitada", "Reage unicamente a estímulos dolorosos. Não consegue comunicar o desconforto, exceto através de gemidos ou inquietação, OU tem uma limitação sensorial que lhe reduz a capacidade de sentir dor ou desconforto em mais de metade do corpo."],
+    ["3", "Ligeiramente limitada", "Obedece a instruções verbais, mas nem sempre consegue comunicar o desconforto ou a necessidade de ser mudado de posição, OU tem alguma limitação sensorial que lhe reduz a capacidade de sentir dor ou desconforto em 1 ou 2 extremidades."],
+    ["4", "Nenhuma limitação", "Obedece a instruções verbais. Não apresenta défice sensorial que possa limitar a capacidade de sentir ou exprimir dor ou desconforto."]]],
+  ["br_humidade", "Humidade (nível de exposição da pele à humidade)", [
+    ["1", "Pele constantemente húmida", "A pele mantém-se sempre húmida devido a sudorese, urina, etc. É detetada humidade sempre que o doente é deslocado ou virado."],
+    ["2", "Pele muito húmida", "A pele está frequentemente, mas nem sempre, húmida. Os lençóis têm de ser mudados pelo menos uma vez por turno."],
+    ["3", "Pele ocasionalmente húmida", "A pele está por vezes húmida, exigindo uma muda adicional de lençóis aproximadamente uma vez por dia."],
+    ["4", "Pele raramente húmida", "A pele está geralmente seca; os lençóis só têm de ser mudados nos intervalos habituais."]]],
+  ["br_atividade", "Atividade (nível de atividade física)", [
+    ["1", "Acamado", "O doente está confinado à cama."],
+    ["2", "Sentado", "Capacidade de marcha gravemente limitada ou inexistente. Não pode fazer carga e/ou tem de ser ajudado a sentar-se na cadeira normal ou de rodas."],
+    ["3", "Anda ocasionalmente", "Por vezes caminha durante o dia, mas apenas curtas distâncias, com ou sem ajuda. Passa a maior parte dos turnos deitado ou sentado."],
+    ["4", "Anda frequentemente", "Anda fora do quarto pelo menos duas vezes por dia, e dentro do quarto pelo menos de duas em duas horas durante o período em que está acordado."]]],
+  ["br_mobilidade", "Mobilidade (capacidade de alterar e controlar a posição do corpo)", [
+    ["1", "Completamente imobilizado", "Não faz qualquer movimento com o corpo ou extremidades sem ajuda."],
+    ["2", "Muito limitada", "Ocasionalmente muda ligeiramente a posição do corpo ou das extremidades, mas não é capaz de fazer mudanças frequentes ou significativas sozinho."],
+    ["3", "Ligeiramente limitado", "Faz pequenas e frequentes alterações de posição do corpo e das extremidades sem ajuda."],
+    ["4", "Nenhuma limitação", "Faz grandes ou frequentes alterações de posição do corpo sem ajuda."]]],
+  ["br_nutricao", "Nutrição (alimentação habitual)", [
+    ["1", "Muito pobre", "Nunca come uma refeição completa. Raramente come mais de 1/3 da comida que lhe é oferecida. Come diariamente duas refeições, ou menos, de proteínas (carne ou lacticínios). Ingere poucos líquidos. Não toma um suplemento dietético líquido, OU está em jejum e/ou a dieta líquida ou a soros durante mais de cinco dias."],
+    ["2", "Provavelmente inadequada", "Raramente come uma refeição completa e geralmente come apenas cerca de 1/2 da comida que lhe é oferecida. A ingestão de proteínas consiste unicamente em três refeições diárias de carne ou lacticínios. Ocasionalmente toma um suplemento dietético, OU recebe menos do que a quantidade ideal de líquidos ou alimentos por sonda."],
+    ["3", "Adequada", "Come mais de metade da maior parte das refeições. Faz quatro refeições diárias de proteínas (carne, peixe, lacticínios). Por vezes recusa uma refeição, mas toma geralmente um suplemento caso lhe seja oferecido, OU é alimentado por sonda ou num regime de nutrição parentérica total satisfazendo provavelmente a maior parte das necessidades nutricionais."],
+    ["4", "Excelente", "Come a maior parte das refeições na íntegra. Nunca recusa uma refeição. Faz geralmente um total de quatro ou mais refeições (carne, peixe, lacticínios). Come ocasionalmente entre as refeições. Não requer suplementos."]]],
+  ["br_friccao", "Fricção e forças de deslizamento", [
+    ["1", "Problema", "Requer uma ajuda moderada a máxima para se movimentar. É impossível levantar o doente completamente sem deslizar contra os lençóis. Descai frequentemente na cama ou cadeira, exigindo um reposicionamento constante com ajuda máxima. Espasticidade, contraturas ou agitação leva a fricção quase constante."],
+    ["2", "Problema potencial", "Movimenta-se com alguma dificuldade ou requer uma ajuda mínima. É provável que, durante uma movimentação, a pele deslize de alguma forma contra os lençóis, cadeira, apoios ou outros dispositivos. A maior parte do tempo, mantém uma posição relativamente boa na cama ou na cadeira, mas ocasionalmente descai."],
+    ["3", "Nenhum problema", "Move-se na cama e na cadeira sem ajuda e tem força muscular suficiente para se levantar completamente durante uma mudança de posição. Mantém uma correta posição na cama ou cadeira."]]]
+];
+/* Corte da DGS (Orientação 017/2011, Critérios 3 e Anexo IV): ≤ 16 alto risco, ≥ 17 baixo risco. */
+var BRADEN_CLASSES = [[17, "Baixo risco de úlcera de pressão"], [0, "Alto risco de úlcera de pressão"]];
+var BRADEN_FAIXAS = [["6–16", "Alto risco de úlcera de pressão"], ["17–23", "Baixo risco de úlcera de pressão"]];
+
 /* Descrição / Uso — texto de apoio por escala, a partir das fontes indicadas (verificadas em 2026-10-08). */
 var BARTHEL_INFO = {
   descricao: "O Índice de Barthel (Mahoney & Barthel, 1965) mede o nível de independência em dez atividades básicas de vida diária: alimentação, banho, higiene pessoal, vestir, controlo intestinal, controlo vesical, uso da sanita, transferências, deambulação e escadas. Esta página usa a pontuação de 0 a 20 (Wade & Collin, 1988), a da validação portuguesa, em que cada nível vale 0, 1, 2 ou 3; o interruptor mostra a mesma avaliação na escala original de 0 a 100 (multiplicar por 5). 0 corresponde à dependência máxima e o máximo à independência nas atividades avaliadas.",
@@ -954,6 +992,19 @@ var MORSE_INFO = {
   fontes: [
     "Morse JM, Morse RM, Tylko SJ. Development of a scale to identify the fall-prone patient. Canadian Journal on Aging. 1989;8(4):366–377. doi:10.1017/S0714980800008576",
     "Costa-Dias MJM, Ferreira PL, Oliveira AS. Adaptação cultural e linguística e validação da Escala de Quedas de Morse. Revista de Enfermagem Referência. 2014;IV(2):7–17. doi:10.12707/RIII1382"
+  ]
+};
+
+/* Fontes verificadas em 2026-10-21: PDF oficial da Orientação DGS 017/2011, ficha RIMAS/CEISUC, DOIs na Crossref. */
+var BRADEN_INFO = {
+  descricao: "A Escala de Braden (Bergstrom, Braden et al., 1987) avalia o risco de desenvolver úlceras de pressão a partir de seis subescalas: perceção sensorial, humidade, atividade, mobilidade, nutrição e fricção e forças de deslizamento. Cada subescala vale de 1 a 4 (a fricção, de 1 a 3) e o valor mais baixo corresponde ao maior risco; o total vai de 6 a 23. Esta é a versão para adultos, na tradução portuguesa de 2001 adotada pela Direção-Geral da Saúde (Orientação n.º 017/2011), que a indica, com o instrumento de avaliação da pele, como os instrumentos validados em Portugal para avaliar o risco no adulto.",
+  leitura: "Corte da DGS: alto risco com total ≤ 16, baixo risco com total ≥ 17. No estudo original, com o corte de 16, a sensibilidade foi de 100% e a especificidade de 64% a 90%; num estudo multicêntrico posterior, em hospitais e lares, o corte com melhor previsão foi 18 (Bergstrom et al., 1998), por isso um total de 17 ou 18 não é motivo para tranquilizar. A DGS recomenda analisar cada subescala individualmente e planear uma intervenção para cada uma que esteja baixa, e lembra que baixo risco não significa ausência de risco. Na validação portuguesa, a concordância entre observadores foi mais fraca na nutrição e mais forte na mobilidade.",
+  uso: "Segundo a DGS, a avaliação do risco faz-se em todos os contextos de cuidados; no domicílio, na primeira visita domiciliária, com reavaliação semanal nos cuidados domiciliários e sempre que o estado clínico muda. Aplica-se a maiores de 18 anos (abaixo dessa idade usa-se a Braden Q). Deve ser acompanhada do instrumento de avaliação da pele, de preferência durante a higiene ou os cuidados à pele, e o resultado regista-se no processo clínico. A avaliação clínica complementa-a obrigatoriamente. A DGS exclui da aplicação as situações de ambulatório sem permanência prevista de 24 h ou mais (salvo mudança do estado clínico), os portadores de doença mental e as situações com risco de automutilação.",
+  fontes: [
+    "Direção-Geral da Saúde. Orientação n.º 017/2011, de 19/05/2011 — Escala de Braden: versão adulto e pediátrica (Braden Q). Lisboa: DGS; 2011. Anexo I: versão portuguesa de 2001 (Margato C, Miguéns C, Ferreira P, Gouveia J, Furtado K; GAIF e CEISUC).",
+    "Bergstrom N, Braden BJ, Laguzza A, Holman V. The Braden Scale for predicting pressure sore risk. Nursing Research. 1987;36(4):205–210. doi:10.1097/00006199-198707000-00002",
+    "Bergstrom N, Braden B, Kemp M, Champagne M, Ruby E. Predicting pressure ulcer risk: a multisite study of the predictive validity of the Braden Scale. Nursing Research. 1998;47(5):261–269. doi:10.1097/00006199-199809000-00005",
+    "Ferreira PL, Miguéns C, Gouveia J, Furtado K. Risco de desenvolvimento de úlceras de pressão: implementação nacional da Escala de Braden. Loures: Lusodidacta; 2007. (Validação portuguesa; não consultada diretamente — dados citados pela DGS e pela ficha do instrumento no RIMAS/CEISUC, Universidade de Coimbra.)"
   ]
 };
 

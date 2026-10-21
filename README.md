@@ -9,19 +9,20 @@ um ficheiro HTML único: não recolhe, não envia e não guarda dados fora do br
 | Avaliação inicial do utente | `/eval-hc-patient/` → `eval-hc-patient/index.html` |
 | Índice de Barthel (isolado) | `/barthel/` → `barthel/index.html` |
 | Escala de Morse (isolada) | `/morse/` → `morse/index.html` |
+| Escala de Braden (isolada) | `/braden/` → `braden/index.html` |
 
 ## Estrutura
 
 | Ficheiro | O que é |
 |---|---|
 | `src/index.src.html` | Índice do site |
-| `src/shared/escalas.js` | **Fonte única** das escalas Barthel e Morse (itens, descrições, faixas), usada pelo formulário e pelas páginas isoladas |
+| `src/shared/escalas.js` | **Fonte única** das escalas Barthel, Morse e Braden (itens, descrições, faixas), usada pelo formulário e pelas páginas isoladas |
 | `src/escala/escala.src.html`, `src/escala/escala.js` | Modelo e motor das ferramentas de escala isolada; cada escala é uma configuração no `build.py` |
 | `src/eval-hc-patient/form.src.html` | Estrutura e estilo do formulário. Marcadores `{{…}}` no lugar dos scripts, logótipo e fontes |
 | `src/eval-hc-patient/dados.js` | Dados fixos: fármacos (DCI), CID-10, MIF, sinais vitais, unidades, vias, horários |
 | `src/eval-hc-patient/app.js` | Lógica: identificação do utente, escalas, alertas, linhas repetíveis, regras dos focos, rascunho, impressão |
 | `assets/` | Logótipo e fontes HC (derivados de `claude/design-md/hc/assets/` no hasp-HQ) |
-| `build.py` | Gera as quatro páginas |
+| `build.py` | Gera todas as páginas (lista em `PAGINAS`) |
 | `index.html`, `*/index.html` | **Gerados** — nunca editar à mão |
 
 ```
@@ -30,7 +31,7 @@ python3 build.py
 
 Editar sempre em `src/`, correr o build e fazer commit dos ficheiros gerados juntamente com as fontes.
 
-## Escalas isoladas (barthel/, morse/)
+## Escalas isoladas (barthel/, morse/, braden/)
 
 Cada escala tem uma página própria, para reavaliações rápidas sem abrir o formulário completo:
 identificação curta (utente, SNS, data de nascimento com idade calculada, data, avaliador, contexto),
@@ -81,6 +82,9 @@ classificação.
   alvo de SpO₂ pode ser 88–92 %, por isso o alerta abaixo de 92 % é um lembrete para confrontar com
   o alvo prescrito, não um diagnóstico.
 - **Morse:** versão portuguesa, com os cortes 0–24 sem risco, 25–50 baixo e ≥ 51 alto.
+- **Braden:** versão adulto da Orientação DGS n.º 017/2011 (Anexo I, tradução portuguesa de 2001),
+  com o corte da DGS: ≤ 16 alto risco, ≥ 17 baixo. Só a página isolada, por agora. A DGS manda
+  aplicá-la com o instrumento de avaliação da pele (Anexo II), que ainda não está feito.
 
 ## Privacidade (dados de saúde, RGPD art. 9.º)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Constrói o site hc-dom: cada página sai como ficheiro HTML único e autossuficiente.
 
-Páginas: índice, eval-hc-patient/, barthel/, morse/. As escalas vêm de src/shared/escalas.js.
+Páginas: índice, eval-hc-patient/, barthel/, morse/, braden/, esc-zarit/. As escalas vêm de src/shared/escalas.js.
 
 Embebe scripts, logótipo e fontes (assets/) para que o site funcione igual no GitHub Pages,
 offline ou enviado por email — sem nenhum pedido de rede. Sem dependências: só biblioteca padrão.
@@ -36,6 +36,9 @@ FONTE_BARTHEL = ("Índice de Barthel: Mahoney FI, Barthel DW (1965). Pontuação
                  "Instrumento de apoio à avaliação; a interpretação é sempre do profissional.")
 FONTE_MORSE = ("Escala de Quedas de Morse: Morse JM, Morse RM, Tylko SJ (1989); versão portuguesa: Costa-Dias, Ferreira, Oliveira (2014). "
                "Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico.")
+FONTE_BRADEN = ("Escala de Braden (adulto): Bergstrom N, Braden BJ et al. (1987); versão portuguesa de 2001 (Margato, Miguéns, Ferreira, Gouveia, Furtado; GAIF/CEISUC), "
+                "Anexo I da Orientação DGS n.º 017/2011. Corte DGS: ≤ 16 alto risco, ≥ 17 baixo risco. "
+                "Instrumento de apoio à avaliação do risco; não dispensa o juízo clínico nem a avaliação da pele.")
 
 
 def config_escala(chave, nome, itens, classes, faixas, fonte, info, divisor="null"):
@@ -77,6 +80,17 @@ PAGINAS = [
                                            "MORSE_FAIXAS", FONTE_MORSE, "MORSE_INFO"),
         },
         saida=RAIZ / "morse" / "index.html",
+    ),
+    dict(
+        template=SRC / "escala" / "escala.src.html",
+        scripts={"{{ESCALAS_JS}}": ESCALAS_JS, "{{ESCALA_JS}}": SRC / "escala" / "escala.js"},
+        textos={
+            "{{TITULO}}": "Escala de Braden",
+            "{{SUBTITULO}}": "Avaliação do risco de úlcera de pressão no adulto",
+            "{{CONFIG_JS}}": config_escala("braden", "Braden", "BRADEN_ITENS", "BRADEN_CLASSES",
+                                           "BRADEN_FAIXAS", FONTE_BRADEN, "BRADEN_INFO"),
+        },
+        saida=RAIZ / "braden" / "index.html",
     ),
     dict(
         template=SRC / "esc" / "esc.src.html",
