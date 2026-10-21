@@ -86,16 +86,20 @@
   tabelaEscala("morse-corpo", MORSE_ITENS);
   tabelaEscala("braden-corpo", BRADEN_ITENS, true);
 
-  // Sinais vitais: só os parâmetros vitais da lista partilhada (sem O₂ no momento, dor nem glicemia)
-  var SINAIS_VITAIS = SINAIS.filter(function (s) { return ["ta", "fc", "fr", "spo2", "temp"].indexOf(s[0]) !== -1; });
+  // Sinais vitais: só os parâmetros vitais (sem O₂ no momento, dor nem glicemia). A TA vai em dois campos,
+  // TAS e TAD, com os mesmos limites que o eval-hc-patient aplica à TA (≥ 140/90 alta, < 90/60 baixa).
+  var SINAIS_VITAIS = [
+    ["tas", "TA sistólica — TAS (mmHg)", "90–139", 90, 139],
+    ["tad", "TA diastólica — TAD (mmHg)", "60–89", 60, 89]
+  ].concat(SINAIS.filter(function (s) { return ["fc", "fr", "spo2", "temp"].indexOf(s[0]) !== -1; }));
   var sinaisCorpo = document.getElementById("sinais-corpo");
   SINAIS_VITAIS.forEach(function (s) {
     var r = el("tr");
     r.appendChild(el("td", { "class": "rot" }, s[1]));
     r.appendChild(el("td", { "class": "ref" }, s[2]));
-    var tdH = el("td"); tdH.appendChild(el("input", { type: "text", name: "sv_" + s[0] + "_hab", inputmode: s[0] === "ta" ? "text" : "decimal", "aria-label": s[1] + " habitual" }));
+    var tdH = el("td"); tdH.appendChild(el("input", { type: "text", name: "sv_" + s[0] + "_hab", inputmode: "decimal", "aria-label": s[1] + " habitual" }));
     var tdV = el("td"), w = el("div", { "class": "sinal" });
-    w.appendChild(el("input", { type: "text", name: "sv_" + s[0] + "_vis", inputmode: s[0] === "ta" ? "text" : "decimal", "aria-label": s[1] + " na visita" }));
+    w.appendChild(el("input", { type: "text", name: "sv_" + s[0] + "_vis", inputmode: "decimal", "aria-label": s[1] + " na visita" }));
     w.appendChild(el("span", { "class": "ind", id: "ind_" + s[0] }));
     tdV.appendChild(w); r.appendChild(tdH); r.appendChild(tdV); sinaisCorpo.appendChild(r);
   });
@@ -238,13 +242,7 @@
     SINAIS_VITAIS.forEach(function (s) {
       var inp = campo("sv_" + s[0] + "_vis"), ind = document.getElementById("ind_" + s[0]);
       var v = inp.value.trim(), dir = "";
-      if (s[0] === "ta") {
-        var m = /(\d{2,3})\s*[\/x-]\s*(\d{2,3})/.exec(v);
-        if (m) {
-          var sis = +m[1], dia = +m[2];
-          if (sis >= 140 || dia >= 90) dir = "↑"; else if (sis < 90 || dia < 60) dir = "↓";
-        }
-      } else if (v !== "") {
+      if (v !== "") {
         var n = parseFloat(v.replace(",", "."));
         if (!isNaN(n)) {
           if (s[3] != null && n < s[3]) dir = "↓";
