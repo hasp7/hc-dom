@@ -101,7 +101,8 @@ dialog#dlg-registo form, dialog#dlg-registo [data-passo] { display: flex; flex-d
 dialog#dlg-registo [hidden] { display: none; }
 dialog#dlg-registo img { align-self: center; background: #fff; padding: 8px; border-radius: 6px; }
 dialog#dlg-registo code { word-break: break-all; }
-.dlg-acoes { display: flex; justify-content: flex-end; gap: 8px; }
+.dlg-acoes { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
+button.ligacao { border: 0; background: none; color: var(--hc-petroleo); text-decoration: underline; padding: 6px 4px; margin-right: auto; font-weight: 400; }
 .dlg-msg { margin: 0; font-size: 14px; min-height: 0; }
 .dlg-msg.erro { color: var(--hc-laranja-forte); font-weight: 700; }
 .dica { font-size: 13px; color: var(--hc-texto-sec); margin: 2px 0 8px; }
@@ -292,7 +293,7 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
   </div>
   <div class="barra-reg nao-imprimir">
     <span class="estado" id="estado-registo" aria-live="polite">Registo: sem sessão</span>
-    <button type="button" class="sec peq" id="btn-sessao" hidden>Terminar sessão</button>
+    <button type="button" class="sec peq" id="btn-sessao">Entrar</button>
   </div>
 
   <div class="aviso nao-imprimir">
@@ -606,7 +607,21 @@ input.invalido { border-color: var(--hc-laranja-forte); background: var(--lar-su
   <form id="frm-login" data-passo="login" hidden>
     <label class="campo">Email <input type="email" id="reg-email" autocomplete="username" required></label>
     <label class="campo">Password <input type="password" id="reg-pw" autocomplete="current-password" required></label>
-    <div class="dlg-acoes"><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Entrar</button></div>
+    <div class="dlg-acoes"><button type="button" class="ligacao" id="btn-esqueci">Esqueci-me da password</button><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Entrar</button></div>
+  </form>
+
+  <form id="frm-recuperar" data-passo="recuperar" hidden>
+    <p>Indique o email da sua conta. Recebe um link para definir uma password nova.</p>
+    <label class="campo">Email <input type="email" id="rec-email" autocomplete="username" required></label>
+    <div class="dlg-acoes"><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Enviar link</button></div>
+  </form>
+
+  <form id="frm-password" data-passo="password" hidden>
+    <p>Defina a sua password (pelo menos 12 caracteres; uma frase curta é mais fácil de lembrar e mais segura).</p>
+    <input type="email" autocomplete="username" hidden aria-hidden="true" tabindex="-1">
+    <label class="campo">Password nova <input type="password" id="pw-nova" autocomplete="new-password" minlength="12" required></label>
+    <label class="campo">Repetir a password <input type="password" id="pw-repetir" autocomplete="new-password" minlength="12" required></label>
+    <div class="dlg-acoes"><button type="button" class="sec" data-fechar>Cancelar</button><button class="prim">Guardar password</button></div>
   </form>
 
   <form id="frm-inscrever" data-passo="inscrever" hidden>
